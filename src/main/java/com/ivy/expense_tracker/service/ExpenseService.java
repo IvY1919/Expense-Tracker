@@ -39,6 +39,11 @@ public class ExpenseService {
         return total == null ? BigDecimal.ZERO : total;
     }
 
+    public BigDecimal getMonthlyTotal(String email, LocalDate startDate, LocalDate endDate){
+        BigDecimal total = expenseRepository.getMonthlyTotal( email, startDate, endDate);
+        return total != null ? total : BigDecimal.ZERO;
+    }
+
     // Get monthly totals for a specific year
     public List<BigDecimal> getMonthlyTotals(String email, int year){
         LocalDate starDate = LocalDate.of(year,1,1);

@@ -68,12 +68,16 @@ public class HomeController {
         LocalDate startDate = selectedYearMonth.atDay(1);
         LocalDate endDate = selectedYearMonth.atEndOfMonth();
 
-        List<ExpenseEntity> expenses =
-                expenseService.getExpensesByUserIdAndDate(
-                        email, startDate, endDate);
+        List<ExpenseEntity> expenses = expenseService.getExpensesByUserIdAndDate( email, startDate, endDate);
 
         model.addAttribute("expenses", expenses);
         model.addAttribute("selectedMonth", selectedYearMonth);
+
+     // Get total for selected month
+        BigDecimal monthlyTotal =
+                expenseService.getMonthlyTotal( email, startDate, endDate);
+
+        model.addAttribute("monthlyTotal", monthlyTotal);
         
         if ("yearly".equals(view)) {            
             List<BigDecimal> yearlyTotals = expenseService.getYearlyTotals(email, currentYear);

@@ -71,17 +71,20 @@
         <div class="main">
             <!-- Navbar -->
             <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm">
-                <div class="container-fluid">
+                <div class="container-fluid position-relative">
                     <span class="brand">
                         Welcome, <span th:text="${username}"></span>
-                    </span>
+                    </span>                
+                    <div class="current-date position-absolute top-50 start-50 translate-middle">
+                        <h3 class="current_date mb-0" th:text="${#temporals.format(T(java.time.LocalDate).now(), 'dd MMMM, yyyy', T(java.util.Locale).ENGLISH)}">August, 2026</h3>
+                    </div>
+                    <!-- Right side -->
+                    <form th:action="@{/logout}" method="post" class="ms-auto me-3">
+                        <button type="submit" class="btn btn-outline-danger">
+                        Logout
+                        </button>
+                    </form>
                 </div>
-                <!-- Right side -->
-                <form th:action="@{/logout}" method="post" class="ms-auto me-3">
-                    <button type="submit" class="btn btn-outline-danger">
-                    Logout
-                    </button>
-                </form>
             </nav>
 
             <!-- Page Content -->
@@ -90,9 +93,11 @@
                     <div class="col-md-3">
                         <div class="card">
                             <div class="card-body card-body-shadow" style="color: #e87d0a;">
-                                <h5><i class="bi bi-calendar-plus"></i>
-                                Total Expense</h5>
-                                <h2>¥<span th:text="${#numbers.formatDecimal(monthlyTotal, 0, 'COMMA', 0, 'POINT')}"></h2>
+                                <h5><i class="bi bi-calendar-plus"></i> Total Expense</h5>
+                                <div class="d-flex align-items-baseline gap-2">
+                                    <h2>¥<span th:text="${#numbers.formatDecimal(monthlyTotal, 0, 'COMMA', 0, 'POINT')}"></h2>
+                                    <p class="mb-0">/<span th:text="${#temporals.format(T(java.time.LocalDate).now(), 'MMMM', T(java.util.Locale).ENGLISH)}"></span></p>
+                                </div>
                             </div>
                         </div>
                     </div>

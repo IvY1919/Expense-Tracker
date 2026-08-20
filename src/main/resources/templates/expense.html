@@ -122,7 +122,6 @@
                                          data-bs-target="#addExpenseModal">
                                             + Add Expense
                                         </button>
-                                         <!-- th:attr="data-bs-target='#editExpenseModal-' + ${expense.expId}">                                                     -->
                                     </div>                                    
                                 </div>
 
@@ -164,13 +163,24 @@
                             </div>
                         </div>
                      </div>
-                      <!-- Card 2 -->
+                      <!-- Pie chart -->
                     <div class="col-md-4">
                         <div class="card h-100">
-                            <div class="card-body card-body-shadow">
-                                <h6 class="card-title">Card 2</h6>
+                            <div class="card-body card-body-shadow justify-content-center">
+                                <div class="current-month-expense d-flex align-items-baseline gap-2 justify-content-center">
+                                    <div class="expense-label">
+                                        Current Month Total Expense :
+                                    </div>
+                                    <div class="expense-total" th:text="'¥' + ${#numbers.formatDecimal(monthlyTotal, 0, 'COMMA', 0, 'POINT')}">
+                                        ¥25,000
+                                    </div>
+                                </div>
+                                <hr>
 
-                                <!-- Your content here -->
+                                <!-- Pie Graph -->
+                                <div class="expense-pie-chart mt-5  chart-container">
+                                    <canvas id="expensePieChart"></canvas>
+                                </div>
 
                             </div>
                         </div>
@@ -421,6 +431,36 @@
                 `/expense?month=${year}-${month}`;
         }
     </script>
+
+    <!-- pie chart -->
+     <script>
+        const piectx= document.getElementById("expensePieChart");
+
+        new Chart(piectx, {
+            type: "doughnut",
+            data: {
+                labels:["Food", "Transport", "Shopping", "Rent", "Others"],
+                datasets: [{
+                    data:[30000, 15000, 20000, 10000, 5000]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: {
+                    animateRotate: true,
+                    animateScale: true,
+                    duration: 1500,
+                    easing: "easeOutQuart"
+                },
+                plugins: {
+                    legend: {
+                        position: "right"
+                    }
+                }
+            }
+        })
+     </script>
 
 </body>
 </html>
