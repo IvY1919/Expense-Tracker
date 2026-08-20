@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" data-bs-theme="light" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">Expense</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/theme.css}">
+    <link rel="stylesheet" th:href="@{/css/expense.css}">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="wrapper">
+
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h4>Expense Tracker</h4>
+            </div>
+
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">
+                        <i class="bi bi-speedometer2"></i>
+                        Dashboard
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link  active" href="#">
+                        <i class="bi bi-wallet2"></i>
+                        Expenses
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-cash-stack"></i>
+                        Income
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-bar-chart"></i>
+                        Reports
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-gear"></i>
+                        Settings
+                    </a>
+                </li>
+            </ul>
+                 <!-- <div class="theme-switch">
+                    <button id="lightBtn" class="theme-btn active">
+                        <i class="bi bi-brightness-high"></i> Light
+                    </button>
+                    <button id="darkBtn" class="theme-btn">
+                        <i class="bi bi-moon"></i> Dark
+                    </button>
+                </div> -->
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main">
+            <!-- Navbar -->
+            <nav class="navbar navbar-expand-lg bg-body-tertiary shadow-sm">
+                <div class="container-fluid position-relative">
+                    <span class="brand">
+                        Welcome, <span th:text="${username}"></span>
+                    </span>                
+                    <div class="current-date position-absolute top-50 start-50 translate-middle">
+                        <h3 class="current_date mb-0" th:text="${#temporals.format(T(java.time.LocalDate).now(), 'dd MMMM, yyyy', T(java.util.Locale).ENGLISH)}">August, 2026</h3>
+                    </div>
+                    <!-- Right side -->
+                    <form th:action="@{/logout}" method="post" class="ms-auto me-3">
+                        <button type="submit" class="btn btn-outline-danger">
+                        Logout
+                        </button>
+                    </form>
+                </div>
+            </nav>
+
+            <div class="container-fluid mt-3 justify-content-center">
+                <!-- Top two cards -->
+                 <div class="row g-3 mb-3">
+                    <!-- Table -->
+                     <div class="col-md-8">
+                        <div class="card h-100">
+                            <div class="card-body card-body-shadow">
+
+                                <div class="row justify-content-between align-items-center">                                    
+                                    <div class="col ms-3 d-flex align-items-center">
+                                        <button type="button" class="month-arrow btn" th:onclick="'changeMonth(-1)'">
+                                                <i class="bi bi-chevron-left"></i>
+                                        </button>
+
+                                        <div class="selected-month">
+                                            <span th:text="${selectedMonth.month.name().substring(0,1)
+                                                        + selectedMonth.month.name().substring(1).toLowerCase()
+                                                        + ', ' + selectedMonth.year}">
+                                                August, 2026
+                                            </span>
+                                        </div>
+
+                                        <button type="button" class="month-arrow btn" th:onclick="'changeMonth(1)'">
+                                            <i class="bi bi-chevron-right"></i>
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="col-auto me-3 mt-2">
+                                        <button type="submit" class="btn btn-outline-primary">
+                                            + Add Expense
+                                        </button>
+                                    </div>                                    
+                                </div>
+
+                                <div class="table-container">
+                                    <!-- <p th:text="${expenses[0].expDate}">TEST</p> -->
+                                    <table class="table expense-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Expense Date</th>
+                                                <th>Description</th>
+                                                <th>Amount</th>
+                                                <th>Payment Method</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            <tr th:each="expense : ${expenses}">
+                                                <td th:text="${expense.expDate}"></td>
+                                                <td th:text="${expense.description}"></td>
+                                                <td th:text="${expense.expAmount}"></td>
+                                                <td th:text="${expense.paymentMethod}"></td>
+                                                <td>
+                                                    <button type="button"
+                                                    class="btn btn-sm btn-outline-primary"
+                                                    data-bs-toggle="modal"
+                                                    th:attr="data-bs-target='#editExpenseModal-' + ${expense.expId}">                                                    
+                                                    Edit
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                           <tr th:if="${#lists.isEmpty(expenses)}">
+                                                <td colspan="5" class="text-center text-muted">
+                                                    No expenses for this month.
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                     </div>
+                      <!-- Card 2 -->
+                    <div class="col-md-4">
+                        <div class="card h-100">
+                            <div class="card-body card-body-shadow">
+                                <h6 class="card-title">Card 2</h6>
+
+                                <!-- Your content here -->
+
+                            </div>
+                        </div>
+                    </div>
+                 </div>
+
+                <!-- graph -->
+                <div class="card">
+                    <div class="card-body card-body-shadow">
+                        <div class="row align-items-center">
+                            <div class="col ms-3"><h5 class="expense-month-graph-title">Expense</h5></div>
+                            <div class="col-auto graph-select-wrapper">
+                                <select class="form-select graph-drop-down" onchange="location.href='/expense?view='+this.value">
+                                    <option value="monthly" th:selected="${view == 'monthly'}">
+                                        Monthly
+                                    </option>
+                                    <option value="yearly" th:selected="${view == 'yearly'}">
+                                        Yearly
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class = " chart-container" style="height: 300px;">
+                            <canvas id="expenseChart"></canvas>
+                        </div>                          
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit modal -->
+    <div th:each="expense : ${expenses}" class="modal fade" th:id="'editExpenseModal-' + ${expense.expId}" tabindex="-1"
+     aria-labelledby="editExpenseModalLabel" aria-hidden="true">
+        <div class="modal-dialog mocal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editExpenseModalLabel"> Edit Expense </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+                </div>
+                <!-- Body -->
+                <form th:action="@{/expense/update}" method="post">
+                    <input type="hidden" name="expId" th:value="${expense.expId}">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="expenseDate" class="form-label"> Expense Date </label>
+                            <input type="date" name="expDate" class="form-control" id="expenseDate" th:value="${expense.expDate}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label"> Description </label>
+                            <input type="text" name="description" class="form-control" id="description" maxlength="200" th:value="${expense.description}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="amount" class="form-label"> Amount </label>
+                            <input type="number" name="expAmount" class="form-control" id="amount" step="1" th:value="${expense.expAmount}">
+                        </div>
+                        <div class="mb-3">
+                            <label for="paymentMethod" class="form-label"> Payment Method </label>
+                            <select name="paymentMethod" class="form-select" id="paymentMethod">
+                                <option value="">Select payment method</option>
+                                <option value="Cash" th:selected="${expense.paymentMethod == 'Cash'}">Cash</option>
+                                <option value="Credit Card" th:selected="${expense.paymentMethod == 'Credit Card'}">Credit Card</option>
+                                <option value="Debit Card" th:selected="${expense.paymentMethod == 'Debit Card'}">Debit Card</option>
+                                <option value="Bank Transfer" th:selected="${expense.paymentMethod == 'Bank Transfer'}">Bank Transfer</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- fotter -->
+                    <div class="modal-footer">
+                        <!-- Delete -->
+                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" th:attr="data-bs-target='#deleteConfirmModal-' + ${expense.expId}">
+                            Delete
+                        </button>
+                        <div class="ms-auto">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div th:each="expense : ${expenses}" class="modal fade"
+        th:id="'deleteConfirmModal-' + ${expense.expId}"
+        tabindex="-1"
+        aria-labelledby="deleteConfirmModalLabel"
+        aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <!-- Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteConfirmModalLabel"> Delete Expense </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+                </div>
+                <!-- Body -->
+                <form th:action="@{/expense/delete}" method="post">
+                    <input type="hidden"  name="expId" th:value="${expense.expId}">
+                    <div class="modal-body">
+                        <p class="mb-0"> Are you sure you want to delete this expense? </p>
+                    </div>
+                    <!-- Footer -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-danger">
+                            Delete
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+ 
+
+
+
+
+    <!-- JavaScript -->
+    <script th:inline="javascript">
+    // Start of graph
+       const ctx = document.getElementById("expenseChart");
+       const monthlyTotals = /*[[${monthlyTotals}]]*/ [];
+       const yearlyTotals = /*[[${yearlyTotals}]]*/ []; 
+       const view = /*[[${view}]]*/ 'monthly';
+       const currentYear = /*[[${year}]]*/ 2026;
+
+       let labels = [];
+       let data = [];
+
+        if (view === 'monthly') {
+            labels = [
+            'Jan', 'Feb', 'Mar', 'Apr',
+            'May', 'Jun', 'Jul', 'Aug',
+            'Sep', 'Oct', 'Nov', 'Dec'];
+            data = monthlyTotals.map(value => Number(value));
+        } else {
+            labels = [];
+            for(let i= -4; i<= 2; i++){
+             labels.push(currentYear +i);
+            }
+            data = yearlyTotals.map(value => Number(value));
+        }
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: view === 'monthly'
+                        ? 'Monthly Expenses'
+                        : 'Yearly Expenses',
+                    data: data,
+                    borderWidth: 2,
+                    borderColor: '#4f46e5',
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: {
+                    duration: 2000,
+                    easing: 'easeInOutQuart'
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // End of graph
+    </script>
+    
+    <!-- month selector -->
+    <script>
+        function changeMonth(direction) {
+
+            const currentMonth = '[[${selectedMonth}]]';
+
+            let date = new Date(currentMonth + '-01');
+
+            date.setMonth(date.getMonth() + direction);
+
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+
+            window.location.href =
+                `/expense?month=${year}-${month}`;
+        }
+    </script>
+
+</body>
+</html>
