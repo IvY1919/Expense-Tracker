@@ -2,7 +2,6 @@ package com.ivy.expense_tracker.controller;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.time.YearMonth;
 
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.security.core.Authentication;
 
@@ -17,7 +17,6 @@ import com.ivy.expense_tracker.database.ExpenseEntity;
 import com.ivy.expense_tracker.service.CustomUserDetails;
 import com.ivy.expense_tracker.service.ExpenseService;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Controller
@@ -76,10 +75,6 @@ public class HomeController {
         model.addAttribute("expenses", expenses);
         model.addAttribute("selectedMonth", selectedYearMonth);
         
-    // Get expenses belonging to the logged-in user
-        // List<ExpenseEntity> expensesdata = expenseService.getExpensesByUserId(email);
-        //model.addAttribute("expenses", expensesdata);
-
         if ("yearly".equals(view)) {            
             List<BigDecimal> yearlyTotals = expenseService.getYearlyTotals(email, currentYear);
             model.addAttribute("yearlyTotals", yearlyTotals);
@@ -92,7 +87,7 @@ public class HomeController {
         return "expense";
     }
 
-    @PostMapping("/expense/update")
+    @PostMapping("/expense/updateexpense")
     public String updateExpense(@RequestParam Long expId,
                                 @RequestParam LocalDate expDate,
                                 @RequestParam String description,
@@ -105,7 +100,7 @@ public class HomeController {
     return "redirect:/expense";
     }
 
-    @PostMapping("/expense/delete")
+    @PostMapping("/expense/deleteexpense")
     public String deleteExpense(
             @RequestParam Long expId,
             Authentication authentication) {
@@ -116,6 +111,20 @@ public class HomeController {
 
         return "redirect:/expense";
     }
+
+    @PostMapping("/expense/addexpense")
+    public String AddExpense(
+            @ModelAttribute ExpenseEntity expense,
+            Authentication authentication) {
+
+        String email = authentication.getName();
+
+        expenseService.addExpense(expense, email);
+
+        return "redirect:/expense";
+    }
+
+
     
 
 }

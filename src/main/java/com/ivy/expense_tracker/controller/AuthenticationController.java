@@ -1,11 +1,16 @@
 package com.ivy.expense_tracker.controller;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-
+import java.util.Optional;
 import com.ivy.expense_tracker.service.UserService;
+import com.ivy.expense_tracker.database.UserEntity;
+import com.ivy.expense_tracker.repository.UserRepository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.Model;
+
 
 @Controller
 public class AuthenticationController {
@@ -15,6 +20,9 @@ public class AuthenticationController {
     public AuthenticationController(UserService userService) {
         this.userService = userService;
     }
+
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/login")
     public String login() {
@@ -33,6 +41,18 @@ public class AuthenticationController {
         userService.registerUser(username, email, password);        
         return "redirect:/login";
     }  
+
+    // @PostMapping("/login")
+    // public String postMethodName(@RequestParam String email, @RequestParam String password, Model model) {
+    //     Optional<UserEntity> user = userRepository.findByEmail(email);
+    //     if (user.isEmpty()) {
+    //     model.addAttribute("emailNotFound", "Email not found");
+    //     return "login";
+    //     }
+        
+    //     return "redirect:/dashboard";
+    // }
+    
 
 
     

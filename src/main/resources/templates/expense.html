@@ -118,14 +118,15 @@
                                     </div>
                                     
                                     <div class="col-auto me-3 mt-2">
-                                        <button type="submit" class="btn btn-outline-primary">
+                                        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" 
+                                         data-bs-target="#addExpenseModal">
                                             + Add Expense
                                         </button>
+                                         <!-- th:attr="data-bs-target='#editExpenseModal-' + ${expense.expId}">                                                     -->
                                     </div>                                    
                                 </div>
 
                                 <div class="table-container">
-                                    <!-- <p th:text="${expenses[0].expDate}">TEST</p> -->
                                     <table class="table expense-table">
                                         <thead>
                                             <tr>
@@ -212,7 +213,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
                 <!-- Body -->
-                <form th:action="@{/expense/update}" method="post">
+                <form th:action="@{/expense/updateexpense}" method="post">
                     <input type="hidden" name="expId" th:value="${expense.expId}">
                     <div class="modal-body">
                         <div class="mb-3">
@@ -273,7 +274,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
                 <!-- Body -->
-                <form th:action="@{/expense/delete}" method="post">
+                <form th:action="@{/expense/deleteexpense}" method="post">
                     <input type="hidden"  name="expId" th:value="${expense.expId}">
                     <div class="modal-body">
                         <p class="mb-0"> Are you sure you want to delete this expense? </p>
@@ -292,7 +293,57 @@
         </div>
     </div>
 
- 
+ <!-- Add modal -->
+    <div class="modal fade" id="addExpenseModal" tabindex="-1"
+     aria-labelledby="addExpenseModalLabel" aria-hidden="true">
+        <div class="modal-dialog mocal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="AddExpenseModalLabel"> Add New Expense </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
+                </div>
+                <!-- Body -->
+                <form th:action="@{/expense/addexpense}" method="post">
+                    <input type="hidden" name="expId">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="expenseDate" class="form-label"> Expense Date </label>
+                            <input type="date" name="expDate" class="form-control" id="expenseDate">
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label"> Description </label>
+                            <input type="text" name="description" class="form-control" id="description" maxlength="200">
+                        </div>
+                        <div class="mb-3">
+                            <label for="amount" class="form-label"> Amount </label>
+                            <input type="number" name="expAmount" class="form-control" id="amount" step="1">
+                        </div>
+                        <div class="mb-3">
+                            <label for="paymentMethod" class="form-label"> Payment Method </label>
+                            <select name="paymentMethod" class="form-select" id="paymentMethod">
+                                <option value="">Select payment method</option>
+                                <option value="Cash">Cash</option>
+                                <option value="Credit Card">Credit Card</option>
+                                <option value="Debit Card">Debit Card</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- fotter -->
+                    <div class="modal-footer">
+                        <div class="ms-auto">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                Save 
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 
 

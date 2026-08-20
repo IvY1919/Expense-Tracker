@@ -17,8 +17,6 @@ public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long>{
 
     Optional<ExpenseEntity> findByExpIdAndUserIdEmail(Long expId,String email);
 
-    // List<ExpenseEntity> findByUserIdEmailAndExpDateBetween( String email, LocalDate startDate, LocalDate endDate);
-
     // Get total expense for current month
     @Query("""
             SELECT SUM(e.expAmount)

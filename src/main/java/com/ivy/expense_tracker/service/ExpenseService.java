@@ -3,22 +3,25 @@ package com.ivy.expense_tracker.service;
 import org.springframework.stereotype.Service;
 
 import com.ivy.expense_tracker.repository.ExpenseRepository;
+import com.ivy.expense_tracker.repository.UserRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import com.ivy.expense_tracker.database.ExpenseEntity;
+import com.ivy.expense_tracker.database.UserEntity;
 
 @Service
 public class ExpenseService {
     
+    private final UserRepository userRepository;
     private final ExpenseRepository expenseRepository;
     
-    public ExpenseService(ExpenseRepository expenseRepository){
+    public ExpenseService(ExpenseRepository expenseRepository, UserRepository userRepository){
         this.expenseRepository = expenseRepository;
+        this.userRepository = userRepository;
     }
 
     public List<ExpenseEntity> getAllExpenses(){
@@ -77,16 +80,6 @@ public class ExpenseService {
         return yearlyTotals;
     }
 
-    // for table
-    // public List<ExpenseEntity> getExpensesByUserId(String email) {
-    //     return expenseRepository.findByUserIdEmail(email);
-    // }
-    // public List<ExpenseEntity> getExpensesByMonth(String email, YearMonth yearMonth) {
-    //     LocalDate startDate = yearMonth.atDay(1);
-    //     LocalDate endDate = yearMonth.atEndOfMonth();
-    //     return expenseRepository.findByUserIdEmailAndExpDateBetween(email, startDate,endDate);
-    // }
-
     public List<ExpenseEntity> getExpensesByUserIdAndDate( String email,LocalDate startDate, LocalDate endDate) {
         return expenseRepository.getExpensesByUserIdAndDate(email, startDate, endDate);
     }
@@ -111,6 +104,16 @@ public class ExpenseService {
         ExpenseEntity expense = expenseRepository.findByExpIdAndUserIdEmail(expId, email)
                         .orElseThrow(() ->new RuntimeException("Expense not found"));
         expenseRepository.delete(expense);
+    }
+
+    public void addExpense(ExpenseEntity expense, String email){
+        UserEntity user = userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
+
+        expense.setUserId(user);
+        expenseRepository.save(expense);
+
     }
 
 
