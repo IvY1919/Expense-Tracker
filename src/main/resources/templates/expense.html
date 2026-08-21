@@ -432,16 +432,20 @@
         }
     </script>
 
-    <!-- pie chart -->
-     <script>
+    <!-- donutchart -->
+     <script  th:inline="javascript">
+
+        const categoryTotals = /*[[${categoryTotals}]]*/{};
+        const donutlabels = Object.keys(categoryTotals);
+        const donutdata = Object.values(categoryTotals);
         const piectx= document.getElementById("expensePieChart");
 
         new Chart(piectx, {
             type: "doughnut",
             data: {
-                labels:["Food", "Transport", "Shopping", "Rent", "Others"],
+                labels: donutlabels,
                 datasets: [{
-                    data:[30000, 15000, 20000, 10000, 5000]
+                    data: donutdata
                 }]
             },
             options: {

@@ -8,7 +8,9 @@ import com.ivy.expense_tracker.repository.UserRepository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 import com.ivy.expense_tracker.database.ExpenseEntity;
 import com.ivy.expense_tracker.database.UserEntity;
@@ -120,6 +122,77 @@ public class ExpenseService {
         expenseRepository.save(expense);
 
     }
+// for donutchart
+    public String getCategory(String description){
+        if (description == null || description.isBlank()) {
+            return "Other";
+        }
+
+        String desc = description.toLowerCase();
+
+        if (   desc.contains("food")
+            || desc.contains("lunch")
+            || desc.contains("dinner")
+            || desc.contains("lunch")
+            || desc.contains("snack")
+            || desc.contains("coffee")
+            || desc.contains("cafe")
+            || desc.contains("breakfast")
+            || desc.contains("eat")){
+
+                return "Food";
+        }
+
+        if(    desc.contains("plane")
+            || desc.contains("train")
+            || desc.contains("bus")
+            || desc.contains("gasoline")
+            || desc.contains("taxi")
+            || desc.contains("transport"))
+            {
+                return "Transport";
+            }
+
+        if (desc.contains("movie")
+                || desc.contains("game")
+                || desc.contains("concert")
+                || desc.contains("entertainment")) {
+            return "Entertainment";
+        }
+
+        if (desc.contains("clothes")
+                || desc.contains("shoes")
+                || desc.contains("shopping")) {
+            return "Shopping";
+        }
+
+        if (desc.contains("electric")
+                || desc.contains("water")
+                || desc.contains("internet")
+                || desc.contains("gass")
+                || desc.contains("phone")
+                || desc.contains("bill")) {
+            return "Bills";
+        }
+
+        if (desc.contains("rent")) {
+            return "Rent";
+        }
+
+        return "Other";
+    }
+// for donutchart
+    public Map<String, BigDecimal> getCategoryTotals( String email, LocalDate starDate, LocalDate endDate){
+
+        List<ExpenseEntity> expenses = expenseRepository.getExpensesByUserIdAndDate(email, starDate, endDate);
+        Map<String, BigDecimal> categoryTotals = new LinkedHashMap<>();
+        for(ExpenseEntity expense : expenses){
+            String category = getCategory(expense.getDescription());
+            categoryTotals.merge(category, expense.getExpAmount(), BigDecimal::add);
+        }
+        return categoryTotals;
+    }
+    
 
 
 }

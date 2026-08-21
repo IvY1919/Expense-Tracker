@@ -3,6 +3,7 @@ package com.ivy.expense_tracker.controller;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import java.time.YearMonth;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +79,12 @@ public class HomeController {
                 expenseService.getMonthlyTotal( email, startDate, endDate);
 
         model.addAttribute("monthlyTotal", monthlyTotal);
+
+    // for donutchart
+        Map<String, BigDecimal> categoryTotals = expenseService.getCategoryTotals(email, startDate, endDate);
+        model.addAttribute("categoryTotals", categoryTotals);
+
+    // for linechart
         
         if ("yearly".equals(view)) {            
             List<BigDecimal> yearlyTotals = expenseService.getYearlyTotals(email, currentYear);
