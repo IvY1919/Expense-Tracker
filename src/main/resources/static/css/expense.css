@@ -79,14 +79,22 @@
     overflow: hidden;
 }
 
-.table-container {
+.exp-table {
     height: 350px;
+    max-height: 350px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.in-table {
+    height: 200px;
+    max-height: 200px;
     overflow-y: auto;
     overflow-x: hidden;
 }
 
 /* Table */
-.expense-table {
+.expense-table .income-table {
     width: 100%;
     margin-bottom: 0;
 }
@@ -168,3 +176,8 @@
 .expense-pie-chart {
     height: 250px;
 }
+
+.modal-title{
+    color: #6c63ff;
+}
+

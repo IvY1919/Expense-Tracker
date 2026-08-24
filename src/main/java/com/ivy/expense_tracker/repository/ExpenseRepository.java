@@ -31,6 +31,19 @@ public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long>{
         @Param("endDate") LocalDate endDate
         );
 
+    @Query("""
+            SELECT e
+            FROM ExpenseEntity e
+            WHERE e.userId.email = :email
+            AND e.expDate BETWEEN :startDate AND :endDate
+            ORDER BY e.expDate DESC
+        """)
+    List<ExpenseEntity> getExpensesByUserIdAndDate(
+            @Param("email") String email,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate
+    );
+
     // Get expense total for each month
     @Query("""
            SELECT
@@ -65,18 +78,7 @@ public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long>{
         @Param("endDate") LocalDate endDate
     );
 
-    @Query("""
-    SELECT e
-    FROM ExpenseEntity e
-    WHERE e.userId.email = :email
-      AND e.expDate BETWEEN :startDate AND :endDate
-    ORDER BY e.expDate DESC
-    """)
-    List<ExpenseEntity> getExpensesByUserIdAndDate(
-            @Param("email") String email,
-            @Param("startDate") LocalDate startDate,
-            @Param("endDate") LocalDate endDate
-    );
+
 
 
     

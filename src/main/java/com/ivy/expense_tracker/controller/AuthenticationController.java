@@ -1,16 +1,12 @@
 package com.ivy.expense_tracker.controller;
 
-import java.util.Optional;
 import com.ivy.expense_tracker.service.UserService;
-import com.ivy.expense_tracker.database.UserEntity;
 import com.ivy.expense_tracker.repository.UserRepository;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
-
 
 @Controller
 public class AuthenticationController {

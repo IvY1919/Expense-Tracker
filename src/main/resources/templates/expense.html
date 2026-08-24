@@ -40,18 +40,18 @@
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="#">
+                    <a class="nav-link" href="/income">
                         <i class="bi bi-cash-stack"></i>
                         Income
                     </a>
                 </li>
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="#">
                         <i class="bi bi-bar-chart"></i>
                         Reports
                     </a>
-                </li>
+                </li> -->
 
                 <li class="nav-item">
                     <a class="nav-link" href="#">
@@ -60,6 +60,7 @@
                     </a>
                 </li>
             </ul>
+            <hr>
                  <!-- <div class="theme-switch">
                     <button id="lightBtn" class="theme-btn active">
                         <i class="bi bi-brightness-high"></i> Light
@@ -92,9 +93,9 @@
 
             <div class="container-fluid mt-3 justify-content-center">
                 <!-- Top two cards -->
-                 <div class="row g-3 mb-3">
+                <div class="row g-3 mb-3">
                     <!-- Table -->
-                     <div class="col-md-8">
+                    <div class="col-md-8">
                         <div class="card h-100">
                             <div class="card-body card-body-shadow">
 
@@ -125,7 +126,7 @@
                                     </div>                                    
                                 </div>
 
-                                <div class="table-container">
+                                <div class="table-container exp-table">
                                     <table class="table expense-table">
                                         <thead>
                                             <tr>
@@ -162,7 +163,7 @@
                                 </div>
                             </div>
                         </div>
-                     </div>
+                    </div>
                       <!-- Pie chart -->
                     <div class="col-md-4">
                         <div class="card h-100">
@@ -185,7 +186,7 @@
                             </div>
                         </div>
                     </div>
-                 </div>
+                </div>
 
                 <!-- graph -->
                 <div class="card">
@@ -216,7 +217,7 @@
     <!-- Edit modal -->
     <div th:each="expense : ${expenses}" class="modal fade" th:id="'editExpenseModal-' + ${expense.expId}" tabindex="-1"
      aria-labelledby="editExpenseModalLabel" aria-hidden="true">
-        <div class="modal-dialog mocal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editExpenseModalLabel"> Edit Expense </h5>

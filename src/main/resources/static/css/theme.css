@@ -16,7 +16,7 @@ body {
 
 /* Sidebar */
 #sidebar {
-    width: 250px;
+    width: 220px;
     min-height: 100vh;
     background: var(--bs-tertiary-bg);
     border-right: 1px solid var(--bs-border-color);

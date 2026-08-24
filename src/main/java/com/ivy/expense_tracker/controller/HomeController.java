@@ -15,9 +15,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.security.core.Authentication;
 
 import com.ivy.expense_tracker.database.ExpenseEntity;
+import com.ivy.expense_tracker.database.IncomeEntity;
 import com.ivy.expense_tracker.service.CustomUserDetails;
 import com.ivy.expense_tracker.service.ExpenseService;
+import com.ivy.expense_tracker.service.IncomeService;
+
 import org.springframework.web.bind.annotation.PostMapping;
+
 
 
 @Controller
@@ -25,6 +29,9 @@ public class HomeController {
 
     @Autowired
     private ExpenseService expenseService;
+
+    @Autowired
+    private IncomeService incomeService;
 
     @GetMapping("/dashboard")
     public String dashboard(
@@ -38,11 +45,15 @@ public class HomeController {
         model.addAttribute("title", "Expense Tracker");
         model.addAttribute("username", userDetails.getUsernameFromDb());
 
-        BigDecimal monthlyTotal = expenseService.getCurrentMonthTotal(email);
-        model.addAttribute("monthlyTotal", monthlyTotal);
+        BigDecimal monthlyexpenseTotal = expenseService.getCurrentMonthTotal(email);
+        model.addAttribute("monthlyexpenseTotal", monthlyexpenseTotal);
+        BigDecimal monthlyincomeTotal = incomeService.getCurrentMonthTotal(email);
+        model.addAttribute("monthlyincomeTotal", monthlyincomeTotal);
+        
         return "dashboard";
     }
 
+    // For Expense page
     @GetMapping("/expense")
     public String expense(
         @RequestParam(defaultValue = "monthly") String view,
@@ -134,6 +145,74 @@ public class HomeController {
 
         return "redirect:/expense";
     }
+    // End of Expense
+
+    // Income page 
+    @GetMapping("/income")
+    public String income(
+        @RequestParam(required = false) String month,
+        Model model,
+        Authentication authentication){
+
+        String email = authentication.getName();
+        int currentYear = LocalDate.now().getYear();
+        CustomUserDetails userDetails =
+            (CustomUserDetails) authentication.getPrincipal();
+
+        model.addAttribute("username", userDetails.getUsernameFromDb());
+        model.addAttribute("year", currentYear);
+
+        if (month == null || month.isBlank()) {
+            month = YearMonth.now().toString();
+        }
+        YearMonth selectedYearMonth = YearMonth.parse(month);
+        LocalDate startDate = selectedYearMonth.atDay(1);
+        LocalDate endDate = selectedYearMonth.atEndOfMonth();
+        List<IncomeEntity> incomes = incomeService.getIncomeByUserIdANDDate( email, startDate, endDate);
+
+        model.addAttribute("incomes", incomes);
+        model.addAttribute("selectedMonth", selectedYearMonth);
+
+
+        return "income";
+    }
+
+    @PostMapping("/income/addincome")
+    public String AddIncome(
+            @ModelAttribute IncomeEntity income,
+            Authentication authentication) {
+
+        String email = authentication.getName();
+
+        incomeService.addIncome(income, email);
+
+        return "redirect:/income";
+    }
+
+    @PostMapping("/income/editincome")
+    public String editIncome(@RequestParam Long incomeId,
+                             @RequestParam LocalDate incomeDate,
+                             @RequestParam String description,
+                             @RequestParam BigDecimal incomeAmount,
+                             Authentication authentication ) {
+        
+        String email = authentication.getName();
+        incomeService.updateIncome( incomeId, incomeDate, description, incomeAmount, email);
+        
+        return "redirect:/income";
+    }
+
+    @PostMapping("/income/deleteincome")
+    public String deleteIncome(@RequestParam Long incomeId,
+                                Authentication authentication ) {
+        String email = authentication.getName();
+        incomeService.deleteIncome(incomeId, email);
+        
+        return "redirect:/income";
+    }
+    
+    
+
 
 
     

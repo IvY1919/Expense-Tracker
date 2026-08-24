@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
+// describes the user to Spring Security.
 public class CustomUserDetails implements UserDetails {
 
     private final UserEntity user;

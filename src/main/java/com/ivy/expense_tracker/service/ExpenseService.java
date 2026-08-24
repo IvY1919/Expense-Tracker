@@ -26,9 +26,9 @@ public class ExpenseService {
         this.userRepository = userRepository;
     }
 
-    public List<ExpenseEntity> getAllExpenses(){
-        return expenseRepository.findAll();
-    }
+    // public List<ExpenseEntity> getAllExpenses(){
+    //     return expenseRepository.findAll();
+    // }
 
     // Get total expense for current month(dashboard)
     public BigDecimal getCurrentMonthTotal(String email){

@@ -91,11 +91,6 @@ public class ExpenseEntity {
         this.paymentMethod = paymentMethod;
     }
 
-    
-    // @ManyToOne
-    // @JoinColumn(name = "category_id")
-    // private CategoryEntity categoryId;
-
-    
+   
 
 }
