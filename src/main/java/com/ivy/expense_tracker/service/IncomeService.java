@@ -2,6 +2,8 @@ package com.ivy.expense_tracker.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.cglib.core.Local;
@@ -69,6 +71,48 @@ public class IncomeService {
         IncomeEntity income = incomeRepository.findByIncomeIdAndUserIdEmail(incomeId, email).orElseThrow(() -> new RuntimeException("Expense not found"));
         incomeRepository.delete(income);
 
+    }
+
+    public List<BigDecimal> getMonthlyTotalsForChart(String email, int year){
+        LocalDate startDate = LocalDate.of(year,1,1);
+        LocalDate endDate = LocalDate.of(year,12,31);
+
+        List<Object[]> results = incomeRepository.getMonthlyTotalsForChart(email, startDate, endDate);
+        List<BigDecimal> monthlyTotals = new ArrayList<>(Collections.nCopies(12, BigDecimal.ZERO));
+
+        for(Object[] result : results){
+            LocalDate monthDate = (LocalDate) result[0];
+            BigDecimal total = (BigDecimal) result[1];
+            int monthIndex = monthDate.getMonthValue() - 1;
+            monthlyTotals.set(monthIndex, total);
+
+        }               
+        return monthlyTotals;
+    }
+
+    public List<BigDecimal> getYearlyTotalsForChart(String email, int year){
+        int startYear = year - 4;
+        int endYear = year + 2;
+
+        LocalDate startDate = LocalDate.of(startYear,1,1);
+        LocalDate endDate = LocalDate.of(endYear,12,31);
+
+        List<Object[]> results = incomeRepository.getYearlyTotalsForChart(email, startDate, endDate);
+        List<BigDecimal> yearlyTotals = new ArrayList<>(Collections.nCopies(7, BigDecimal.ZERO));
+
+        for(Object[] result : results){
+            LocalDate yearDate = (LocalDate) result[0];
+            BigDecimal total = (BigDecimal) result[1];
+            int yearIndex = yearDate.getYear()  - startYear;
+            yearlyTotals.set(yearIndex, total);
+        }   
+
+        return yearlyTotals;
+    }
+
+    public BigDecimal getMonthlyIncomeTotal(String email, LocalDate startDate, LocalDate endDate){
+        BigDecimal total = incomeRepository.getMonthlyIncomeTotal( email, startDate, endDate);
+        return total != null ? total : BigDecimal.ZERO;
     }
 
 

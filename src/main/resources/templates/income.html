@@ -107,7 +107,7 @@
                     <div class="col-md-12">
                         <div class="card h-100">
                             <div class="card-body card-body-shadow">
-                                <div class="row justify-content-between align-items-center">
+                                <div class="row align-items-center">
                                     <div class="col ms-3 d-flex align-items-center">
                                         <button type = "button" class="month-arrow btn" th:onclick="'changeMonth(-1)'">
                                             <i class="bi bi-chevron-left"></i>
@@ -123,7 +123,15 @@
                                             <i class="bi bi-chevron-right"></i>
                                         </button>
                                     </div>
-                                    <div class="col-auto me-3 mt-2">
+                                    <div class="col-auto d-flex align-items-center me-4 current-month-total">
+                                        <div class="income-label me-2">
+                                            Total Income :
+                                        </div>
+                                        <div class="income-total" th:text="'¥' + ${#numbers.formatDecimal(monthlyincomeTotal, 0, 'COMMA', 0, 'POINT')}">
+                                            ¥25,000
+                                        </div>
+                                    </div>
+                                    <div class="col-auto">
                                         <button type = "button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addIncomeModal">
                                             + Add Income
                                         </button>
@@ -160,9 +168,31 @@
                         </div>
                     </div>
                 </div>
+            
+
+                <!-- line graph -->
+                <div class="card mt-3">
+                    <div class="card-body card-body-shadow">
+                        <div class="row align-tems-center">
+                            <div class="col ms-3"><h5 class="income-month-graph-title">Incomes</h5></div>
+                            <div class="col-auto graph-select-wrapper">
+                                <select class="form-select graph-drop-down" onchange="location.href='/income?view='+this.value">
+                                    <option value="monthly" th:selected="${view == 'monthly'}">
+                                        Monthly
+                                    </option>
+                                    <option value="yearly" th:selected="${view == 'yearly'}">
+                                        Yearly
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                                   
+                        <div class="chart-container" style="height: 400px;">
+                            <canvas id="incomeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-
         </div>
     </div>
 
@@ -292,6 +322,54 @@
         const month = String(date.getMonth()+1).padStart(2,'0');
         window.location.href = `/income?month=${year}-${month}`;
     }
+</script>
+
+<script th:inline="javascript">
+    const ctx = document.getElementById("incomeChart");
+    const monthlyTotals = /*[[${monthlyTotals}]]*/[];
+    const yearlyTotals = /*[[${yearlyTotals}]]*/[];
+    const view = /*[[${view}]]*/'monthly';
+    const currentYear = /*[[${year}]]*/ 2026;
+
+    let labels = [];
+    let data = [];
+
+    if (view === 'monthly'){
+        labels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Nov','Dec'];
+        data = monthlyTotals.map(value => Number(value));
+    }else{
+        labels = [];
+        for(let i = -4; i <= 2; i++){
+            labels.push(currentYear + i);
+        }
+        data = yearlyTotals.map(value => Number(value));
+    }
+
+    new Chart(ctx, {
+        type : 'line',
+        data : {
+            labels : labels,
+            datasets : [{
+                label : view === 'monthly' ? 'Monthly Expenses': 'Yearly Expenses',
+                data : data,
+                borderWidth : 2,
+                borderColor: '#4f46e5',
+                tension: 0.3
+            }]
+        },
+        options : {
+            responsive : true,
+            maintainAspectRatio: false,
+                animation: {
+                    duration: 2000,
+                    easing: 'easeInOutQuart'
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+        }
+    });
+
 </script>
 
 </body>

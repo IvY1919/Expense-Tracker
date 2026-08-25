@@ -168,9 +168,9 @@
                     <div class="col-md-4">
                         <div class="card h-100">
                             <div class="card-body card-body-shadow justify-content-center">
-                                <div class="current-month-expense d-flex align-items-baseline gap-2 justify-content-center">
+                                <div class="current-month-total d-flex align-items-baseline gap-2 justify-content-center">
                                     <div class="expense-label">
-                                        Current Month Total Expense :
+                                        Total Expense :
                                     </div>
                                     <div class="expense-total" th:text="'¥' + ${#numbers.formatDecimal(monthlyTotal, 0, 'COMMA', 0, 'POINT')}">
                                         ¥25,000

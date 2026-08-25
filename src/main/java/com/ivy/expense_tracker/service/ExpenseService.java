@@ -48,10 +48,10 @@ public class ExpenseService {
 
     // Get monthly totals for a specific year
     public List<BigDecimal> getMonthlyTotals(String email, int year){
-        LocalDate starDate = LocalDate.of(year,1,1);
+        LocalDate startDate = LocalDate.of(year,1,1);
         LocalDate endDate = LocalDate.of(year,12,31);
 
-        List<Object[]> results = expenseRepository.getMonthlyTotals(email,starDate,endDate);
+        List<Object[]> results = expenseRepository.getMonthlyTotals(email,startDate,endDate);
         List<BigDecimal> monthlyTotals = new ArrayList<>(Collections.nCopies(12, BigDecimal.ZERO));
 
         for (Object[] result : results) {

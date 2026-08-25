@@ -120,7 +120,10 @@
                             <div class="card-body card-body-shadow"   style="color: #6c63ff">
                                 <h5><i class="bi bi-calendar-month"></i>
                                 Balance Remaining</h5>
-                                <h2>¥56,500</h2>
+                                <div class="d-flex align-items-baseline gap-2">
+                                    <h2>¥<span th:text="${#numbers.formatDecimal(monthlyRemainingTotal,0, 'COMMA', 0, 'POINT')}"></h2>
+                                    <p class="mb-0">/<span th:text="${#temporals.format(T(java.time.LocalDate).now(), 'MMMM', T(java.util.Locale).ENGLISH)}"></span></p>
+                                </div>
                             </div>
                         </div>
                     </div>

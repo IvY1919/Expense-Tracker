@@ -24,7 +24,6 @@ public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long>{
             WHERE e.userId.email = :email
             AND e.expDate BETWEEN :startDate AND :endDate
             """)
-
     BigDecimal getMonthlyTotal(
         @Param("email") String email,
         @Param("startDate") LocalDate startDate,

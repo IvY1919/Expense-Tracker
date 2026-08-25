@@ -42,5 +42,50 @@ public interface IncomeRepository extends JpaRepository<IncomeEntity, Long>{
         @Param("endDate") LocalDate endDate
         );
 
+    @Query("""
+           SELECT
+                FUNCTION('DATE_TRUNC', 'month', c.incomeDate),
+                SUM(c.incomeAmount)
+            FROM IncomeEntity c
+            WHERE c.userId.email = :email
+            AND c.incomeDate BETWEEN :startDate AND :endDate
+            GROUP BY FUNCTION('DATE_TRUNC', 'month', c.incomeDate)
+            ORDER BY FUNCTION('DATE_TRUNC', 'month', c.incomeDate) 
+            """)
+    List<Object[]> getMonthlyTotalsForChart(
+        @Param("email") String email,
+        @Param("startDate") LocalDate starDate,
+        @Param("endDate") LocalDate endDate
+    );
+
+    @Query("""
+           SELECT
+                FUNCTION('DATE_TRUNC', 'year', e.incomeDate),
+                SUM(e.incomeAmount)
+            FROM IncomeEntity e
+            WHERE e.userId.email = :email
+            AND e.incomeDate BETWEEN :startDate AND :endDate
+            GROUP BY FUNCTION('DATE_TRUNC', 'year', e.incomeDate)
+            ORDER BY FUNCTION('DATE_TRUNC', 'year', e.incomeDate) 
+            """)
+    List<Object[]> getYearlyTotalsForChart(
+        @Param("email") String email,
+        @Param("startDate") LocalDate starDate,
+        @Param("endDate") LocalDate endDate
+    );
+
+    @Query("""
+            SELECT SUM(e.incomeAmount)
+            FROM IncomeEntity e
+            WHERE e.userId.email = :email
+            AND e.incomeDate BETWEEN :startDate AND :endDate
+            """)
+    BigDecimal getMonthlyIncomeTotal(
+        @Param("email") String email,
+        @Param("startDate") LocalDate starDate,
+        @Param("endDate") LocalDate endDate
+    );
+
+
     
 }

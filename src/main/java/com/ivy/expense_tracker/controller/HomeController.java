@@ -19,6 +19,7 @@ import com.ivy.expense_tracker.database.IncomeEntity;
 import com.ivy.expense_tracker.service.CustomUserDetails;
 import com.ivy.expense_tracker.service.ExpenseService;
 import com.ivy.expense_tracker.service.IncomeService;
+import com.ivy.expense_tracker.service.ReportService;
 
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -32,6 +33,9 @@ public class HomeController {
 
     @Autowired
     private IncomeService incomeService;
+
+    @Autowired
+    private ReportService reportService;
 
     @GetMapping("/dashboard")
     public String dashboard(
@@ -49,6 +53,8 @@ public class HomeController {
         model.addAttribute("monthlyexpenseTotal", monthlyexpenseTotal);
         BigDecimal monthlyincomeTotal = incomeService.getCurrentMonthTotal(email);
         model.addAttribute("monthlyincomeTotal", monthlyincomeTotal);
+        BigDecimal monthlyRemainingTotal = reportService.getCurrentMontRemainingTotal(email);
+        model.addAttribute("monthlyRemainingTotal", monthlyRemainingTotal);
         
         return "dashboard";
     }
@@ -151,20 +157,23 @@ public class HomeController {
     @GetMapping("/income")
     public String income(
         @RequestParam(required = false) String month,
+        @RequestParam(defaultValue = "monthly") String view,
         Model model,
         Authentication authentication){
 
         String email = authentication.getName();
-        int currentYear = LocalDate.now().getYear();
         CustomUserDetails userDetails =
             (CustomUserDetails) authentication.getPrincipal();
-
         model.addAttribute("username", userDetails.getUsernameFromDb());
+
+        int currentYear = LocalDate.now().getYear();
         model.addAttribute("year", currentYear);
+        model.addAttribute("view", view);
 
         if (month == null || month.isBlank()) {
             month = YearMonth.now().toString();
         }
+
         YearMonth selectedYearMonth = YearMonth.parse(month);
         LocalDate startDate = selectedYearMonth.atDay(1);
         LocalDate endDate = selectedYearMonth.atEndOfMonth();
@@ -172,6 +181,20 @@ public class HomeController {
 
         model.addAttribute("incomes", incomes);
         model.addAttribute("selectedMonth", selectedYearMonth);
+
+
+        if("yearly".equals(view)){
+            List<BigDecimal> yearlyTotals = incomeService.getYearlyTotalsForChart(email, currentYear);
+            model.addAttribute("yearlyTotals",yearlyTotals);
+
+        }else{
+            List<BigDecimal> monthlyTotals = incomeService.getMonthlyTotalsForChart(email, currentYear);
+            model.addAttribute("monthlyTotals",monthlyTotals);
+        }
+
+        // Get total for selected month
+        BigDecimal monthlyincomeTotal = incomeService.getMonthlyIncomeTotal( email, startDate, endDate);
+        model.addAttribute("monthlyincomeTotal", monthlyincomeTotal);
 
 
         return "income";

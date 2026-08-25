@@ -165,12 +165,9 @@
     display: inline-block;
 }
 
-.current-month-expense{
+.current-month-total{
     color: #6c63ff;
-    font-size: 15px;
-}
-.expense-total{
-    font-size: 25px;
+    font-size: 20px;
 }
 
 .expense-pie-chart {
