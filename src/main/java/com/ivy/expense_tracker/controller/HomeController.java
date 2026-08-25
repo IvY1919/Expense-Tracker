@@ -82,6 +82,7 @@ public class HomeController {
         }
 
         YearMonth selectedYearMonth = YearMonth.parse(month);
+        int selectedYear = selectedYearMonth.getYear();
 
         LocalDate startDate = selectedYearMonth.atDay(1);
         LocalDate endDate = selectedYearMonth.atEndOfMonth();
@@ -90,6 +91,7 @@ public class HomeController {
 
         model.addAttribute("expenses", expenses);
         model.addAttribute("selectedMonth", selectedYearMonth);
+        model.addAttribute("selectedYear", selectedYear);
 
      // Get total for selected month
         BigDecimal monthlyTotal =
@@ -104,11 +106,11 @@ public class HomeController {
     // for linechart
         
         if ("yearly".equals(view)) {            
-            List<BigDecimal> yearlyTotals = expenseService.getYearlyTotals(email, currentYear);
+            List<BigDecimal> yearlyTotals = expenseService.getYearlyTotals(email, selectedYear);
             model.addAttribute("yearlyTotals", yearlyTotals);
 
         } else {
-            List<BigDecimal> monthlyTotals = expenseService.getMonthlyTotals(email, currentYear);
+            List<BigDecimal> monthlyTotals = expenseService.getMonthlyTotals(email, selectedYear);
             model.addAttribute("monthlyTotals", monthlyTotals);
             System.out.println("Controller monthly totals: " + monthlyTotals);
         }          
@@ -175,20 +177,23 @@ public class HomeController {
         }
 
         YearMonth selectedYearMonth = YearMonth.parse(month);
+        int selectedYear = selectedYearMonth.getYear();
+
         LocalDate startDate = selectedYearMonth.atDay(1);
         LocalDate endDate = selectedYearMonth.atEndOfMonth();
         List<IncomeEntity> incomes = incomeService.getIncomeByUserIdANDDate( email, startDate, endDate);
 
         model.addAttribute("incomes", incomes);
         model.addAttribute("selectedMonth", selectedYearMonth);
+        model.addAttribute("selectedYear", selectedYear);
 
 
         if("yearly".equals(view)){
-            List<BigDecimal> yearlyTotals = incomeService.getYearlyTotalsForChart(email, currentYear);
+            List<BigDecimal> yearlyTotals = incomeService.getYearlyTotalsForChart(email, selectedYear);
             model.addAttribute("yearlyTotals",yearlyTotals);
 
         }else{
-            List<BigDecimal> monthlyTotals = incomeService.getMonthlyTotalsForChart(email, currentYear);
+            List<BigDecimal> monthlyTotals = incomeService.getMonthlyTotalsForChart(email, selectedYear);
             model.addAttribute("monthlyTotals",monthlyTotals);
         }
 

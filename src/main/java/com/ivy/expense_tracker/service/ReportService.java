@@ -3,11 +3,8 @@ package com.ivy.expense_tracker.service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
-import com.ivy.expense_tracker.database.ExpenseEntity;
-import com.ivy.expense_tracker.database.IncomeEntity;
 import com.ivy.expense_tracker.repository.ExpenseRepository;
 import com.ivy.expense_tracker.repository.IncomeRepository;
 import com.ivy.expense_tracker.repository.UserRepository;

@@ -109,19 +109,23 @@
                             <div class="card-body card-body-shadow">
                                 <div class="row align-items-center">
                                     <div class="col ms-3 d-flex align-items-center">
-                                        <button type = "button" class="month-arrow btn" th:onclick="'changeMonth(-1)'">
+                                        <!-- <button type = "button" class="month-arrow btn" th:onclick="'changeMonth(-1)'">
                                             <i class="bi bi-chevron-left"></i>
-                                        </button>
+                                        </button> -->
                                         <div class="slect-month">
-                                            <span th:text="${selectedMonth.month.name().substring(0,1)
+                                            <!-- <span th:text="${selectedMonth.month.name().substring(0,1)
                                                         + selectedMonth.month.name().substring(1).toLowerCase()
                                                         + ', ' + selectedMonth.year}">
                                                 Augest, 2026
-                                            </span>
+                                            </span> -->
+                                                <input type="month"
+                                                    class="form-control"
+                                                    th:value="${selectedMonth}"
+                                                    onchange="changeMonthInput(this.value)">
                                         </div>
-                                        <button type = "button" class="month-arrow btn"  th:onclick="'changeMonth(1)'">
+                                        <!-- <button type = "button" class="month-arrow btn"  th:onclick="'changeMonth(1)'">
                                             <i class="bi bi-chevron-right"></i>
-                                        </button>
+                                        </button> -->
                                     </div>
                                     <div class="col-auto d-flex align-items-center me-4 current-month-total">
                                         <div class="income-label me-2">
@@ -174,9 +178,9 @@
                 <div class="card mt-3">
                     <div class="card-body card-body-shadow">
                         <div class="row align-tems-center">
-                            <div class="col ms-3"><h5 class="income-month-graph-title">Incomes</h5></div>
+                            <div class="col ms-3"><h5 class="income-month-graph-title" th:text="${view == 'monthly' ? selectedYear + ' Income' : 'Income'}">Incomes</h5></div>
                             <div class="col-auto graph-select-wrapper">
-                                <select class="form-select graph-drop-down" onchange="location.href='/income?view='+this.value">
+                                <select class="form-select graph-drop-down" th:onchange="'changeView(this.value)'">
                                     <option value="monthly" th:selected="${view == 'monthly'}">
                                         Monthly
                                     </option>
@@ -313,14 +317,25 @@
      </div>
 
 <script>
-    function changeMonth(direction){
-        const currentMonth = '[[${selectedMonth}]]';
-        let date = new Date(currentMonth + '-01');
-        date.setMonth(date.getMonth() + direction);
+    // function changeMonth(direction){
+    //     const currentMonth = '[[${selectedMonth}]]';
+    //     let date = new Date(currentMonth + '-01');
+    //     date.setMonth(date.getMonth() + direction);
 
-        const year = date.getFullYear();
-        const month = String(date.getMonth()+1).padStart(2,'0');
-        window.location.href = `/income?month=${year}-${month}`;
+    //     const year = date.getFullYear();
+    //     const month = String(date.getMonth()+1).padStart(2,'0');
+    //     window.location.href = `/income?month=${year}-${month}`;
+    // }
+    function changeMonthInput(month) {
+        const view = '[[${view}]]';
+
+        window.location.href =
+            `/income?month=${month}&view=${view}`;
+    }
+
+    function changeView(view){
+        const selectedMonth = '[[${selectedMonth}]]';
+        window.location.href = `/income?view=${view}&month=${selectedMonth}`;
     }
 </script>
 
@@ -329,7 +344,8 @@
     const monthlyTotals = /*[[${monthlyTotals}]]*/[];
     const yearlyTotals = /*[[${yearlyTotals}]]*/[];
     const view = /*[[${view}]]*/'monthly';
-    const currentYear = /*[[${year}]]*/ 2026;
+    // const currentYear = /*[[${year}]]*/ 2026;
+    const selectedYear = /*[[${selectedYear}]]*/ 2026;
 
     let labels = [];
     let data = [];
@@ -340,7 +356,7 @@
     }else{
         labels = [];
         for(let i = -4; i <= 2; i++){
-            labels.push(currentYear + i);
+            labels.push(selectedYear + i);
         }
         data = yearlyTotals.map(value => Number(value));
     }
