@@ -2,11 +2,13 @@ package com.ivy.expense_tracker.controller;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.Year;
 import java.util.List;
 import java.util.Map;
 import java.time.YearMonth;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +41,7 @@ public class HomeController {
 
     @GetMapping("/dashboard")
     public String dashboard(
+        @RequestParam(required = false) String year,
         Model model,
         Authentication authentication){
 
@@ -55,7 +58,20 @@ public class HomeController {
         model.addAttribute("monthlyincomeTotal", monthlyincomeTotal);
         BigDecimal monthlyRemainingTotal = reportService.getCurrentMontRemainingTotal(email);
         model.addAttribute("monthlyRemainingTotal", monthlyRemainingTotal);
-        
+
+        if(year == null || year.isBlank()){
+            year = Year.now().toString();
+        }
+        int selectedYear = Integer.parseInt(year);       
+
+        model.addAttribute("selectedYear", selectedYear);
+        List<BigDecimal> expenseMonthlyTotals = expenseService.getMonthlyTotals(email, selectedYear);
+        model.addAttribute("expenseMonthlyTotals", expenseMonthlyTotals);
+        // System.out.println("expensemonthlyTotals barchart" + expenseMonthlyTotals);
+        List<BigDecimal> incomeMonthlyTotals = incomeService.getMonthlyTotalsForChart(email, selectedYear);
+        model.addAttribute("incomeMonthlyTotals", incomeMonthlyTotals);
+        // System.out.println("incomeMonthlyTotal barchart" + incomeMonthlyTotals);
+
         return "dashboard";
     }
 
@@ -112,7 +128,7 @@ public class HomeController {
         } else {
             List<BigDecimal> monthlyTotals = expenseService.getMonthlyTotals(email, selectedYear);
             model.addAttribute("monthlyTotals", monthlyTotals);
-            System.out.println("Controller monthly totals: " + monthlyTotals);
+            // System.out.println("Controller monthly totals: " + monthlyTotals);
         }          
         return "expense";
     }
@@ -123,27 +139,33 @@ public class HomeController {
                                 @RequestParam String description,
                                 @RequestParam BigDecimal expAmount,
                                 @RequestParam String paymentMethod,
+                                @RequestParam String month,
+                                @RequestParam String view,
                                 Authentication authentication) {
 
     String email = authentication.getName();
     expenseService.updateExpense( expId, expDate, description, expAmount, paymentMethod, email);
-    return "redirect:/expense";
+    return "redirect:/expense?month=" + month + "&view=" + view;
     }
 
     @PostMapping("/expense/deleteexpense")
     public String deleteExpense(
             @RequestParam Long expId,
+            @RequestParam String view,
+            @RequestParam String month,
             Authentication authentication) {
 
         String email = authentication.getName();
 
         expenseService.deleteExpense(expId, email);
 
-        return "redirect:/expense";
+        return "redirect:/expense?month=" + month + "&view=" + view;
     }
 
     @PostMapping("/expense/addexpense")
     public String AddExpense(
+            @RequestParam String month,
+            @RequestParam String view,
             @ModelAttribute ExpenseEntity expense,
             Authentication authentication) {
 
@@ -151,7 +173,7 @@ public class HomeController {
 
         expenseService.addExpense(expense, email);
 
-        return "redirect:/expense";
+        return "redirect:/expense?month=" + month + "&view=" + view;
     }
     // End of Expense
 
@@ -201,12 +223,13 @@ public class HomeController {
         BigDecimal monthlyincomeTotal = incomeService.getMonthlyIncomeTotal( email, startDate, endDate);
         model.addAttribute("monthlyincomeTotal", monthlyincomeTotal);
 
-
         return "income";
     }
 
     @PostMapping("/income/addincome")
     public String AddIncome(
+            @RequestParam String month,
+            @RequestParam String view,
             @ModelAttribute IncomeEntity income,
             Authentication authentication) {
 
@@ -214,7 +237,7 @@ public class HomeController {
 
         incomeService.addIncome(income, email);
 
-        return "redirect:/income";
+        return "redirect:/income?month=" + month + "&view=" + view;
     }
 
     @PostMapping("/income/editincome")
@@ -222,21 +245,25 @@ public class HomeController {
                              @RequestParam LocalDate incomeDate,
                              @RequestParam String description,
                              @RequestParam BigDecimal incomeAmount,
+                             @RequestParam String month,
+                             @RequestParam String view,
                              Authentication authentication ) {
         
         String email = authentication.getName();
         incomeService.updateIncome( incomeId, incomeDate, description, incomeAmount, email);
         
-        return "redirect:/income";
+        return "redirect:/income?month=" + month + "&view=" + view;
     }
 
     @PostMapping("/income/deleteincome")
     public String deleteIncome(@RequestParam Long incomeId,
+                               @RequestParam String month,
+                               @RequestParam String view,
                                 Authentication authentication ) {
         String email = authentication.getName();
         incomeService.deleteIncome(incomeId, email);
         
-        return "redirect:/income";
+        return "redirect:/income?month=" + month + "&view=" + view;
     }
     
     

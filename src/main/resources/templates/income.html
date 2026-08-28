@@ -211,10 +211,12 @@
                 </div>
                 <form th:action="@{/income/editincome}"  method="post">
                     <input type="hidden" name="incomeId" th:value="${income.incomeId}">
+                    <input type="hidden" name = "month" th:value="${selectedMonth}">
+                    <input type="hidden" name = "view" th:value="${view}">
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="incomeDate" class="form-label"> Income Date </label>
-                            <input type="date" name="incomeDate" class="form-control" id="IncomeDate" th:value="${income.incomeDate}">
+                            <input type="date" name="incomeDate" class="form-control" id="IncomeDate" th:value="${income.incomeDate}" required>
                         </div>
                         <div class="mb-3">
                             <label for="description" class="form-label"> Description </label>
@@ -222,7 +224,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="amount" class="form-label"> Amount </label>
-                            <input type="number" name="incomeAmount" class="form-control" id="incomeanoumt" th:value="${income.incomeAmount}">
+                            <input type="number" name="incomeAmount" class="form-control" id="incomeanoumt" th:value="${income.incomeAmount}" required>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -260,6 +262,8 @@
                 <!-- Body -->
                 <form th:action="@{/income/deleteincome}" method="post">
                     <input type="hidden"  name="incomeId" th:value="${income.incomeId}">
+                    <input type="hidden" name="view" th:value="${view}">
+                    <input type="hidden" name = "month" th:value="${selectedMonth}">
                     <div class="modal-body">
                         <p class="mb-0"> Are you sure you want to delete this expense? </p>
                     </div>
@@ -286,11 +290,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
                 <form th:action="@{/income/addincome}" method="post">
+                    <input type="hidden" name = "month" th:value="${selectedMonth}">
+                    <input type="hidden" name = "view" th:value="${view}">
                     <input type="hidden" name="expId" >
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="incomeDate" class="form-label"> Income Date </label>
-                            <input type="date" name="incomeDate" class="form-control" id="IncomeDate" >
+                            <input type="date" name="incomeDate" class="form-control" id="IncomeDate" required>
                         </div>
                         <div class="mb-3">
                             <label for="description" class="form-label"> Description </label>
@@ -298,7 +304,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="amount" class="form-label"> Amount </label>
-                            <input type="number" name="incomeAmount" class="form-control" id="incomeanoumt" >
+                            <input type="number" name="incomeAmount" class="form-control" id="incomeanoumt" required>
                         </div>
                     </div>
                     <div class="modal-footer">
