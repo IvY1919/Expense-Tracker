@@ -54,8 +54,9 @@
     border-color: #4f46e5;
     box-shadow: 0 0 0 3px #4e46e560;
 }
-.chart-container {
+.linechart-container {
     animation: floatIn 0.8s ease-out;
+    height: 400px;
 }
 
 @keyframes floatIn {
@@ -70,18 +71,10 @@
     }
 }
 
-.card1 {
-    height: 400px;
-}
-
-.card1 .card-body {
-    padding: 0;
-    overflow: hidden;
-}
 
 .exp-table {
-    height: 350px;
-    max-height: 350px;
+    height: 370px;
+    max-height: 370px;
     overflow-y: auto;
     overflow-x: hidden;
 }

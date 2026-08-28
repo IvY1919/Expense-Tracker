@@ -4,6 +4,12 @@
     --card-body-shadow: 10px 15px 25px -12px #4e46e560;
 }
 
+html,body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+}
+
 body {
     overflow-x: hidden;
     background: #f8fafc;
@@ -17,9 +23,9 @@ body {
 /* Sidebar */
 #sidebar {
     width: 220px;
-    min-height: 100vh;
-    background: var(--bs-tertiary-bg);
-    border-right: 1px solid var(--bs-border-color);
+    flex-shrink: 0;
+    box-shadow: 4px 0 10px #4e46e560;
+    z-index: 1000;
 }
 
 .sidebar-header {
@@ -64,6 +70,10 @@ body {
 /* Main */
 .main {
     flex: 1;
+    min-width: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .card {
@@ -76,7 +86,7 @@ body,
     transition: .3s;
 }
 
-/* dark light mode */
+/* dark light mode 
 .theme-switch{
 display: inline-flex;
 background: #f3f4f6;
@@ -110,4 +120,25 @@ body.dark-mode .theme-btn.active {
 
 body.dark-mode .theme-switch {
     background: #2d3748;
+}*/
+
+.barchart-scroll {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
 }
+
+.barchart-container {
+    height: 350px;
+    min-width: 800px;
+}
+
+/* .dashboard-card {
+    min-height: 380px;
+}
+
+@media (max-width: 576px) {
+    .dashboard-card {
+        min-height: 400px;
+    }
+} */

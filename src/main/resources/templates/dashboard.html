@@ -43,13 +43,6 @@
                     </a>
                 </li>
 
-                <!-- <li class="nav-item">
-                    <a class="nav-link" href="#">
-                        <i class="bi bi-bar-chart"></i>
-                        Reports
-                    </a>
-                </li> -->
-
                 <li class="nav-item">
                     <a class="nav-link" href="#">
                         <i class="bi bi-gear"></i>
@@ -79,7 +72,6 @@
                     <div class="current-date position-absolute top-50 start-50 translate-middle">
                         <h3 class="current_date mb-0" th:text="${#temporals.format(T(java.time.LocalDate).now(), 'dd MMMM, yyyy', T(java.util.Locale).ENGLISH)}">August, 2026</h3>
                     </div>
-                    <!-- Right side -->
                     <form th:action="@{/logout}" method="post" class="ms-auto me-3">
                         <button type="submit" class="btn btn-outline-danger">
                         Logout
@@ -89,10 +81,10 @@
             </nav>
 
             <!-- Page Content -->
-            <div class="container-fluid mt-3">
-                <div class="row justify-content-center">
-                    <div class="col-md-3">
-                        <div class="card">
+            <div class="container-fluid mt-4">
+                <div class="row g-3">
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="card h-100">
                             <div class="card-body card-body-shadow" style="color: #e80a0a;">
                                 <h5><i class="bi bi-calendar-plus"></i> Total Expense</h5>
                                 <div class="d-flex align-items-baseline gap-2">
@@ -103,8 +95,8 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
-                        <div class="card">
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="card h-100">
                             <div class="card-body card-body-shadow"  style="color: #06bd03;">
                                 <h5><i class="bi bi-calendar-minus"></i> Total Income</h5>
                                 <div class="d-flex align-items-baseline gap-2">
@@ -115,8 +107,8 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
-                        <div class="card">
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="card h-100">
                             <div class="card-body card-body-shadow"   style="color: #6c63ff">
                                 <h5><i class="bi bi-calendar-month"></i>
                                 Balance Remaining</h5>
@@ -128,8 +120,8 @@
                         </div>
                     </div>
 
-                    <div class="col-md-3">
-                        <div class="card">
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="card h-100">
                             <div class="card-body card-body-shadow"   style="color: #d2ca37;">
                                 <h5><i class="bi bi-coin"></i>
                                 Total Saving</h5>
@@ -137,6 +129,24 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div class="row g-3 mt-1">
+                    <div class="col-12 col-lg-6">
+                        <div class="card h-100 dashboard-card">
+                            <div class="card-body card-body-shadow">
+                                card1
+                            </div>
+                        </div>
+                    </div>   
+                    <div class="col-12 col-lg-6">
+                        <div class="card h-100 dashboard-card" >
+                            <div class="card-body card-body-shadow">
+                                card1
+                            </div>
+                        </div>
+                    </div>              
+                    
                 </div>
             
                 <!-- Bar Chart -->            
@@ -150,13 +160,16 @@
                                 <select class="form-select form-select-sm" id="yearSelect" onchange="selectYear(this.value)"></select>
                             </div>
                         </div>
-                        <div style="height: 350px;">
+
+                        <div class="barchart-scroll">
+                            <div class="barchart-container">
                                 <canvas id="incomeExpenseBarChart"></canvas>
-                        </div>                        
+                            </div>
+                        </div>                    
                     </div>
                 </div>
-                
-            </div>
+            </div>                
+        </div>
 
 
     </div>
