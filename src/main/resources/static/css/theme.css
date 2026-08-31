@@ -1,10 +1,102 @@
-:root{
+/* 1. ROOT VARIABLES */
+
+:root {
+    /* Main colors */
     --sidebar-nav-color: #4f46e5;
     --sidebar-nav-color-hover: #7f79e771;
+
+    /* Background */
+    --bg-color: #f8f9fa;
+    --card-bg: #ffffff;
+    --sidebar-bg: #ffffff;
+    --input-bg: #ffffff;
+
+    /* Text */
+    --text-color: #212529;
+    --secondary-text: #6c757d;
+
+    /* Borders & shadows */
+    --border-color: #dee2e6;
+    --shadow-color: rgba(0, 0, 0, 0.1);
     --card-body-shadow: 10px 15px 25px -12px #4e46e560;
+
+    /* Accent */
+    --accent-color: #6c63ff;
+
+    /* Table */
+    --table-header-bg: #ffffff; 
+    --table-border-color: #eeeeee; 
+    --table-bg: #ffffff;
+    --table-text: #212529;
+    --table-border: #dee2e6;
+    --table-hover-bg: #f8f9fa;
+    
+    /* Theme switch */ 
+    --theme-switch-bg: #f3f4f6; 
+    --theme-button-color: #6b7280; 
+    --theme-button-active-bg: #ffffff; 
+    --theme-button-active-color: #111827;
+
+    --main-color:#f8f9fa; 
+    --sidebar-box-shadow:4px 0 10px #4e46e560;
+
+    /* Chart color */
+    --chart-text-color: #212529;
+    --chart-grid-color: rgba(0, 0, 0, 0.1);
+
+    /*dashboard year select*/    
+    --year-drop-dwn-shadow: 0 0 0 3px #4e46e560;
+    --select-bg: #ffffff;
+    --select-text: #333333;
+    --select-border: #ced4da;
 }
 
-html,body {
+/*  DARK MODE  */ 
+html.dark-mode { 
+    /* Background */ 
+    --bg-color: #111827; 
+    --card-bg: #1f2937; 
+    --sidebar-bg: #1f2937; 
+    --input-bg: #374151; 
+    /* Text */ 
+    --text-color: #f3f4f6; 
+    --secondary-text: #9ca3af; 
+    /* Borders & shadows */ 
+    --border-color: #374151; 
+    --shadow-color: rgba(233, 228, 228, 0.35); 
+    /* Table */ 
+    --table-header-bg: #1f2937; 
+    --table-border-color: #374151; 
+    --table-bg: #1f2937;
+    --table-text: #f3f4f6;
+    --table-border: #374151;
+    --table-hover-bg: #374151;
+    /* Theme switch */ 
+    --theme-switch-bg: #2d3748;
+    --theme-button-color: #9ca3af; 
+    --theme-button-active-bg: #374151; 
+    --theme-button-active-color: #ffffff; 
+    --card-body-shadow: 10px 15px 25px -12px #948ef8e9;
+    --sidebar-box-shadow:4px 0 10px #948ef8e9;
+
+    --main-color: #111827; 
+    /* Accent */
+    --accent-color: #bdb9ff;
+    /* Chart color */
+    --chart-text-color: #f3f4f6;
+    --chart-grid-color: rgba(255, 255, 255, 0.15);
+
+    /*dashboard year select*/
+    --year-drop-dwn-shadow: 0 0 0 3px #948ef8e9;
+    --select-bg: #2b2b2b;
+    --select-text: #f1f1f1;
+    --select-border: #555555;    
+}
+
+/* 2. GLOBAL */
+
+html,
+body {
     margin: 0;
     padding: 0;
     min-height: 100%;
@@ -12,20 +104,44 @@ html,body {
 
 body {
     overflow-x: hidden;
-    background: #f8fafc;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: 0.3s;
 }
+
+
+/*  3. LAYOUT */
 
 .wrapper {
     display: flex;
     min-height: 100vh;
 }
 
-/* Sidebar */
+.main {
+    flex: 1;
+    min-width: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-navbar {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    transition: background-color 0.3s ease,
+                color 0.3s ease;
+}
+
+/*  4. SIDEBAR  */
+
 #sidebar {
     width: 220px;
     flex-shrink: 0;
-    box-shadow: 4px 0 10px #4e46e560;
     z-index: 1000;
+    background-color: var(--sidebar-bg);
+    color: var(--text-color);
+    box-shadow: var(--sidebar-box-shadow);
+    transition: 0.3s;
 }
 
 .sidebar-header {
@@ -37,12 +153,12 @@ body {
 }
 
 #sidebar .nav-link {
-    color: var(--bs-body-color);
+    color: var(--text-color);
     padding: 15px 20px;
 }
 
 #sidebar .nav-link:hover {
-    background: var( --sidebar-nav-color-hover);
+    background: var(--sidebar-nav-color-hover);
     color: white;
 }
 
@@ -55,44 +171,39 @@ body {
     margin-right: 10px;
 }
 
-.card-body-shadow{
+.brand {
+    color: var(--accent-color);
+    font-size: 30px;
+}
+
+
+/*  5. CARDS */
+
+.card {
+    transition: 0.3s;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border-color: var(--border-color);
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.card-body-shadow {
     box-shadow: var(--card-body-shadow);
-    background: #ffffff;
+    background: var(--card-bg);
     border-radius: 8px;
 }
 
-.brand{
-    color: #9046e5b2;
-    font-size: 30px;    
-}
 
+/*  6. LIGHT / DARK MODE SWITCH */
 
-/* Main */
-.main {
-    flex: 1;
-    min-width: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
-
-.card {
-    transition: .3s;
-}
-
-body,
-.card,
-#sidebar {
-    transition: .3s;
-}
-
-/* dark light mode 
-.theme-switch{
-display: inline-flex;
-background: #f3f4f6;
-padding: 4px;
-border-radius: 10px;
-gap: 4px;
+.theme-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px;
+    background: var(--theme-switch-bg);
+    border-radius: 10px;
+    transition: 0.3s;
 }
 
 .theme-btn {
@@ -103,14 +214,14 @@ gap: 4px;
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
-    color: #6b7280;
+    color: var(--theme-button-color);
     transition: all 0.25s ease;
 }
 
 .theme-btn.active {
-    background: white;
-    color: #111827;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    background: var(--theme-button-active-bg);
+    color: var(--theme-button-active-color);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 body.dark-mode .theme-btn.active {
@@ -120,7 +231,84 @@ body.dark-mode .theme-btn.active {
 
 body.dark-mode .theme-switch {
     background: #2d3748;
-}*/
+}
+
+
+/*  7. GRAPH / CHART SELECT  */
+
+.graph-select-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.graph-select-wrapper .form-select {
+    background-color: var(--select-bg);
+    color: var(--select-text);
+    border-color: var(--select-border);
+}
+
+.graph-drop-down {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 140px;
+    padding: 9px 40px 9px 15px;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    background-color: var(--input-bg);
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Custom arrow */
+.graph-select-wrapper::after {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+
+    transform: translateY(-55%);
+
+    font-size: 18px;
+    color: var(--sidebar-nav-color);
+
+    pointer-events: none;
+}
+
+.graph-drop-down:hover {
+    border-color: var(--sidebar-nav-color);
+    background-color: var(--bg-color);
+}
+
+.graph-drop-down:focus {
+    outline: none;
+    border-color: var(--sidebar-nav-color);
+    box-shadow: var(--year-drop-dwn-shadow);
+}
+
+
+/* 8. LINE CHART  */
+
+.linechart-container {
+    height: 400px;
+    animation: floatIn 0.8s ease-out;
+}
+
+@keyframes floatIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* 9. BAR CHART */
 
 .barchart-scroll {
     width: 100%;
@@ -133,12 +321,153 @@ body.dark-mode .theme-switch {
     min-width: 800px;
 }
 
-/* .dashboard-card {
-    min-height: 380px;
+
+/*  10. PIE CHART */
+
+.expense-pie-chart {
+    height: 250px;
 }
 
-@media (max-width: 576px) {
-    .dashboard-card {
-        min-height: 400px;
-    }
-} */
+
+/*  11. TABLE CONTAINERS */
+
+.exp-table {
+    height: 350px;
+    max-height: 350px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.in-table {
+    height: 350px;
+    max-height: 350px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+
+
+/*  12. EXPENSE / INCOME TABLE */
+
+.expense-table,
+.income-table {
+    width: 100%;
+    margin-bottom: 0;
+    --bs-table-bg: var(--table-bg);
+    --bs-table-color: var(--table-text);
+    --bs-table-border-color: var(--table-border);
+    background-color: var(--table-bg);
+    color: var(--table-text);
+}
+
+
+/* Table header */
+.expense-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: var(--table-header-bg);
+}
+
+.expense-table th {
+    padding: 12px 16px;
+    font-weight: 600;
+    border-bottom: 1px solid var(--border-color);
+}
+
+
+/* Table body */
+.expense-table td {
+    padding: 12px 16px;
+    vertical-align: middle;
+    border-bottom: 1px solid var(--table-border-color);
+}
+
+
+/* Edit button */
+.expense-table .btn {
+    border-radius: 8px;
+    padding: 5px 14px;
+}
+
+
+/*  13. TABLE SCROLLBAR */
+
+.table-container::-webkit-scrollbar {
+    width: 10px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+    background-color: var(--accent-color);
+    border-radius: 30px;
+}
+
+.table-container::-webkit-scrollbar-track {
+    background-color: #ffffffc6;
+}
+
+
+/* 14. BUTTONS */
+
+.btn-outline-primary {
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.btn-outline-primary:hover {
+    color: #f9f9fb;
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.btn-primary {
+    background-color: #fcfcfd;
+    color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+
+/* 15. MONTH / TOTAL */
+
+.selected-month {
+    text-align: center;
+    width: 150px;
+    display: inline-block;
+}
+
+.selected-month input[type="month"].form-control {
+    background-color: var(--input-bg) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+
+    transition:
+        background-color 0.3s ease,
+        color 0.3s ease,
+        border-color 0.3s ease;
+}
+/* Calendar icon */
+html.dark-mode
+.selected-month input[type="month"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+
+.current-month-total {
+    color: var(--accent-color);
+    font-size: 20px;
+}
+
+
+/* 16. MODAL */
+
+.modal-title {
+    color: var(--accent-color);
+}
+
