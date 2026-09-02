@@ -15,6 +15,7 @@ import java.util.List;
 import com.ivy.expense_tracker.database.ExpenseEntity;
 import com.ivy.expense_tracker.database.UserEntity;
 
+
 @Service
 public class ExpenseService {
     
@@ -192,7 +193,6 @@ public class ExpenseService {
         }
         return categoryTotals;
     }
-    
 
 
 }

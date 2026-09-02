@@ -22,6 +22,7 @@ import com.ivy.expense_tracker.service.CustomUserDetails;
 import com.ivy.expense_tracker.service.ExpenseService;
 import com.ivy.expense_tracker.service.IncomeService;
 import com.ivy.expense_tracker.service.ReportService;
+import com.ivy.expense_tracker.dto.TransactionDto;
 
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -38,6 +39,10 @@ public class HomeController {
 
     @Autowired
     private ReportService reportService;
+
+    // private final HomeController(ReportService reportService){
+    //     this.reportService = reportService;
+    // }
 
     @GetMapping("/dashboard")
     public String dashboard(
@@ -67,10 +72,10 @@ public class HomeController {
         model.addAttribute("selectedYear", selectedYear);
         List<BigDecimal> expenseMonthlyTotals = expenseService.getMonthlyTotals(email, selectedYear);
         model.addAttribute("expenseMonthlyTotals", expenseMonthlyTotals);
-        // System.out.println("expensemonthlyTotals barchart" + expenseMonthlyTotals);
         List<BigDecimal> incomeMonthlyTotals = incomeService.getMonthlyTotalsForChart(email, selectedYear);
         model.addAttribute("incomeMonthlyTotals", incomeMonthlyTotals);
-        // System.out.println("incomeMonthlyTotal barchart" + incomeMonthlyTotals);
+        List<TransactionDto> latestTransactions = reportService.getLatestTransactions(email);
+        model.addAttribute("latestTransactions", latestTransactions);
 
         return "dashboard";
     }

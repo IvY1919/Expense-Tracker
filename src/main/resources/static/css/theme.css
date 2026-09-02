@@ -49,6 +49,7 @@
     --select-bg: #ffffff;
     --select-text: #333333;
     --select-border: #ced4da;
+
 }
 
 /*  DARK MODE  */ 
@@ -91,6 +92,7 @@ html.dark-mode {
     --select-bg: #2b2b2b;
     --select-text: #f1f1f1;
     --select-border: #555555;    
+
 }
 
 /* 2. GLOBAL */
@@ -331,28 +333,27 @@ body.dark-mode .theme-switch {
 
 /*  11. TABLE CONTAINERS */
 
-.exp-table {
+.exp-table,
+.in-table,
+.trans-table {
     height: 350px;
     max-height: 350px;
-
     overflow-y: auto;
     overflow-x: hidden;
 }
 
-.in-table {
+.latest-transactions{
     height: 350px;
     max-height: 350px;
-
     overflow-y: auto;
     overflow-x: hidden;
 }
-
-
 
 /*  12. EXPENSE / INCOME TABLE */
 
 .expense-table,
-.income-table {
+.income-table,
+.latestrans-table {
     width: 100%;
     margin-bottom: 0;
     --bs-table-bg: var(--table-bg);
@@ -405,7 +406,11 @@ body.dark-mode .theme-switch {
 }
 
 .table-container::-webkit-scrollbar-track {
-    background-color: #ffffffc6;
+    background-color: #ffffffc6 !important;
+}
+
+html.dark-mode .table-container::-webkit-scrollbar-track {
+    background-color: #1e1e1e !important;
 }
 
 
@@ -438,7 +443,7 @@ body.dark-mode .theme-switch {
 
 .selected-month {
     text-align: center;
-    width: 150px;
+    width: 180px;
     display: inline-block;
 }
 

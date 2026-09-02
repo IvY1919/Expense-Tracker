@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import com.ivy.expense_tracker.database.IncomeEntity;
@@ -114,7 +113,6 @@ public class IncomeService {
         BigDecimal total = incomeRepository.getMonthlyIncomeTotal( email, startDate, endDate);
         return total != null ? total : BigDecimal.ZERO;
     }
-
 
     
 }
