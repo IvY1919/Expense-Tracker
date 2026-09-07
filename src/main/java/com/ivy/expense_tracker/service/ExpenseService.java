@@ -34,10 +34,10 @@ public class ExpenseService {
     // Get total expense for current month(dashboard)
     public BigDecimal getCurrentMonthTotal(String email){
         LocalDate today = LocalDate.now();
-        LocalDate starDate = today.withDayOfMonth(1);
+        LocalDate startDate = today.withDayOfMonth(1);
         LocalDate endDate = today.withDayOfMonth(today.lengthOfMonth());
 
-        BigDecimal total = expenseRepository.getMonthlyTotal(email, starDate, endDate);
+        BigDecimal total = expenseRepository.getMonthlyTotal(email, startDate, endDate);
 
         return total == null ? BigDecimal.ZERO : total;
     }

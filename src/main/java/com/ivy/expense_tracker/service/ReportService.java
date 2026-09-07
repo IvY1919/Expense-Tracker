@@ -68,6 +68,25 @@ public class ReportService {
 
     }
 
+    public List<TransactionDto> getAllTransactions(String email){
+
+        List<TransactionDto> trans = new ArrayList<>();
+        List<ExpenseEntity> expenses = expenseRepository.findByUserIdEmail(email);
+        List<IncomeEntity> incomes = incomeRepository.findByUserIdEmail(email);
+
+        for(ExpenseEntity expense : expenses){
+            trans.add(new TransactionDto(expense.getExpDate(), expense.getDescription(),"Expense", expense.getExpAmount()));
+        }
+
+        for(IncomeEntity income : incomes){
+            trans.add(new TransactionDto(income.getIncomeDate(), income.getDescription(),"Income", income.getIncomeAmount()));
+        }
+        trans.sort(Comparator.comparing(TransactionDto::getDate).reversed());
+
+        return trans;
+
+    }
+
 
 
     

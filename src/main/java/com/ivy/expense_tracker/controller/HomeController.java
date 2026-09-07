@@ -80,6 +80,32 @@ public class HomeController {
         return "dashboard";
     }
 
+    @GetMapping("/alltransactions")
+    public String viewAllTransactions(Model model,
+        @RequestParam (defaultValue = "0") int page,
+        Authentication authentication) {
+        String email = authentication.getName();
+        CustomUserDetails userDetails =
+            (CustomUserDetails) authentication.getPrincipal();
+
+        // model.addAttribute("title", "Expense Tracker");
+        model.addAttribute("username", userDetails.getUsernameFromDb());
+        List<TransactionDto> allTransactions = reportService.getAllTransactions(email);
+        // model.addAttribute("allTransactions", allTransactions);
+
+        int pageSize = 10;
+        int totalPage = (int) Math.ceil((double) allTransactions.size()/pageSize);
+        int start = page * pageSize;
+        int end = Math.min(start + pageSize, allTransactions.size());
+
+        List<TransactionDto> transactionsForPage = allTransactions.subList(start, end);
+
+        model.addAttribute("allTransactions", transactionsForPage);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPage);
+        return "alltransactions";
+    }
+
     // For Expense page
     @GetMapping("/expense")
     public String expense(
@@ -270,6 +296,9 @@ public class HomeController {
         
         return "redirect:/income?month=" + month + "&view=" + view;
     }
+
+
+    
     
     
 

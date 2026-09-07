@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">Expense Tracker</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css"
+          rel="stylesheet">
+    <script>
+        if (localStorage.getItem("theme") === "dark") {
+            document.documentElement.classList.add("dark-mode");
+        }
+    </script>
+    <link rel="stylesheet" th:href="@{/css/theme.css}">
+</head>
+<body>
+    <div class="wrapper">
+
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h4>Expense Tracker</h4>
+            </div>
+
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link" href="/dashboard">
+                        <i class="bi bi-speedometer2"></i>
+                        Dashboard
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/expense">
+                        <i class="bi bi-wallet2"></i>
+                        Expenses
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/income">
+                        <i class="bi bi-cash-stack"></i>
+                        Income
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="/alltransactions">
+                        <i class="bi bi-arrow-left-right"></i>
+                        Transactions
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-gear"></i>
+                        Settings
+                    </a>
+                </li>
+            </ul>
+            <hr>
+            <div class="theme-switch">
+                <button id="lightBtn" class="theme-btn">
+                    <i class="bi bi-brightness-high"></i> Light
+                </button>
+                <button id="darkBtn" class="theme-btn active">
+                    <i class="bi bi-moon"></i> Dark
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="main">
+            <!-- Navbar -->
+            <nav class="navbar navbar-expand-lg shadow-sm main-navbar">
+                <div class="container-fluid position-relative">
+                    <span class="brand">
+                        Welcome, <span th:text="${username}"></span>
+                    </span>                
+                    <div class="current-date position-absolute top-50 start-50 translate-middle">
+                        <h3 class="current_date mb-0" th:text="${#temporals.format(T(java.time.LocalDate).now(), 'dd MMMM, yyyy', T(java.util.Locale).ENGLISH)}">August, 2026</h3>
+                    </div>
+                    <form th:action="@{/logout}" method="post" class="ms-auto me-3">
+                        <button type="submit" class="btn btn-outline-danger">
+                        Logout
+                        </button>
+                    </form>
+                </div>
+            </nav>
+
+            <!-- Page Content -->
+
+            <div class="card ms-3 mt-3">
+                <div class="card-body card-body-shadow d-flex flex-column">
+                    <div class="row align-items-center">
+                        <div class="table-container all-trans-table">
+                            <h4>All Transactions</h4>
+                            <table class="table alltrans-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th>Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="transaction : ${allTransactions}">
+                                        <td th:text = "${transaction.description}"></td>
+                                        <td th:text = "${transaction.date}"></td>
+                                        <td>
+                                            <span th:if="${transaction.type == 'Income'}"
+                                                class="text-success"
+                                                th:text="'+' + ${transaction.amount}"></span>
+                                            <span th:if="${transaction.type == 'Expense'}"
+                                                class="text-danger"
+                                                th:text="'-' + ${transaction.amount}"></span>
+                                            </td>
+                                        </tr>
+                                </tbody>
+                            </table>
+                            <div class="pagination-container mt-4" th:if="${totalPages >1}" aria-label="Transaction pagination">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                                        <a class="page-link" th:href="@{/alltransactions(page=${currentPage -1})}"><i class="bi bi-caret-left-fill"></i></a>
+                                    </li>
+                                    <li class="page-item" th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"
+                                            th:classappend="${pageNumber == currentPage} ? 'active'">
+                                            <a class="page-link" th:href="@{/alltransactions(page=${pageNumber})}" th:text="${pageNumber + 1}"></a>
+                                    </li>
+                                    <li class="page-item" th:classappend="${currentPage == totalPages -1} ? 'disabled'">
+                                        <a class="page-link" th:href="@{/alltransactions(page=${currentPage +1})}"><i class="bi bi-caret-right-fill"></i></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>              
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <!-- JavaScript -->
+    <script th:src="@{/js/theme.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        
+        const lightBtn = document.getElementById("lightBtn");
+        const darkBtn = document.getElementById("darkBtn");
+        const savedTheme = localStorage.getItem("theme");
+        
+        function getChartThemeColors() { 
+            const styles = getComputedStyle(document.documentElement); 
+            return { textColor: styles .getPropertyValue("--chart-text-color") .trim(), 
+                     gridColor: styles .getPropertyValue("--chart-grid-color") .trim() 
+                    }; 
+        }
+       
+        function updateThemeButtons() {
+            if (document.documentElement.classList.contains("dark-mode")) {
+                darkBtn.classList.add("active");
+                lightBtn.classList.remove("active");
+            } else {
+                lightBtn.classList.add("active");
+                darkBtn.classList.remove("active");
+            }
+        }
+
+        lightBtn.addEventListener("click", () => {
+            localStorage.setItem("theme", "light");
+            location.reload();
+        });
+
+        darkBtn.addEventListener("click", () => {
+            localStorage.setItem("theme", "dark");
+            location.reload();
+        });
+
+        if(savedTheme ==="dark"){
+            document.documentElement.classList.add("dark-mode");
+        }else{
+            document.documentElement.classList.remove("dark-mode");
+        }
+
+        // 7. Initialize everything 
+        updateThemeButtons();
+
+    </script>
+
+</body>
+</html>
