@@ -1,6 +1,8 @@
 package com.ivy.expense_tracker.controller;
 
+import com.ivy.expense_tracker.service.UserService;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.List;
@@ -25,11 +27,15 @@ import com.ivy.expense_tracker.service.ReportService;
 import com.ivy.expense_tracker.dto.TransactionDto;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 
 
 @Controller
 public class HomeController {
+
+    private final UserService userService;
 
     @Autowired
     private ExpenseService expenseService;
@@ -39,6 +45,10 @@ public class HomeController {
 
     @Autowired
     private ReportService reportService;
+
+    HomeController(UserService userService) {
+        this.userService = userService;
+    }
 
     // private final HomeController(ReportService reportService){
     //     this.reportService = reportService;
@@ -63,6 +73,7 @@ public class HomeController {
         model.addAttribute("monthlyincomeTotal", monthlyincomeTotal);
         BigDecimal monthlyRemainingTotal = reportService.getCurrentMontRemainingTotal(email);
         model.addAttribute("monthlyRemainingTotal", monthlyRemainingTotal);
+        
 
         if(year == null || year.isBlank()){
             year = Year.now().toString();
@@ -76,6 +87,22 @@ public class HomeController {
         model.addAttribute("incomeMonthlyTotals", incomeMonthlyTotals);
         List<TransactionDto> latestTransactions = reportService.getLatestTransactions(email);
         model.addAttribute("latestTransactions", latestTransactions);
+
+        // Get user targetAmount
+        BigDecimal targetAmount = userService.getTargetAmount(email);
+        BigDecimal monthlySpent = expenseService.getCurrentMonthTotal(email);
+        double budgetPercentage  = 0.0;
+        if(targetAmount !=null && targetAmount.compareTo(BigDecimal.ZERO) > 0){
+            budgetPercentage  = monthlySpent.divide(targetAmount,4,RoundingMode.HALF_UP).doubleValue()*60.0;
+        }
+        budgetPercentage  = Math.min(budgetPercentage , 100.0);
+        // Target position is always 60%
+        // double targetPercentage = 60.0;
+
+        model.addAttribute("monthlySpent", monthlySpent);
+        model.addAttribute("targetAmount", targetAmount);
+        model.addAttribute("budgetPercentage", budgetPercentage);
+        // model.addAttribute("targetPercentage", targetPercentage); 
 
         return "dashboard";
     }
@@ -296,6 +323,17 @@ public class HomeController {
         
         return "redirect:/income?month=" + month + "&view=" + view;
     }
+
+    @PostMapping("/budget/add")
+    public String addBudget(@RequestParam("targetAmount") BigDecimal targetAmount,
+                            Authentication authentication) {
+        
+        String email = authentication.getName();
+        userService.updateTargetAmount(email, targetAmount);
+        
+        return "redirect:/dashboard";
+    }
+    
 
 
     

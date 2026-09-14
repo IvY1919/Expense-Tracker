@@ -184,7 +184,44 @@
                     <div class="col-12 col-lg-8">
                         <div class="card h-100 dashboard-card" >
                             <div class="card-body card-body-shadow">
-                                card1
+                                <div class="budget-goal-card">
+                                    <!-- Header -->
+                                    <div class="budget-goal-header">
+                                        <div class="budget-title">
+                                            Monthly Budget
+                                        </div>
+                                        <button type="button"
+                                                class="add-target-btn"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#targetModal">
+                                            + Add Target
+                                        </button>
+                                    </div>
+
+                                    <div class="budget-progress-container">
+                                        <div class="budget-amount-row">
+                                            <div class="budget-amount budget-spent">
+                                                <span class="coin-icon"><i class="bi bi-coin"></i></span>
+                                               <span th:text="${monthlySpent}" th:classappend="${monthlySpent.compareTo(targetAmount) > 0} ? 'budget-over' : ''">¥12345</span>
+                                            </div>
+                                            <div class="budget-amount budget-target">
+                                                <span class="flag-icon"><i class="bi bi-flag-fill"></i></span>
+                                                <span th:text="${targetAmount != null ? targetAmount : 0}">¥100,000</span>
+                                            </div>
+                                        </div>
+                                    </div> 
+
+                                    <div class="budget-bar-wrapper">
+                                        <div class="budget-progress-bar">
+                                            <div class="budget-progress-fill" th:style="|width: ${budgetPercentage}%;|"></div>
+                                        </div>
+                                        <div class="budget-target-marker">
+                                            <div class="target-line"></div>
+                                            <!-- <div class="target-arrow">↓</div> -->
+                                        </div>
+                                    </div>                                                         
+
+                                </div>
                             </div>
                         </div>
                     </div>              
@@ -212,9 +249,50 @@
                 </div>
             </div>                
         </div>
-
-
     </div>
+
+    <!-- add budget modal -->
+     <div class="modal fade" id="targetModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-cnetered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"> Set Monthly Target </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form th:action="@{/budget/add}" method="post">
+                    <div class="modal-body">
+                        <label for="targetAmount" class="form-label">
+                            Target Amount
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                ¥
+                            </span>
+                            <input type="number"
+                                id="targetAmount"
+                                name="targetAmount"
+                                class="form-control"
+                                min="1"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal">
+                            Cancel
+                        </button>
+                        <button type="submit"
+                                class="btn btn-primary">
+                            Save Target
+                        </button>
+                    </div>
+                </form>                
+            </div>
+        </div>
+     </div>
+
 
     <!-- JavaScript -->
     <script th:src="@{/js/theme.js}"></script>

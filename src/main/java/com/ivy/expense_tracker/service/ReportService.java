@@ -1,6 +1,7 @@
 package com.ivy.expense_tracker.service;
 
 import java.math.BigDecimal;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -13,6 +14,7 @@ import com.ivy.expense_tracker.database.IncomeEntity;
 import com.ivy.expense_tracker.dto.TransactionDto;
 import com.ivy.expense_tracker.repository.ExpenseRepository;
 import com.ivy.expense_tracker.repository.IncomeRepository;
+
 
 @Service
 public class ReportService {
@@ -86,8 +88,6 @@ public class ReportService {
         return trans;
 
     }
-
-
 
     
 }

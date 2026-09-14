@@ -50,6 +50,15 @@
     --select-text: #333333;
     --select-border: #ced4da;
 
+    --budget-card-color:#fffaf0;
+    --budget-card-border-color :1px solid #eadfca;
+    --budget-progress-fill: #f5eab5;
+    --add-target-hover-bg: #f5eab5;
+    --add-target-bg: transparent;
+    --add-target-txt-color-hover: #777;
+    --target-line-color: #ffbb00;
+
+
 }
 
 /*  DARK MODE  */ 
@@ -82,7 +91,8 @@ html.dark-mode {
 
     --main-color: #111827; 
     /* Accent */
-    --accent-color: #bdb9ff;
+    --accent-color: #6c63ff;
+    /* --accent-color: #bdb9ff; */
     /* Chart color */
     --chart-text-color: #f3f4f6;
     --chart-grid-color: rgba(255, 255, 255, 0.15);
@@ -91,7 +101,15 @@ html.dark-mode {
     --year-drop-dwn-shadow: 0 0 0 3px #948ef8e9;
     --select-bg: #2b2b2b;
     --select-text: #f1f1f1;
-    --select-border: #555555;    
+    --select-border: #555555;   
+    
+    --budget-card-color:#1e1e1f;
+    --budget-card-border-color :#eadfca;
+    --budget-progress-fill: #f5eab5;
+    --add-target-hover-bg: transparent;
+    --add-target-bg: #f5eab5;
+    --add-target-txt-color-hover: #f3f3f3;
+    --target-line-color: #ffbb00;
 
 }
 
@@ -527,4 +545,81 @@ html.dark-mode .pagination .page-item.active .page-link {
     color: #222222;
     border-color: #ffffff;
 }
+
+.budget-goal-card {
+    background: var(--budget-card-color);
+    border: var(--budget-card-border-color);
+    border-radius: 6px;
+    padding: 12px 14px;
+    width: 100%;
+}
+
+
+/* Header */
+
+.budget-goal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.budget-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* Add Target button */
+.add-target-btn {
+    border: 1px solid #d8c88b;
+    background: var(--add-target-bg);
+    color: #777;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 4px 9px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.add-target-btn:hover {
+    background: var(--add-target-hover-bg);
+    color: var(--add-target-txt-color-hover);
+}
+
+.budget-progress-container { width: 100%; }
+
+.budget-amount-row { position: relative; width: 100%; height: 45px; margin-bottom: 4px; }
+
+.budget-amount { position: absolute; top: 0; display: flex; align-items: center; gap: 5px; font-size: 0.95rem; font-weight: 600; }
+
+.budget-spent { left: 0; }
+
+.budget-target { left: 60%; transform: translateX(-50%); white-space: nowrap; }
+
+.coin-icon, .flag-icon { display: inline-flex; align-items: center; justify-content: center; font-size:20px; }
+.coin-icon{color: #d3d603;} .flag-icon{color: #ff6969;} .budget-over {color: #ff6b7a;}
+
+.budget-bar-wrapper { position: relative; width: 100%; height: 30px; }
+
+.budget-progress-bar { 
+    position: absolute; 
+    left: 0; right: 0; top: 50%; height: 15px; 
+    transform: translateY(-50%); 
+    background-color: #e5e7eb; 
+    border-radius: 999px; 
+    overflow: visible; }
+
+.budget-progress-fill { 
+    height: 100%; 
+    border-radius: 999px; 
+    background-color: var(--budget-progress-fill); 
+    transition: width 0.4s ease; }
+
+.budget-target-marker { position: absolute; left: 60%; top: 0; width: 0; height: 100%; transform: translateX(-50%); z-index: 5; }
+
+.target-line { position: absolute; left: 0; top: 3px; width: 2px; height: 24px; transform: translateX(-50%); background-color: var(--target-line-color); }
+
+.target-arrow { position: absolute; left: 0; top: -3px; transform: translateX(-50%); font-size: 16px; font-weight: 600; line-height: 1; background: transparent; }
 

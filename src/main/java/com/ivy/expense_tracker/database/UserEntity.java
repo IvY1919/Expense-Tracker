@@ -1,7 +1,7 @@
 package com.ivy.expense_tracker.database;
 
 import java.time.LocalDateTime;
-
+import java.math.BigDecimal;
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.*;
@@ -23,6 +23,9 @@ public class UserEntity {
     
     @Column(name = "password", nullable = false)
     private String password;
+
+    @Column(name = "target_amt")
+    private BigDecimal targetAmount;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -62,6 +65,14 @@ public class UserEntity {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public BigDecimal getTargetAmount() {
+        return targetAmount;
+    }
+
+    public void setTargetAmount(BigDecimal targetAmount) {
+        this.targetAmount = targetAmount;
     }
 
 
