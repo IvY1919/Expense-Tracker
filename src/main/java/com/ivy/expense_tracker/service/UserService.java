@@ -34,6 +34,7 @@ public class UserService {
         user.setUsername(username);
         user.setEmail(email);
         user.setPassword(passwordEncoder.encode(password));
+        user.setTargetAmount(BigDecimal.ZERO);
 
         return userRepository.save(user);
 

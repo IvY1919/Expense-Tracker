@@ -89,5 +89,21 @@ public class ReportService {
 
     }
 
+    // Get all totals
+    public BigDecimal getTotal(String email){
+        BigDecimal totalExpense = expenseRepository.getTotalExpense(email);
+        BigDecimal totalIncome = incomeRepository.getTotalIncome(email);      
+        
+        if (totalExpense == null) {
+        totalExpense = BigDecimal.ZERO;
+        }
+
+        if (totalIncome == null) {
+            totalIncome = BigDecimal.ZERO;
+        }
+
+        return totalIncome.subtract(totalExpense);
+    }
+
     
 }

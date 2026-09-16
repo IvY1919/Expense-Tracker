@@ -10,7 +10,6 @@ import java.util.Map;
 import java.time.YearMonth;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,10 +26,6 @@ import com.ivy.expense_tracker.service.ReportService;
 import com.ivy.expense_tracker.dto.TransactionDto;
 
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-
-
-
 
 @Controller
 public class HomeController {
@@ -96,13 +91,13 @@ public class HomeController {
             budgetPercentage  = monthlySpent.divide(targetAmount,4,RoundingMode.HALF_UP).doubleValue()*60.0;
         }
         budgetPercentage  = Math.min(budgetPercentage , 100.0);
-        // Target position is always 60%
-        // double targetPercentage = 60.0;
 
+        BigDecimal totalsaving = reportService.getTotal(email);
+        
         model.addAttribute("monthlySpent", monthlySpent);
         model.addAttribute("targetAmount", targetAmount);
         model.addAttribute("budgetPercentage", budgetPercentage);
-        // model.addAttribute("targetPercentage", targetPercentage); 
+        model.addAttribute("totalsaving", totalsaving);
 
         return "dashboard";
     }

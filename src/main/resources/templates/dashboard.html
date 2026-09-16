@@ -136,7 +136,9 @@
                             <div class="card-body card-body-shadow"   style="color: #d2ca37;">
                                 <h5><i class="bi bi-coin"></i>
                                 Total Saving</h5>
-                                <h2>¥56,500</h2>
+                                <div class="d-flex align-items-baseline gap-2">
+                                    <h2>¥<span th:text="${#numbers.formatDecimal(totalsaving,0, 'COMMA', 0, 'POINT')}"></h2>                                    
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -202,11 +204,11 @@
                                         <div class="budget-amount-row">
                                             <div class="budget-amount budget-spent">
                                                 <span class="coin-icon"><i class="bi bi-coin"></i></span>
-                                               <span th:text="${monthlySpent}" th:classappend="${monthlySpent.compareTo(targetAmount) > 0} ? 'budget-over' : ''">¥12345</span>
+                                               <span th:text="${#numbers.formatDecimal(monthlySpent,0, 'COMMA', 0, 'POINT')}" th:classappend="${monthlySpent.compareTo(targetAmount) > 0} ? 'budget-over' : ''">¥12345</span>
                                             </div>
                                             <div class="budget-amount budget-target">
                                                 <span class="flag-icon"><i class="bi bi-flag-fill"></i></span>
-                                                <span th:text="${targetAmount != null ? targetAmount : 0}">¥100,000</span>
+                                                <span th:text="${targetAmount != null ? #numbers.formatDecimal(targetAmount,0, 'COMMA', 0, 'POINT') : 0}">¥100,000</span>
                                             </div>
                                         </div>
                                     </div> 
