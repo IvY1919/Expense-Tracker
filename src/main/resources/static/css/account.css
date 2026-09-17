@@ -1,0 +1,43 @@
+:root {
+--icon-color: #d0ceffe9;
+--box-shadow: 0 5px 10px #dacbfce9;
+--box-border: 1px solid #948ef8e9;
+}
+
+html.dark-mode { 
+--icon-color:#948ef8e9;
+--box-shadow:  0 5px 10px #948ef8e9;
+--box-border: 1px solid #948ef8e9;
+}
+
+.account-user-icon {
+     width: 100px;
+     height: 100px; 
+     margin: 0 auto; 
+     border-radius: 50%; 
+     display: flex; 
+     align-items: center; 
+     justify-content: center; 
+     font-size: 55px; 
+     background-color: var(--icon-color); } 
+     
+.account-info {
+    max-width: 500px; 
+    margin: 0 auto; } 
+    
+.account-info .form-control { 
+    min-height: 42px;
+    display: flex; 
+    align-items: center;
+    gap: 5px; 
+
+    /* Glow effect */
+    box-shadow: var(--box-shadow);
+
+    border: var(--box-border);
+    border-radius: 8px;}
+
+#deleteConfirmation{
+    width: 320px;
+}
+

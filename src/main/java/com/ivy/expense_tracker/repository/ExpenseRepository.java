@@ -10,12 +10,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.ivy.expense_tracker.database.ExpenseEntity;
+import com.ivy.expense_tracker.database.UserEntity;
 
 public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long>{
 
     List<ExpenseEntity> findByUserIdEmail(String email);
 
     Optional<ExpenseEntity> findByExpIdAndUserIdEmail(Long expId,String email);
+
+    void deleteByUserId(UserEntity userId);
 
     // Get total expense for current month
     @Query("""

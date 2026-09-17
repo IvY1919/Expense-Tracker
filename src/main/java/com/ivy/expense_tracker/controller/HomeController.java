@@ -19,6 +19,7 @@ import org.springframework.security.core.Authentication;
 
 import com.ivy.expense_tracker.database.ExpenseEntity;
 import com.ivy.expense_tracker.database.IncomeEntity;
+import com.ivy.expense_tracker.database.UserEntity;
 import com.ivy.expense_tracker.service.CustomUserDetails;
 import com.ivy.expense_tracker.service.ExpenseService;
 import com.ivy.expense_tracker.service.IncomeService;
@@ -26,6 +27,8 @@ import com.ivy.expense_tracker.service.ReportService;
 import com.ivy.expense_tracker.dto.TransactionDto;
 
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 public class HomeController {
@@ -93,7 +96,7 @@ public class HomeController {
         budgetPercentage  = Math.min(budgetPercentage , 100.0);
 
         BigDecimal totalsaving = reportService.getTotal(email);
-        
+
         model.addAttribute("monthlySpent", monthlySpent);
         model.addAttribute("targetAmount", targetAmount);
         model.addAttribute("budgetPercentage", budgetPercentage);
@@ -327,6 +330,30 @@ public class HomeController {
         userService.updateTargetAmount(email, targetAmount);
         
         return "redirect:/dashboard";
+    }
+    
+    @GetMapping("/account_setting")
+    public String accountsetting(
+        Model model,Authentication authentication) {
+
+        String email = authentication.getName();
+        CustomUserDetails userDetails =
+            (CustomUserDetails) authentication.getPrincipal();
+        
+        UserEntity user = userService.findByEmail(email);
+
+        model.addAttribute("username", userDetails.getUsernameFromDb());
+        model.addAttribute("email", user.getEmail());
+
+        return "account_setting";
+    }
+
+    @PostMapping("/account/delete")
+    public String deleteAccount(Authentication authentication) {
+       
+        String email = authentication.getName();
+        userService.deleteAccount(email);        
+        return "redirect:/login";
     }
     
 

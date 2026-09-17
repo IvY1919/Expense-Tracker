@@ -1,6 +1,9 @@
 package com.ivy.expense_tracker.service;
 import com.ivy.expense_tracker.database.UserEntity;
+import com.ivy.expense_tracker.repository.ExpenseRepository;
+import com.ivy.expense_tracker.repository.IncomeRepository;
 import com.ivy.expense_tracker.repository.UserRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -10,14 +13,18 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
+    private final IncomeRepository incomeRepository;
+    private final ExpenseRepository expenseRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
     public UserService( UserRepository userRepository,
-        PasswordEncoder passwordEncoder){
+        PasswordEncoder passwordEncoder, ExpenseRepository expenseRepository, IncomeRepository incomeRepository){
         
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.expenseRepository = expenseRepository;
+        this.incomeRepository = incomeRepository;
         }
 
     // For Sign Up 
@@ -56,8 +63,18 @@ public class UserService {
         return user.getTargetAmount();
     }
 
-
+    public UserEntity findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
     
+    @Transactional
+    public void deleteAccount(String email){
+        UserEntity user = userRepository.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
+        expenseRepository.deleteByUserId(user);
+        incomeRepository.deleteByUserId(user);
+        userRepository.delete(user);
+    }
 
     
 }
