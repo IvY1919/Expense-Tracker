@@ -25,19 +25,34 @@ html.dark-mode {
     max-width: 500px; 
     margin: 0 auto; } 
     
-.account-info .form-control { 
+ .account-info .form-control { 
     min-height: 42px;
     display: flex; 
     align-items: center;
     gap: 5px; 
-
-    /* Glow effect */
     box-shadow: var(--box-shadow);
-
     border: var(--box-border);
-    border-radius: 8px;}
+    border-radius: 8px;} 
 
 #deleteConfirmation{
     width: 320px;
+}
+
+#editUsernameBtn{
+    color:  #9046e599;
+}
+
+#editUsernameBtn:hover{
+    color:  #9046e5;
+}
+
+.input-group-text{
+    border-left: none;
+    border-radius: 0 14px 14px 0;
+    /* background: transparent; */
+    border: 1px solid #e2e8f0;
+    border-right: none;
+    border-radius: 14px 0 0 14px;
+    padding-right: 0.3rem;
 }
 

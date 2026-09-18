@@ -2,6 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org" data-bs-theme="light" lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}">
+    <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <!-- <title th:text="${title}">Expense</title> -->
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
@@ -115,7 +117,17 @@
                                     <label class="form-label fw-bold"> UserName </label> 
                                     <div class="form-control"> 
                                         <span class="input-group-text"><i class="bi bi-person"></i></span>
-                                        <span th:text="${username}">Username</span> 
+                                        <span id="usernameText" th:text="${username}">Username</span> 
+                                        <input type="text" id="usernameInput" th:value="${username}" class="form-control" style="display: none;">
+                                        <button type="button" id="editUsernameBtn" class="btn btn-link ms-auto -0" title="Edit Username">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
+                                        <button type="button" id="saveUsernameBtn" class="btn  btn-outline-success btn-sm" style="display: none;">
+                                             <i class="bi bi-check-lg"></i>     
+                                        </button>
+                                        <button type="button" id="cancleUsernameBtn" class="btn btn-outline-danger btn-sm" style="display: none;">
+                                            <i class="bi bi-x-lg"></i>
+                                        </button>
                                     </div>
                                 </div>
                                 <!-- Email -->
@@ -154,7 +166,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id=""deleteAccountModalLabel>
+                    <h5 class="modal-title" id="deleteAccountModalLabel">
                         Delete Account
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -239,6 +251,92 @@
                 input.classList.remove("is-invalid");
             }
         });
+
+        const editBtn = document.getElementById("editUsernameBtn");
+        const saveBtn = document.getElementById("saveUsernameBtn");
+        const cancleBtn = document.getElementById("cancleUsernameBtn");
+
+        const usernameText = document.getElementById("usernameText");
+        const usernameInput = document.getElementById("usernameInput");
+
+        editBtn.addEventListener("click", function() {
+            // Hide username text
+            usernameText.style.display = "none";
+            // Show input
+            usernameInput.style.display = "block";
+            // Hide edit button
+            editBtn.style.display = "none";
+            // Show save button
+            saveBtn.style.display = "inline-block";
+            cancleBtn.style.display = "inline-block";
+            // Focus input
+            usernameInput.focus();
+        });
+
+        cancleBtn.addEventListener("click", function(){
+                usernameInput.style.display = "none";
+                usernameText.style.display = "inline";
+                saveBtn.style.display = "none";
+                cancleBtn.style.display = "none";
+                editBtn.style.display = "inline-block";
+        });
+
+        saveBtn.addEventListener("click", function() {
+            const newUsername = usernameInput.value.trim();
+            if (newUsername === "") {
+                alert("Username cannot be empty.");
+                return;
+            }
+        // Get CSRF token
+            const csrfToken = document.querySelector(
+                'meta[name="_csrf"]'
+            ).getAttribute("content");
+
+            const csrfHeader = document.querySelector(
+                'meta[name="_csrf_header"]'
+            ).getAttribute("content");
+
+            fetch("/account/update-username", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    [csrfHeader]: csrfToken
+                },
+                body: JSON.stringify({
+                    username: newUsername
+                })
+            })
+            .then(response => {
+                console.log("Status:", response.status);
+
+                return response.text().then(data => {
+
+                    console.log("Response:", data);
+
+                    if (!response.ok) {
+                        throw new Error(data || "Failed to update username");
+                    }
+                    return data;
+            });
+        })
+            .then(data => {
+                usernameText.textContent = newUsername;
+                usernameInput.style.display = "none";
+                usernameText.style.display = "inline";
+                saveBtn.style.display = "none";
+                cancleBtn.style.display = "none";
+                editBtn.style.display = "inline-block";
+                alert("Username updated successfully!");                
+                window.location.href = "/account_setting";               
+                
+            })
+            .catch(error => {
+                console.error("Update username error:", error);
+                alert("Failed to update username: " + error.message);
+            });
+
+        });
+
     </script>
 
 </body>

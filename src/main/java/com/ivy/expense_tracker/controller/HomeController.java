@@ -10,12 +10,17 @@ import java.util.Map;
 import java.time.YearMonth;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.ivy.expense_tracker.database.ExpenseEntity;
 import com.ivy.expense_tracker.database.IncomeEntity;
@@ -343,6 +348,7 @@ public class HomeController {
         UserEntity user = userService.findByEmail(email);
 
         model.addAttribute("username", userDetails.getUsernameFromDb());
+        model.addAttribute("username", user.getUsername());
         model.addAttribute("email", user.getEmail());
 
         return "account_setting";
@@ -356,7 +362,28 @@ public class HomeController {
         return "redirect:/login";
     }
     
+    @PostMapping("/account/update-username")
+    @ResponseBody
+    public ResponseEntity<String> updateUsername(
+            Authentication authentication,
+            @RequestBody Map<String, String> request) {
 
+        String email = authentication.getName();
+        String newUsername = request.get("username");
+        // Update username in database
+        userService.updateUsername(email, newUsername);
+        // Get updated user from database
+        UserEntity updatedUser = userService.findByEmail(email);
+        // Create updated CustomUserDetails
+        CustomUserDetails updatedUserDetails = new CustomUserDetails(updatedUser);
+        // Create new Authentication
+        Authentication newAuthentication = new UsernamePasswordAuthenticationToken(updatedUserDetails, authentication.getCredentials(),updatedUserDetails.getAuthorities());
+        // Update Spring Security Context
+        SecurityContextHolder.getContext().setAuthentication(newAuthentication);
+
+        return ResponseEntity.ok("Username updated");
+
+    }
 
     
     

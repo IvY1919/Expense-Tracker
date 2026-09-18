@@ -76,5 +76,12 @@ public class UserService {
         userRepository.delete(user);
     }
 
+    @Transactional
+    public void updateUsername(String email, String newUsername){
+        UserEntity user = userRepository.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
+        user.setUsername(newUsername);
+        userRepository.save(user);
+    }
+
     
 }
