@@ -14,7 +14,7 @@
 </head>
 <body>
 <div class="login-card">
-    <form th:action="@{/signup}" method="post">
+    <form th:action="@{/signup}" method="post" id="form">
         <div class="row g-0">
                 <!-- login form -->
                 <div class="col-lg-6 col-md-6">
@@ -54,8 +54,21 @@
                             </div>
                         </div>
 
+                        <div>
+                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" placeholder="Reenter Your Password" required>
+                            </div>
+                        </div>
+
+                        <!-- Error message -->
+                        <div id="passwordError" class="text-danger mt-1" style="display: none;">
+                              The two passwords do not match.
+                        </div>
+
                         <!-- login button -->
-                        <button class="btn btn-login mt-3">
+                        <button type="submit" class="btn btn-login mt-3">
                         <i class="bi bi-box-arrow-in-right me-2"></i> Sign Up
                         </button>
 
@@ -75,5 +88,21 @@
         </div>
     </form>
 </div>
+<script>
+
+    const passwordInput = document.getElementById("passwordInput");
+    const confirmPassword = document.getElementById("confirmPassword");
+    const passwordError = document.getElementById("passwordError");
+
+    form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+        if(passwordInput.value !== confirmPassword.value){
+            passwordError.style.display = "block";
+            return;
+        }
+        passwordError.style.display = "none";
+        
+    });
+</script>
 </body>
 </html>

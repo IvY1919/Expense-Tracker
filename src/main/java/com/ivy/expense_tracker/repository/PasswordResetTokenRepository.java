@@ -1,7 +1,5 @@
 package com.ivy.expense_tracker.repository;
 
-import java.lang.foreign.Linker.Option;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.ivy.expense_tracker.database.PasswordResetTokenEntity;
 
