@@ -30,6 +30,8 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/login",
                     "/signup",
+                    "/forgetPwd",
+                    "/changePwd",
                     "/css/**",
                     "/js/**",
                     "/gallary/**"

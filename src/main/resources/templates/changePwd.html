@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <title th:text="${title}">Login</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+</head>
+<body>
+<div class="login-card">
+    <form id="passwordForm">
+        <div class="row g-0">
+            <!-- login form -->
+            <div class="col-lg-6 col-md-6">
+                <div class="login-form">
+                    <div class="title-decor">
+                        <h2>Forgot Your Password?</h2>
+                        <p>Please enter your email. We will email you a link to change password.</p>
+                    </div>
+                                        
+                    <!-- password -->
+                    <div  class="mb-2">
+                        <label for="passwordInput" class="form-label">New Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                            <input type="password" class="form-control" name="newpassword" id="newPassword" placeholder="Your new Password" required>
+                        </div>
+                    </div>
+
+                    <div  class="mb-2">
+                        <label for="confirmPassword" class="form-label">Reenter Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                            <input type="password" class="form-control" name="confirmPassword" id="confirmPassword" placeholder="Your new Password" required>
+                        </div>
+                    </div>
+
+                    <!-- Error message -->
+                   <div id="passwordError" class="text-danger mt-1" style="display: none;">
+                      The two passwords do not match.
+                   </div>
+                    
+                    <hr>
+                    <!-- send button -->
+                    <button type="submit" class="btn btn-login mt-3" id="sendBtn">
+                        <i class="bi bi-box-arrow-in-right me-2"></i> SEND
+                    </button>
+
+                </div>
+           
+            </div>
+            <div class="col-lg-6 col-md-6">
+            <div class="login-image">
+                <img th:src="@{/gallary/forget password.jpg}" alt="Fleurs et jardin" class="img-fluid">
+            </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script>
+
+console.log("===== CHANGE PWD SCRIPT LOADED =====");
+
+const form = document.getElementById("passwordForm");
+const newPassword = document.getElementById("newPassword");
+const confirmPassword = document.getElementById("confirmPassword");
+const passwordError = document.getElementById("passwordError");
+const csrfToken = document.querySelector('meta[name="_csrf"]').content;
+const csrfHeader = document.querySelector('meta[name="_csrf_header"]').content;
+
+console.log("Form:", form);
+console.log("New password:", newPassword);
+console.log("Confirm password:", confirmPassword);
+
+form.addEventListener("submit", async function(event) {
+
+    console.log("===== SUBMIT EVENT FIRED =====");
+
+    event.preventDefault();
+
+    if (newPassword.value !== confirmPassword.value) {
+
+        console.log("Passwords do NOT match");
+
+        passwordError.style.display = "block";
+        return;
+    }
+
+    passwordError.style.display = "none";
+
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+
+    console.log("Token:", token);
+
+    if (!token) {
+        console.log("No token found!");
+
+        alert("Invalid password reset link.");
+        return;
+    }
+
+    console.log("Calling POST /changePwd...");
+
+    const response = await fetch("/changePwd", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            [csrfHeader]: csrfToken
+        },
+        body: JSON.stringify({
+            token: token,
+            newPassword: newPassword.value
+        })
+    });
+
+    console.log("Response status:", response.status);
+
+    const result = await response.text();
+
+    console.log("Server response:", result);
+
+    if (response.ok) {
+
+        alert("Password changed successfully!");
+
+        window.location.href = "/login";
+
+    } else {
+
+        alert(result);
+    }
+
+});
+
+</script>
+
+</body>
+</html>

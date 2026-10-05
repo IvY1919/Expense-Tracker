@@ -29,7 +29,7 @@ public class AuthenticationController {
     @GetMapping("/signup")
     public String signup() {
         return "signup";
-    }    
+    }
 
     @PostMapping("/signup")
     public String register(@RequestParam String username,
@@ -46,18 +46,6 @@ public class AuthenticationController {
         }
 
     }  
-
-    // @PostMapping("/login")
-    // public String postMethodName(@RequestParam String email, @RequestParam String password, Model model) {
-    //     Optional<UserEntity> user = userRepository.findByEmail(email);
-    //     if (user.isEmpty()) {
-    //     model.addAttribute("emailNotFound", "Email not found");
-    //     return "login";
-    //     }
-        
-    //     return "redirect:/dashboard";
-    // }
-    
 
 
     

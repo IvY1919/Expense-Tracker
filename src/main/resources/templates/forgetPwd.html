@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${title}">Login</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+</head>
+<body>
+<div class="login-card">
+    <form th:action="@{/forgetPwd}" method="post">
+        <div class="row g-0">
+            <div class="col-lg-6 col-md-6">
+                <div class="login-image">
+                    <img th:src="@{/gallary/forget password.jpg}" alt="Fleurs et jardin" class="img-fluid">
+                </div>
+            </div>
+
+            <!-- login form -->
+            <div class="col-lg-6 col-md-6">
+                <div class="login-form">
+                    <div class="title-decor">
+                        <h2>Forgot Your Password?</h2>
+                        <p>Please enter your email. We will email you a link to change password.</p>
+                    </div>
+                                        
+                    <!-- email -->
+                    <div class="mb-2">
+                        <label for="emailInput" class="form-label">Email</label>
+                        <div th:if="${param.emailNotFound}" class="text-danger mt-1"> Email not registered.</div>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-person"></i></span>
+                            <input type="email" class="form-control" name="email" id="emailInput" placeholder="your-email@gmail.com" required>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    <!-- send button -->
+                    <button class="btn btn-login mt-3" id="sentBtn">
+                    <i class="bi bi-box-arrow-in-right me-2"></i> SEND
+                    </button>
+                    
+                    <div id="countdownMsg" class="text-success text-muted mt-1" style="display: none;">
+                        Email sent! You can resend the email in <span id="countdown">60</span>seconds.
+                    </div>
+
+                    <div id="resendMsg" class="text-muted mt-1" style="display: none;">
+                        If the email has not arrived, please resend it.
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>    
+    const countdownMsg = document.getElementById("countdownMsg");
+    const countdown = document.getElementById("countdown");
+    const sentBtn = document.getElementById("sentBtn");
+    const resendMsg  = document.getElementById("resendMsg");
+
+    function startCountdown() {
+
+        let seconds = 50;
+
+        // Disable SEND button
+        sentBtn.disabled = true;
+
+        // Show countdown
+        countdownMsg.style.display = "block";
+        resendMsg.style.display = "none";
+
+        countdown.textContent = seconds;
+
+        const timer = setInterval(function() {
+
+            seconds--;
+
+            countdown.textContent = seconds;
+
+            if (seconds <= 0) {
+
+                clearInterval(timer);
+
+                // Hide countdown
+                countdownMsg.style.display = "none";
+
+                // Show resend message
+                resendMsg.style.display = "block";
+
+                // Enable SEND button again
+                sentBtn.disabled = false;
+            }
+
+        }, 1000);
+    }
+
+    const parms = new URLSearchParams(window.location.search);
+    
+    if(parms.has("emailSent")){
+        startCountdown();
+    }
+
+
+</script>
+</body>
+</html>
