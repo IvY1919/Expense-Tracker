@@ -38,7 +38,8 @@ public class AuthenticationController {
                            Model model) {
 
         try{
-            userService.registerUser(username, email, password);        
+            userService.registerUser(username, email, password);       
+            System.out.println("here is my signup"); 
             return "redirect:/login";
         } catch(IllegalArgumentException e){
             model.addAttribute("signupError", e.getMessage());

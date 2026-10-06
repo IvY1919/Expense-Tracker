@@ -95,8 +95,9 @@
     const passwordError = document.getElementById("passwordError");
 
     form.addEventListener("submit", async function (event) {
-        event.preventDefault();
+        
         if(passwordInput.value !== confirmPassword.value){
+            event.preventDefault();
             passwordError.style.display = "block";
             return;
         }
