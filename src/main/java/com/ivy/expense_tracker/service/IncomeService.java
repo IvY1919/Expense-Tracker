@@ -2,6 +2,7 @@ package com.ivy.expense_tracker.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,6 +31,32 @@ public class IncomeService {
 
         income.setUserId(user);
         incomeRepository.save(income);
+    }
+    
+    public void addMonthlyIncome( String startMonth, String endMonth, int incomeDay, String description, BigDecimal amount, String email){
+        YearMonth start = YearMonth.parse(startMonth);
+        YearMonth end = YearMonth.parse(endMonth);
+        YearMonth current = start;
+
+        UserEntity user = userRepository.findByEmail(email)
+        .orElseThrow(() -> new RuntimeException("User not found"));
+
+        while (!current.isAfter(end)) {
+            LocalDate incomeDate;
+            int lastDay = current.lengthOfMonth();
+            if (incomeDay > lastDay) {
+                incomeDate = current.atEndOfMonth();
+            } else {
+                incomeDate = current.atDay(incomeDay);
+            }
+            IncomeEntity income = new IncomeEntity();
+            income.setUserId(user);
+            income.setIncomeDate(incomeDate);
+            income.setDescription(description);
+            income.setIncomeAmount(amount);
+            incomeRepository.save(income);
+            current = current.plusMonths(1);
+        }
     }
 
     public List<IncomeEntity> getIncomeByUserIdANDDate( String email,LocalDate startDate, LocalDate endDate) {
@@ -113,6 +140,7 @@ public class IncomeService {
         BigDecimal total = incomeRepository.getMonthlyIncomeTotal( email, startDate, endDate);
         return total != null ? total : BigDecimal.ZERO;
     }
+
 
     
 }

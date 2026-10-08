@@ -321,6 +321,36 @@ public class HomeController {
         return "redirect:/income?month=" + month + "&view=" + view;
     }
 
+    @PostMapping("/income/addmonthlyincome")
+    public String addMonthlyIncome(@RequestParam String startMonth,
+                             @RequestParam String endMonth,
+                             @RequestParam Integer incomeDay,
+                             @RequestParam String description,
+                             @RequestParam BigDecimal incomeAmount,
+                             @RequestParam String month,
+                             @RequestParam String view,
+                             Authentication authentication,
+                             RedirectAttributes redirectAttributes ) {
+
+        if (incomeDay == null) {
+            redirectAttributes.addFlashAttribute("monthError","Please select an income day.");
+            return "redirect:/income?month=" + month + "&view=" + view;
+        }
+
+        YearMonth start = YearMonth.parse(startMonth);
+        YearMonth end = YearMonth.parse(endMonth);
+        if(end.isBefore(start)){
+            redirectAttributes.addFlashAttribute("monthError", "End Month cannot be earlier than Start Month.");
+            return "redirect:/income?month=" + month + "&view=" + view;
+        }
+
+        String email = authentication.getName();
+        incomeService.addMonthlyIncome(startMonth, endMonth, incomeDay, description, incomeAmount, email);
+        
+        return "redirect:/income?month=" + month + "&view=" + view;
+    }
+    
+
     @PostMapping("/income/deleteincome")
     public String deleteIncome(@RequestParam Long incomeId,
                                @RequestParam String month,

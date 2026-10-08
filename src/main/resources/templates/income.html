@@ -200,7 +200,7 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label for="incomeDate" class="form-label"> Income Date </label>
-                            <input type="date" name="incomeDate" class="form-control" id="IncomeDate" th:value="${income.incomeDate}" required>
+                            <input type="date" name="incomeDate" class="form-control" id="incomeDate" th:value="${income.incomeDate}" required>
                         </div>
                         <div class="mb-3">
                             <label for="description" class="form-label"> Description </label>
@@ -273,15 +273,57 @@
                     <h5 class="modal-title" id="editIncomeModalLabel">Add Income</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
-                <form th:action="@{/income/addincome}" method="post">
+                <form th:action="@{/income/addincome}" method="post" id="incomeForm">             
+                    
                     <input type="hidden" name = "month" th:value="${selectedMonth}">
                     <input type="hidden" name = "view" th:value="${view}">
                     <input type="hidden" name="expId" >
                     <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="incomeDate" class="form-label"> Income Date </label>
-                            <input type="date" name="incomeDate" class="form-control" id="IncomeDate" required>
+                        <div class="d-flex gap-4 mb-3">
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" name="incomeInput" id="dailyIncomeInput" value="daily" checked>
+                                <label class="form-check-label" for="dailyIncomeInput">Daily</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" name="incomeInput" id="monthlyIncomeInput" value="monthly">
+                                <label class="form-check-label" for="monthlyIncomeInput">Monthly</label>
+                            </div>
                         </div>
+                        
+                        <div th:if="${monthError}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <span th:text="${monthError}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"> </button>
+                        </div>
+                        <!-- Daily -->
+                        <div id="dailyIncomeFields">
+                            <div class="mb-3">
+                                <label for="incomeDate" class="form-label"> Income Date </label>
+                                <input type="date" name="incomeDate" class="form-control" id="incomeDate">
+                            </div>
+                        </div>
+                        <!-- MONTHLY -->
+                        <div id="monthlyIncomeFields" style="display: none;">
+                            <div class="mb-3">
+                                <label for="startMonth" class="form-label"> Start Month </label>
+                                <input type="month" name="startMonth" class="form-control" id="startMonth">
+                            </div>
+                            <div class="mb-3">
+                                <label for="endMonth" class="form-label"> End Month </label>
+                                <input type="month" name="endMonth" class="form-control" id="endMonth">
+                            </div>
+                            <div id="monthError" class="text-danger mt-1" style="display: none;">End Month cannot be earlier than Start Month</div>
+                            <div class="mb-3">
+                                <label for="incomeDay" class="form-label"> Income Date </label>
+                                <select name="incomeDay" id="incomeDay" class="form-select">
+                                    <option value="" selected disabled>Select day</option>
+                                    <option th:each="day : ${#numbers.sequence(1,31)}"
+                                        th:value="${day}"
+                                        th:text="${day}">
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+
                         <div class="mb-3">
                             <label for="description" class="form-label"> Description </label>
                             <input type="text" name="description" class="form-control" id="incomedescription" >
@@ -308,6 +350,99 @@
 
 <!-- JavaScript -->
 <script th:inline="javascript">
+
+//////////////////////////////
+//     Income type
+//////////////////////////////
+
+const dailyRadio = document.getElementById("dailyIncomeInput");
+const monthlyRadio = document.getElementById("monthlyIncomeInput");
+const dailyFields = document.getElementById("dailyIncomeFields");
+const monthlyFields = document.getElementById("monthlyIncomeFields");
+const incomeForm = document.getElementById("incomeForm");
+const incomeDate = document.getElementById("incomeDate");
+const startMonth = document.getElementById("startMonth");
+const endMonth = document.getElementById("endMonth");
+const incomeDay = document.getElementById("incomeDay");
+const monthError = document.getElementById("monthError");
+
+//////////////////////////////
+//     Daily
+//////////////////////////////
+
+dailyRadio.addEventListener("change", function () {
+    dailyFields.style.display = "block";
+    monthlyFields.style.display = "none";
+    incomeForm.action = "/income/addincome";
+    incomeDate.required = true;
+    startMonth.required = false;
+    endMonth.required = false;
+    incomeDay.required = false;
+});
+
+//////////////////////////////
+//     Monthly
+//////////////////////////////
+
+monthlyRadio.addEventListener("change", function () {
+    dailyFields.style.display = "none";
+    monthlyFields.style.display = "block";
+    incomeForm.action = "/income/addmonthlyincome";
+    incomeDate.required = false;
+    startMonth.required = true;
+    endMonth.required = true;
+    incomeDay.required = true;
+});
+
+//////////////////////////////
+//     Month validation
+//////////////////////////////
+
+function validateMonths() {
+    if (startMonth.value && endMonth.value) {
+        if (endMonth.value < startMonth.value) {
+            monthError.style.display = "block";
+            endMonth.classList.add("is-invalid");
+            return false;
+        } else {
+            monthError.style.display = "none";
+            endMonth.classList.remove("is-invalid");
+        }
+    }
+    return true;
+}
+
+startMonth.addEventListener("change", validateMonths);
+endMonth.addEventListener("change", validateMonths);
+
+//////////////////////////////
+//     Form submit
+//////////////////////////////
+
+incomeForm.addEventListener("submit", function(event) {
+    if (monthlyRadio.checked) {
+        if (!validateMonths()) {
+            event.preventDefault();
+            return;
+        }
+    }
+});
+
+
+//////////////////////////////
+//     Initial state
+//////////////////////////////
+dailyFields.style.display = "block";
+monthlyFields.style.display = "none";
+incomeForm.action = "/income/addincome";
+incomeDate.required = true;
+startMonth.required = false;
+endMonth.required = false;
+incomeDay.required = false;
+
+    //////////////////////////////
+    //     For Bar chart    /////
+    /////////////////////////////
     
     const monthlyTotals = /*[[${monthlyTotals}]]*/[];
     const yearlyTotals = /*[[${yearlyTotals}]]*/[];
@@ -332,7 +467,7 @@
         let data = [];
 
         if (view === 'monthly'){
-            labels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Nov','Dec'];
+            labels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
             data = monthlyTotals.map(value => Number(value));
         }else{
             labels = [];
