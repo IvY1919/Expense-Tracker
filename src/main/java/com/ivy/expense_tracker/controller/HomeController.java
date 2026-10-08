@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.ivy.expense_tracker.database.ExpenseEntity;
 import com.ivy.expense_tracker.database.IncomeEntity;
@@ -29,15 +30,19 @@ import com.ivy.expense_tracker.service.ExpenseService;
 import com.ivy.expense_tracker.service.IncomeService;
 import com.ivy.expense_tracker.service.ReportService;
 import com.ivy.expense_tracker.dto.TransactionDto;
+import com.ivy.expense_tracker.repository.UserRepository;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
 public class HomeController {
 
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
+    
 
     @Autowired
     private ExpenseService expenseService;
@@ -48,8 +53,9 @@ public class HomeController {
     @Autowired
     private ReportService reportService;
 
-    HomeController(UserService userService) {
+    HomeController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // private final HomeController(ReportService reportService){
@@ -383,6 +389,35 @@ public class HomeController {
         return ResponseEntity.ok("Username updated");
 
     }
+
+@PostMapping("/account/changepassword")
+public String changeAccPwd(
+        @RequestParam("currentpassword") String currentPassword,
+        @RequestParam("newpassword") String newPassword,
+        Authentication authentication,
+        RedirectAttributes redirectAttributes,
+        Model model) {
+
+    CustomUserDetails userDetails =
+            (CustomUserDetails) authentication.getPrincipal();
+
+    String storedPassword = userDetails.getPassword();
+
+    if (!passwordEncoder.matches(currentPassword, storedPassword)) {
+        // model.addAttribute("passwordError", "Incorrect password.");
+        redirectAttributes.addFlashAttribute("passwordError", "Incorrect password.");
+        return "redirect:/account_setting";
+    }  
+
+    String encodedPassword = passwordEncoder.encode(newPassword);
+    userService.updatePassword(
+            userDetails.getUsername(),
+            encodedPassword
+    );
+    redirectAttributes.addFlashAttribute("passwordChanged",true);
+    return "redirect:/account_setting";
+}
+    
 
     
     

@@ -2,6 +2,7 @@ package com.ivy.expense_tracker.service;
 import com.ivy.expense_tracker.database.UserEntity;
 import com.ivy.expense_tracker.repository.ExpenseRepository;
 import com.ivy.expense_tracker.repository.IncomeRepository;
+import com.ivy.expense_tracker.repository.PasswordResetTokenRepository;
 import com.ivy.expense_tracker.repository.UserRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,14 +18,19 @@ public class UserService {
     private final ExpenseRepository expenseRepository;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
 
     public UserService( UserRepository userRepository,
-        PasswordEncoder passwordEncoder, ExpenseRepository expenseRepository, IncomeRepository incomeRepository){
+        PasswordEncoder passwordEncoder,
+        ExpenseRepository expenseRepository, 
+        IncomeRepository incomeRepository,
+        PasswordResetTokenRepository passwordResetTokenRepository){
         
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.expenseRepository = expenseRepository;
         this.incomeRepository = incomeRepository;
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
         }
 
     // For Sign Up 
@@ -73,6 +79,7 @@ public class UserService {
         UserEntity user = userRepository.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found"));
         expenseRepository.deleteByUserId(user);
         incomeRepository.deleteByUserId(user);
+        passwordResetTokenRepository.deleteByUserId(user);
         userRepository.delete(user);
     }
 
@@ -82,6 +89,16 @@ public class UserService {
         user.setUsername(newUsername);
         userRepository.save(user);
     }
+
+    public void updatePassword(String email, String encodedPassword) {
+
+    UserEntity user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+    user.setPassword(encodedPassword);
+
+    userRepository.save(user);
+}
 
     
 }

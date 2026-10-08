@@ -172,11 +172,10 @@
                             <div class="card-body card-body-shadow justify-content-center">
                                 <div class="current-month-total d-flex align-items-baseline gap-2 justify-content-center" style="color:#e80a0a">
                                     <div class="expense-label">
-                                        Total Expense :
+                                        Total Expense of <span th:text="${#temporals.format(selectedMonth, 'yyyy MMMM', new java.util.Locale('en', 'US'))}"></span>:
                                     </div>
                                     <div class="expense-total d-flex align-items-baseline gap-2">
                                         <h2><span th:text="'¥' + ${#numbers.formatDecimal(monthlyTotal, 0, 'COMMA', 0, 'POINT')}"></span></h2>
-                                        <p class="mb-0">/<span th:text="${#temporals.format(T(java.time.LocalDate).now(), 'MMMM', T(java.util.Locale).ENGLISH)}"></span></p>
                                     </div>
                                 </div>
                                 <hr>

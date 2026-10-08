@@ -38,11 +38,12 @@ html.dark-mode {
     width: 320px;
 }
 
-#editUsernameBtn{
+#editUsernameBtn, #editPwdBtn{
     color:  #9046e599;
 }
 
-#editUsernameBtn:hover{
+#editUsernameBtn:hover,
+#editPwdBtn:hover{
     color:  #9046e5;
 }
 

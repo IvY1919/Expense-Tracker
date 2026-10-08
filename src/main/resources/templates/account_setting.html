@@ -139,17 +139,57 @@
                                         </div> 
                                 </div> 
                                 <!-- Password --> 
-                                <div class="mb-4"> 
-                                    <label class="form-label fw-bold"> Password </label> 
-                                        
+                                <div class="mb-4" id="showPwd"> 
+                                    <label class="form-label fw-bold"> Password </label>                                         
+                                        <div class="form-control"> 
+                                            <span class="input-group-text"><i class="bi bi-lock"></i></span>******** 
+                                            <button type="button" id="editPwdBtn" class="btn btn-link ms-auto -0" title="Edit Password">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </button>
+                                        </div> 
+                                </div> 
+
+                                <form th:action="@{/account/changepassword}" id="passwordForm" method="post"> 
+                                <div th:if="${passwordError}" class="text-danger mt-1" id="inputError"> <span th:text="${passwordError}"></span></div>
+                                <div th:if="${passwordChanged}" class="text-success mt-2"> Password changed successfully.</div>
+                                <div class="mb-4" id="currentPwd" style="display: none;"> 
+                                    <label class="form-label fw-bold"> Current Password </label>                                         
                                         <div class="form-control"> 
                                             <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                                            ******** </div> 
+                                            <input type="password" class="form-control" name="currentpassword" id="currentpassword" placeholder="Enter your current password" required>
+                                            <button type="submit" id="savePwdBtn" class="btn  btn-outline-success btn-sm" style="display: none;">
+                                                 <i class="bi bi-check-lg"></i>     
+                                            </button>
+                                            <button type="button" id="canclePwdBtn" class="btn btn-outline-danger btn-sm" style="display: none;">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>                                        
+                                        </div> 
                                 </div> 
+                                <div class="mb-4" id="newPwd" style="display: none;"> 
+                                    <label class="form-label fw-bold"> New Password </label>                                         
+                                        <div class="form-control"> 
+                                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                            <input type="password" class="form-control" name="newpassword" id="newpassword" placeholder="Enter your new password" required>
+                                        </div> 
+                                </div> 
+                                <div class="mb-4" id="confirmnewPwd" style="display: none;"> 
+                                    <label class="form-label fw-bold">  Confirm Password </label>                                         
+                                        <div class="form-control"> 
+                                            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                            <input type="password" class="form-control" name="confirmnewpassword" id="confirmnewpassword" placeholder="Confirm your new password" required>
+                                        </div> 
+                                </div> 
+                                <!-- Error message -->
+                                <div id="passwordError" class="text-danger mt-1" style="display: none;">
+                                   <h4>The two passwords do not match.</h4>
+                                </div>
+                                <div id="samepasswordError" class="text-danger mt-1" style="display: none;">
+                                   <h4>You cannot set the same password as the current password</h4>
+                                </div>
+                                </form>
                             </div> 
                             <!-- Delete Account --> 
-                            <div class="text-center mt-4"> 
-
+                            <div class="text-center mt-4" id="deleteAccBtn"> 
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal"> 
                                     <i class="bi bi-trash"></i> Delete Account 
                                 </button> 
@@ -198,6 +238,28 @@
         const lightBtn = document.getElementById("lightBtn");
         const darkBtn = document.getElementById("darkBtn");
         const savedTheme = localStorage.getItem("theme");
+        
+        const editBtn = document.getElementById("editUsernameBtn");
+        const saveBtn = document.getElementById("saveUsernameBtn");
+        const cancleBtn = document.getElementById("cancleUsernameBtn")
+        const usernameText = document.getElementById("usernameText");
+        const usernameInput = document.getElementById("usernameInput");
+
+        const showPwd = document.getElementById("showPwd");
+        const currentPwd = document.getElementById("currentPwd");
+        const editPwdBtn = document.getElementById("editPwdBtn");
+        const savePwdBtn = document.getElementById("savePwdBtn");
+        const canclePwdBtn = document.getElementById("canclePwdBtn");
+        const newPwd = document.getElementById("newPwd");
+        const confirmnewPwd = document.getElementById("confirmnewPwd");
+        const passwordForm = document.getElementById("passwordForm");    
+        const newpassword = document.getElementById("newpassword");
+        const confirmnewpassword = document.getElementById("confirmnewpassword");    
+        const passwordError = document.getElementById("passwordError");
+        const samepasswordError = document.getElementById("samepasswordError");
+        const inputError = document.getElementById("inputError");
+
+        const deleteAccBtn = document.getElementById("deleteAccBtn");
 
         function getChartThemeColors() { 
             const styles = getComputedStyle(document.documentElement); 
@@ -252,13 +314,6 @@
             }
         });
 
-        const editBtn = document.getElementById("editUsernameBtn");
-        const saveBtn = document.getElementById("saveUsernameBtn");
-        const cancleBtn = document.getElementById("cancleUsernameBtn");
-
-        const usernameText = document.getElementById("usernameText");
-        const usernameInput = document.getElementById("usernameInput");
-
         editBtn.addEventListener("click", function() {
             // Hide username text
             usernameText.style.display = "none";
@@ -279,6 +334,33 @@
                 saveBtn.style.display = "none";
                 cancleBtn.style.display = "none";
                 editBtn.style.display = "inline-block";
+        });
+
+        editPwdBtn.addEventListener("click", function() {
+            showPwd.style.display = "none";
+            currentPwd.style.display = "block";
+            savePwdBtn.style.display = "inline-block";
+            canclePwdBtn.style.display = "inline-block";
+            newPwd.style.display = "block";
+            confirmnewPwd.style.display = "block";
+            deleteAccBtn.style.display = "none";
+            editUsernameBtn.style.display = "none";
+            inputError.style.display = "none";
+        });
+
+        canclePwdBtn.addEventListener("click", function(){
+            showPwd.style.display = "block";
+            currentPwd.style.display = "none";
+            savePwdBtn.style.display = "none";
+            canclePwdBtn.style.display = "none";
+            editPwdBtn.style.display = "inline-block";
+            newPwd.style.display = "none";
+            confirmnewPwd.style.display = "none";
+            deleteAccBtn.style.display = "block";
+            editUsernameBtn.style.display = "inline-block";
+            passwordError.style.display = "none";
+            samepasswordError.style.display = "none";
+            inputError.style.display = "none";
         });
 
         saveBtn.addEventListener("click", function() {
@@ -335,6 +417,22 @@
                 alert("Failed to update username: " + error.message);
             });
 
+        });
+
+        passwordForm.addEventListener("submit", async function (event) {
+
+            if( newpassword.value !== confirmnewpassword.value ){
+                event.preventDefault();
+                passwordError.style.display = "block";
+                samepasswordError.style.display = "none";
+            }
+
+            if( newpassword.value == currentpassword.value ){
+                event.preventDefault();
+                samepasswordError.style.display = "block";
+                passwordError.style.display = "none";
+            }
+            
         });
 
     </script>
