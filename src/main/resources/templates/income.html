@@ -303,6 +303,7 @@
                         </div>
                         <!-- MONTHLY -->
                         <div id="monthlyIncomeFields" style="display: none;">
+                            <p>For Monthly Income</p>
                             <div class="mb-3">
                                 <label for="startMonth" class="form-label"> Start Month </label>
                                 <input type="month" name="startMonth" class="form-control" id="startMonth">
@@ -316,7 +317,7 @@
                                 <label for="incomeDay" class="form-label"> Income Date </label>
                                 <select name="incomeDay" id="incomeDay" class="form-select">
                                     <option value="" selected disabled>Select day</option>
-                                    <option th:each="day : ${#numbers.sequence(1,31)}"
+                                    <option th:each="day : ${#numbers.sequence(1,28)}"
                                         th:value="${day}"
                                         th:text="${day}">
                                     </option>
@@ -349,28 +350,75 @@
      </div>
 
 <!-- JavaScript -->
+<script th:src="@{/js/DarkLightMode.js}"></script>
 <script th:inline="javascript">
 
-//////////////////////////////
-//     Income type
-//////////////////////////////
+    ///////////////////////////////////////
+    //  For Dialy-Monthly Input Field    //
+    ///////////////////////////////////////
 
-const dailyRadio = document.getElementById("dailyIncomeInput");
-const monthlyRadio = document.getElementById("monthlyIncomeInput");
-const dailyFields = document.getElementById("dailyIncomeFields");
-const monthlyFields = document.getElementById("monthlyIncomeFields");
-const incomeForm = document.getElementById("incomeForm");
-const incomeDate = document.getElementById("incomeDate");
-const startMonth = document.getElementById("startMonth");
-const endMonth = document.getElementById("endMonth");
-const incomeDay = document.getElementById("incomeDay");
-const monthError = document.getElementById("monthError");
+    const dailyRadio = document.getElementById("dailyIncomeInput");
+    const monthlyRadio = document.getElementById("monthlyIncomeInput");
+    const dailyFields = document.getElementById("dailyIncomeFields");
+    const monthlyFields = document.getElementById("monthlyIncomeFields");
+    const incomeForm = document.getElementById("incomeForm");
+    const incomeDate = document.getElementById("incomeDate");
+    const startMonth = document.getElementById("startMonth");
+    const endMonth = document.getElementById("endMonth");
+    const incomeDay = document.getElementById("incomeDay");
+    const monthError = document.getElementById("monthError");
 
-//////////////////////////////
-//     Daily
-//////////////////////////////
+    // for Daily field
+    dailyRadio.addEventListener("change", function () {
+        dailyFields.style.display = "block";
+        monthlyFields.style.display = "none";
+        incomeForm.action = "/income/addincome";
+        incomeDate.required = true;
+        startMonth.required = false;
+        endMonth.required = false;
+        incomeDay.required = false;
+    });
 
-dailyRadio.addEventListener("change", function () {
+    // for Monthly field
+    monthlyRadio.addEventListener("change", function () {
+        dailyFields.style.display = "none";
+        monthlyFields.style.display = "block";
+        incomeForm.action = "/income/addmonthlyincome";
+        incomeDate.required = false;
+        startMonth.required = true;
+        endMonth.required = true;
+        incomeDay.required = true;
+    });
+
+    // Month validation
+    function validateMonths() {
+        if (startMonth.value && endMonth.value) {
+            if (endMonth.value < startMonth.value) {
+                monthError.style.display = "block";
+                endMonth.classList.add("is-invalid");
+                return false;
+            } else {
+                monthError.style.display = "none";
+                endMonth.classList.remove("is-invalid");
+            }
+        }
+        return true;
+    }
+
+    startMonth.addEventListener("change", validateMonths);
+    endMonth.addEventListener("change", validateMonths);
+
+    // Form submit
+    incomeForm.addEventListener("submit", function(event) {
+        if (monthlyRadio.checked) {
+            if (!validateMonths()) {
+                event.preventDefault();
+                return;
+            }
+        }
+    });
+
+    // Initial state
     dailyFields.style.display = "block";
     monthlyFields.style.display = "none";
     incomeForm.action = "/income/addincome";
@@ -378,71 +426,11 @@ dailyRadio.addEventListener("change", function () {
     startMonth.required = false;
     endMonth.required = false;
     incomeDay.required = false;
-});
-
-//////////////////////////////
-//     Monthly
-//////////////////////////////
-
-monthlyRadio.addEventListener("change", function () {
-    dailyFields.style.display = "none";
-    monthlyFields.style.display = "block";
-    incomeForm.action = "/income/addmonthlyincome";
-    incomeDate.required = false;
-    startMonth.required = true;
-    endMonth.required = true;
-    incomeDay.required = true;
-});
-
-//////////////////////////////
-//     Month validation
-//////////////////////////////
-
-function validateMonths() {
-    if (startMonth.value && endMonth.value) {
-        if (endMonth.value < startMonth.value) {
-            monthError.style.display = "block";
-            endMonth.classList.add("is-invalid");
-            return false;
-        } else {
-            monthError.style.display = "none";
-            endMonth.classList.remove("is-invalid");
-        }
-    }
-    return true;
-}
-
-startMonth.addEventListener("change", validateMonths);
-endMonth.addEventListener("change", validateMonths);
-
-//////////////////////////////
-//     Form submit
-//////////////////////////////
-
-incomeForm.addEventListener("submit", function(event) {
-    if (monthlyRadio.checked) {
-        if (!validateMonths()) {
-            event.preventDefault();
-            return;
-        }
-    }
-});
 
 
-//////////////////////////////
-//     Initial state
-//////////////////////////////
-dailyFields.style.display = "block";
-monthlyFields.style.display = "none";
-incomeForm.action = "/income/addincome";
-incomeDate.required = true;
-startMonth.required = false;
-endMonth.required = false;
-incomeDay.required = false;
-
-    //////////////////////////////
-    //     For Bar chart    /////
-    /////////////////////////////
+    //////////////////////////////////////
+    //  For Creating Line Chart         //
+    //////////////////////////////////////
     
     const monthlyTotals = /*[[${monthlyTotals}]]*/[];
     const yearlyTotals = /*[[${yearlyTotals}]]*/[];
@@ -450,13 +438,6 @@ incomeDay.required = false;
     const selectedYear = /*[[${selectedYear}]]*/ 2026;
 
     let lineChart = null;
-
-    function getChartThemeColors() { 
-        const styles = getComputedStyle(document.documentElement); 
-        return { textColor: styles .getPropertyValue("--chart-text-color") .trim(), 
-                 gridColor: styles .getPropertyValue("--chart-grid-color") .trim() 
-                }; 
-    }
 
     function createLineChart(){
         const ctx = document.getElementById("incomeChart");
@@ -508,56 +489,24 @@ incomeDay.required = false;
                     plugins: {
                         legend:{ labels : { color: colors.textColor}}
                     }
-                }
-            });
-        }
-
-        const lightBtn = document.getElementById("lightBtn");
-        const darkBtn = document.getElementById("darkBtn");
-        const savedTheme = localStorage.getItem("theme");
-
-        function updateThemeButtons(){                    
-            if (document.documentElement.classList.contains("dark-mode")) {
-                darkBtn.classList.add("active");
-                lightBtn.classList.remove("active");
-            } else {
-                lightBtn.classList.add("active");
-                darkBtn.classList.remove("active");
             }
-        }
-
-        lightBtn.addEventListener("click", () => {
-            localStorage.setItem("theme", "light");
-            location.reload();
         });
+    }
+    
 
-        darkBtn.addEventListener("click", () => {
-            localStorage.setItem("theme", "dark");
-            location.reload();
-        });
-
-        if(savedTheme === "dark"){
-            document.documentElement.classList.add("dark-mode");
-        }else{
-            document.documentElement.classList.remove("dark-mode");
-        }
-        // Initialize everything 
+        // Initialize
         createLineChart(); 
-        updateThemeButtons(); 
-</script>
 
-<script>
-    function changeMonthInput(month) {
-        const view = '[[${view}]]';
+        //month selector 
+        function changeMonthInput(month) {
+            const view = '[[${view}]]';
+            window.location.href = `/income?month=${month}&view=${view}`;
+        }
 
-        window.location.href =
-            `/income?month=${month}&view=${view}`;
-    }
-
-    function changeView(view){
-        const selectedMonth = '[[${selectedMonth}]]';
-        window.location.href = `/income?view=${view}&month=${selectedMonth}`;
-    }
+        function changeView(view){
+            const selectedMonth = '[[${selectedMonth}]]';
+            window.location.href = `/income?view=${view}&month=${selectedMonth}`;
+        }
 </script>
 
 </body>

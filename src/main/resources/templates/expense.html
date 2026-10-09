@@ -320,14 +320,54 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
                 <!-- Body -->
-                <form th:action="@{/expense/addexpense}" method="post">
+                <form th:action="@{/expense/addexpense}" method="post" id="expenseForm">
                     <input type="hidden" name="expId">
                     <input type="hidden"  name="month" th:value="${selectedMonth}">
                     <input type="hidden"  name="view" th:value="${view}">
                     <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="expenseDate" class="form-label"> Expense Date </label>
-                            <input type="date" name="expDate" class="form-control" id="expenseDate" required>
+                        <div class="d-flex gap-4 mb-3">
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" name="expenseInput" id="dailyExpenseInput" value="daily" checked>
+                                <label class="form-check-label" for="dailyExpenseInput">Daily</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" name="expenseInput" id="monthlyExpenseInput" value="monthly" >
+                                <label class="form-check-label" for="monthlyExpenseInput">Monthly</label>
+                            </div>
+                        </div>
+                        <div th:if="${monthError}" class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <span th:text="${monthError}"></span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"> </button>
+                        </div>
+                        <!-- Daily -->
+                        <div id="dailyExpenseFields">
+                            <div class="mb-3">
+                                <label for="expenseDate" class="form-label"> Expense Date </label>
+                                <input type="date" name="expDate" class="form-control" id="expenseDate">
+                            </div>
+                        </div>
+                        <!-- Monthly -->
+                        <div id="MonthlyExpenseFields" style="display: none;">
+                            <p> For Monthly subscribtions</p>
+                            <div class="mb-3">
+                                <label for="startMonth" class="form-label"> Start Month </label>
+                                <input type="month" name="startMonth" class="form-control" id="startMonth">
+                            </div>
+                            <div class="mb-3">
+                                <label for="endMonth" class="form-label"> End Month </label>
+                                <input type="month" name="endMonth" class="form-control" id="endMonth">
+                            </div>
+                            <div id="monthError" class="text-danger mt-1" style="display: none;">End Month cannot be earlier than Start Month</div>
+                            <div class="mb-3">
+                                <label for="expenseDay" class="form-label"> Expense Date </label>
+                                <select name="expenseDay" id="expenseDay" class="form-select">
+                                    <option value="" selected disabled>Select day</option>
+                                    <option th:each="day : ${#numbers.sequence(1,28)}"
+                                        th:value="${day}"
+                                        th:text="${day}">
+                                    </option>
+                                </select>
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="description" class="form-label"> Description </label>
@@ -365,27 +405,99 @@
     </div>
 
     <!-- JavaScript -->
+    <script th:src="@{/js/DarkLightMode.js}"></script>
     <script th:inline="javascript">
 
-       // 1. Chart data from Thymeleaf 
+        ///////////////////////////////////////
+        //  For Dialy-Monthly Input Field    //
+        ///////////////////////////////////////
+
+        const dailyRadio = document.getElementById("dailyExpenseInput");
+        const monthlyRadio = document.getElementById("monthlyExpenseInput");
+        const dailyFields = document.getElementById("dailyExpenseFields");
+        const monthlyFields = document.getElementById("MonthlyExpenseFields");
+        const expenseForm = document.getElementById("expenseForm");
+        const expenseDate = document.getElementById("expenseDate");
+        const startMonth = document.getElementById("startMonth");
+        const endMonth = document.getElementById("endMonth");
+        const expenseDay = document.getElementById("expenseDay");
+        const monthError = document.getElementById("monthError");
+
+        // for Daily field
+        dailyRadio.addEventListener("change", function(){
+
+            dailyFields.style.display="block";
+            monthlyFields.style.display="none";
+            expenseDate.required = true;
+            expenseDay.required = false;
+            startMonth.required = false;
+            endMonth.required = false;
+            expenseForm.action = "/expense/addexpense";
+        });
+
+        // for Monthly field
+        monthlyRadio.addEventListener("change", function(){
+
+            dailyFields.style.display="none";
+            monthlyFields.style.display="block";
+            expenseDate.required = false;
+            expenseDay.required = true;
+            startMonth.required = true;
+            endMonth.required = true;
+            expenseForm.action = "/expense/addmonthlyexpense";
+        });
+
+        // Month validation
+        function validateMonths() {
+            if (startMonth.value && endMonth.value) {
+                if (endMonth.value < startMonth.value) {
+                    monthError.style.display = "block";
+                    endMonth.classList.add("is-invalid");
+                    return false;
+                } else {
+                    monthError.style.display = "none";
+                    endMonth.classList.remove("is-invalid");
+                }
+            }
+            return true;
+        }
+
+        startMonth.addEventListener("change", validateMonths);
+        endMonth.addEventListener("change", validateMonths);
+
+        // Form submit
+        expenseForm.addEventListener("submit", function(event) {
+            if(monthlyRadio.checked){
+                if(!validateMonths()) {
+                    event.preventDefault();
+                    return;
+                }
+            }
+        });
+
+        // Initial state
+        dailyFields.style.display = "block";
+        monthlyFields.style.display = "none";
+        expenseForm.action = "/expense/addexpense";
+        expenseDate.required = true;
+        expenseDay.required = false;
+        startMonth.required = false;
+        endMonth.required = false;
+
+        ////////////////////////////////////////
+        //  For Creating Line and donut Chart //
+        ////////////////////////////////////////
+
        const monthlyTotals = /*[[${monthlyTotals}]]*/ [];
        const yearlyTotals = /*[[${yearlyTotals}]]*/ []; 
        const view = /*[[${view}]]*/ 'monthly';
-    // const currentYear = /*[[${year}]]*/ 2026;
        const selectedYear = /*[[${selectedYear}]]*/ 2026;
+       // const currentYear = /*[[${year}]]*/ 2026;
 
        let lineChart = null;
        let donutChart = null;
 
-       // 2. Get current theme colors
-       function getChartThemeColors() { 
-            const styles = getComputedStyle(document.documentElement); 
-            return { textColor: styles .getPropertyValue("--chart-text-color") .trim(), 
-                     gridColor: styles .getPropertyValue("--chart-grid-color") .trim() 
-                    }; 
-        }
-
-       // 3. Create Line Chart
+       // Create Line Chart
        function createLineChart() {
 
             const ctx = document.getElementById("expenseChart");
@@ -446,7 +558,7 @@
             });
         }
 
-        // 4. Create Donut Chart
+        // Create Donut Chart
         function createDonutChart() {
            const piectx= document.getElementById("expensePieChart");
            if (!piectx) { return; }
@@ -480,68 +592,10 @@
             });
         }
 
-        // 5. Update all chart colors when theme changes
-    //    function updateChartsTheme() {
-    //         const colors = getChartThemeColors();
-
-    //         if (lineChart) {
-    //             lineChart.options.scales.x.ticks.color = colors.textColor;
-    //             lineChart.options.scales.x.grid.color = colors.gridColor;
-
-    //             lineChart.options.scales.y.ticks.color = colors.textColor;
-    //             lineChart.options.scales.y.grid.color = colors.gridColor;
-
-    //             lineChart.options.plugins.legend.labels.color = textColor;
-
-    //             lineChart.update();
-    //         }
-
-    //         if (donutChart) {
-    //             donutChart.options.plugins.legend.labels.color = colors.textColor; 
-    //             donutChart.update();
-    //         }
-    //     }
-
-        // 6. Theme buttons
-        const lightBtn = document.getElementById("lightBtn");
-        const darkBtn = document.getElementById("darkBtn");
-        const savedTheme = localStorage.getItem("theme");
-        
-        function updateThemeButtons() {
-            if (document.documentElement.classList.contains("dark-mode")) {
-                darkBtn.classList.add("active");
-                lightBtn.classList.remove("active");
-            } else {
-                lightBtn.classList.add("active");
-                darkBtn.classList.remove("active");
-            }
-        }
-
-        lightBtn.addEventListener("click", () => {
-            localStorage.setItem("theme", "light"); 
-            location.reload();
-            // updateChartsTheme();
-        });
-
-        darkBtn.addEventListener("click", () => {
-            localStorage.setItem("theme", "dark"); 
-            location.reload();
-            // updateChartsTheme();
-        });
-
-        if(savedTheme ==="dark"){
-            document.documentElement.classList.add("dark-mode");
-        }else{
-            document.documentElement.classList.remove("dark-mode");
-        }
-
-        // 7. Initialize everything 
+        // Initialize
         createLineChart(); 
         createDonutChart(); 
-        updateThemeButtons();    
-    </script>
 
-    <script>
         //month selector 
         function changeMonthInput(month){
             const view = '[[${view}]]';

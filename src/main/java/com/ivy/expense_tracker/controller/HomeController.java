@@ -229,7 +229,7 @@ public class HomeController {
     }
 
     @PostMapping("/expense/addexpense")
-    public String AddExpense(
+    public String addExpense(
             @RequestParam String month,
             @RequestParam String view,
             @ModelAttribute ExpenseEntity expense,
@@ -241,6 +241,36 @@ public class HomeController {
 
         return "redirect:/expense?month=" + month + "&view=" + view;
     }
+
+    @PostMapping("/expense/addmonthlyexpense")
+    public String addMonthlyExpense(@RequestParam String startMonth,
+                             @RequestParam String endMonth,
+                             @RequestParam Integer expenseDay,
+                             @RequestParam String description,
+                             @RequestParam BigDecimal expAmount,
+                             @RequestParam String paymentMethod,
+                             @RequestParam String month,
+                             @RequestParam String view,
+                             Authentication authentication,
+                             RedirectAttributes redirectAttributes ) {
+
+        if (expenseDay == null) {
+            redirectAttributes.addFlashAttribute("monthError","Please select an expense day.");
+            return "redirect:/expense?month=" + month + "&view=" + view;
+        }
+        YearMonth start = YearMonth.parse(startMonth);
+        YearMonth end = YearMonth.parse(endMonth);
+        if(end.isBefore(start)){
+            redirectAttributes.addFlashAttribute("monthError", "End Month cannot be earlier than Start Month.");
+            return "redirect:/expense?month=" + month + "&view=" + view;
+        }
+        String email = authentication.getName();
+        expenseService.addMonthlyexpense(startMonth, endMonth, expenseDay, description, expAmount, paymentMethod, email);
+        
+        return "redirect:/expense?month=" + month + "&view=" + view;
+    }
+    
+
     // End of Expense
 
     // Income page 

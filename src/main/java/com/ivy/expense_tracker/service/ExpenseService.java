@@ -7,6 +7,7 @@ import com.ivy.expense_tracker.repository.UserRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Collections;
@@ -192,6 +193,33 @@ public class ExpenseService {
             categoryTotals.merge(category, expense.getExpAmount(), BigDecimal::add);
         }
         return categoryTotals;
+    }
+
+    public void addMonthlyexpense( String startMonth, String endMonth, int expenseDay, String description, BigDecimal amount, String paymentMethod, String email){
+        YearMonth start = YearMonth.parse(startMonth);
+        YearMonth end = YearMonth.parse(endMonth);
+        YearMonth current = start;
+
+        UserEntity user = userRepository.findByEmail(email)
+        .orElseThrow(() -> new RuntimeException("User not found"));
+
+        while (!current.isAfter(end)) {
+            LocalDate expenseDate;
+            int lastDay = current.lengthOfMonth();
+            if (expenseDay > lastDay) {
+                expenseDate = current.atEndOfMonth();
+            } else {
+                expenseDate = current.atDay(expenseDay);
+            }
+            ExpenseEntity expense = new ExpenseEntity();
+            expense.setUserId(user);
+            expense.setExpDate(expenseDate);
+            expense.setDescription(description);
+            expense.setExpAmount(amount);
+            expense.setPaymentMethod(paymentMethod);
+            expenseRepository.save(expense);
+            current = current.plusMonths(1);
+        }
     }
 
 

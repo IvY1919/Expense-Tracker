@@ -297,7 +297,7 @@
 
 
     <!-- JavaScript -->
-    <script th:src="@{/js/theme.js}"></script>
+    <script th:src="@{/js/DarkLightMode.js}"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -311,14 +311,6 @@
         let incomeData = incomeMonthlyTotals.map(value => Number(value));
         let expenseData = expenseMonthlyTotals.map(value => Number(value));
         let incomeExpenseChart = null;
-
-
-        function getChartThemeColors() { 
-            const styles = getComputedStyle(document.documentElement); 
-            return { textColor: styles .getPropertyValue("--chart-text-color") .trim(), 
-                     gridColor: styles .getPropertyValue("--chart-grid-color") .trim() 
-                    }; 
-        }
 
         function createBarChart() {
             const ctx = document.getElementById('incomeExpenseBarChart');
@@ -401,40 +393,8 @@
             window.location.href = `/dashboard?year=${year}`;
 
         }
-
-        const lightBtn = document.getElementById("lightBtn");
-        const darkBtn = document.getElementById("darkBtn");
-        const savedTheme = localStorage.getItem("theme");
-        
-        function updateThemeButtons() {
-            if (document.documentElement.classList.contains("dark-mode")) {
-                darkBtn.classList.add("active");
-                lightBtn.classList.remove("active");
-            } else {
-                lightBtn.classList.add("active");
-                darkBtn.classList.remove("active");
-            }
-        }
-
-        lightBtn.addEventListener("click", () => {
-            localStorage.setItem("theme", "light");
-            location.reload();
-        });
-
-        darkBtn.addEventListener("click", () => {
-            localStorage.setItem("theme", "dark");
-            location.reload();
-        });
-
-        if(savedTheme ==="dark"){
-            document.documentElement.classList.add("dark-mode");
-        }else{
-            document.documentElement.classList.remove("dark-mode");
-        }
-
-        // 7. Initialize everything 
+        // Initialize everything 
         createBarChart(); 
-        updateThemeButtons();
 
     </script>
 </body>

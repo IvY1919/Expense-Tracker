@@ -234,17 +234,13 @@
 
      </div>
 
-    <script>
-        const lightBtn = document.getElementById("lightBtn");
-        const darkBtn = document.getElementById("darkBtn");
-        const savedTheme = localStorage.getItem("theme");
-        
+    <script th:src="@{/js/DarkLightMode.js}"></script>
+    <script>       
         const editBtn = document.getElementById("editUsernameBtn");
         const saveBtn = document.getElementById("saveUsernameBtn");
         const cancleBtn = document.getElementById("cancleUsernameBtn")
         const usernameText = document.getElementById("usernameText");
         const usernameInput = document.getElementById("usernameInput");
-
         const showPwd = document.getElementById("showPwd");
         const currentPwd = document.getElementById("currentPwd");
         const editPwdBtn = document.getElementById("editPwdBtn");
@@ -258,45 +254,7 @@
         const passwordError = document.getElementById("passwordError");
         const samepasswordError = document.getElementById("samepasswordError");
         const inputError = document.getElementById("inputError");
-
         const deleteAccBtn = document.getElementById("deleteAccBtn");
-
-        function getChartThemeColors() { 
-            const styles = getComputedStyle(document.documentElement); 
-            return { textColor: styles .getPropertyValue("--chart-text-color") .trim(), 
-                     gridColor: styles .getPropertyValue("--chart-grid-color") .trim() 
-                    }; 
-        }
-       
-        function updateThemeButtons() {
-            if (document.documentElement.classList.contains("dark-mode")) {
-                darkBtn.classList.add("active");
-                lightBtn.classList.remove("active");
-            } else {
-                lightBtn.classList.add("active");
-                darkBtn.classList.remove("active");
-            }
-        }
-
-        lightBtn.addEventListener("click", () => {
-            localStorage.setItem("theme", "light");
-            location.reload();
-        });
-
-        darkBtn.addEventListener("click", () => {
-            localStorage.setItem("theme", "dark");
-            location.reload();
-        });
-
-        if(savedTheme ==="dark"){
-            document.documentElement.classList.add("dark-mode");
-        }else{
-            document.documentElement.classList.remove("dark-mode");
-        }
-
-        // 7. Initialize everything 
-        updateThemeButtons();
-
 
         document.getElementById("deleteAccountForm").addEventListener("submit", function(event){
             const input = document.getElementById("deleteConfirmation");
