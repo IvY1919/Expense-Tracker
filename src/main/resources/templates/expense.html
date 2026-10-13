@@ -232,8 +232,8 @@
                     <input type="hidden"  name="view" th:value="${view}">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="expenseDate" class="form-label"> Expense Date </label>
-                            <input type="date" name="expDate" class="form-control" id="expenseDate" th:value="${expense.expDate}" required>
+                            <label for="editExpenseDate" class="form-label"> Expense Date </label>
+                            <input type="date" name="editExpenseDate" class="form-control"  th:id="'editExpenseDate-' + ${expense.expId}" th:value="${expense.expDate}" required>
                         </div>
                         <div class="mb-3">
                             <label for="description" class="form-label"> Description </label>
@@ -320,7 +320,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
                 <!-- Body -->
-                <form th:action="@{/expense/addexpense}" method="post" id="expenseForm">
+                <form th:action="@{/expense/addexpense}" method="post" id="addExpenseForm">
                     <input type="hidden" name="expId">
                     <input type="hidden"  name="month" th:value="${selectedMonth}">
                     <input type="hidden"  name="view" th:value="${view}">
@@ -342,8 +342,8 @@
                         <!-- Daily -->
                         <div id="dailyExpenseFields">
                             <div class="mb-3">
-                                <label for="expenseDate" class="form-label"> Expense Date </label>
-                                <input type="date" name="expDate" class="form-control" id="expenseDate">
+                                <label for="addExpenseDate" class="form-label"> Expense Date </label>
+                                <input type="date" name="addExpenseDate" class="form-control" id="addExpenseDate">
                             </div>
                         </div>
                         <!-- Monthly -->
@@ -416,8 +416,8 @@
         const monthlyRadio = document.getElementById("monthlyExpenseInput");
         const dailyFields = document.getElementById("dailyExpenseFields");
         const monthlyFields = document.getElementById("MonthlyExpenseFields");
-        const expenseForm = document.getElementById("expenseForm");
-        const expenseDate = document.getElementById("expenseDate");
+        const addExpenseForm = document.getElementById("addExpenseForm");
+        const expenseDate = document.getElementById("addExpenseDate");
         const startMonth = document.getElementById("startMonth");
         const endMonth = document.getElementById("endMonth");
         const expenseDay = document.getElementById("expenseDay");
@@ -432,7 +432,10 @@
             expenseDay.required = false;
             startMonth.required = false;
             endMonth.required = false;
-            expenseForm.action = "/expense/addexpense";
+            expenseDay.value = "";
+            startMonth.value = "";
+            endMonth.value = "";            
+            addExpenseForm.action = "/expense/addexpense";
         });
 
         // for Monthly field
@@ -444,7 +447,8 @@
             expenseDay.required = true;
             startMonth.required = true;
             endMonth.required = true;
-            expenseForm.action = "/expense/addmonthlyexpense";
+            expenseDate.value = "";
+            addExpenseForm.action = "/expense/addmonthlyexpense";
         });
 
         // Month validation
@@ -466,7 +470,7 @@
         endMonth.addEventListener("change", validateMonths);
 
         // Form submit
-        expenseForm.addEventListener("submit", function(event) {
+        addExpenseForm.addEventListener("submit", function(event) {
             if(monthlyRadio.checked){
                 if(!validateMonths()) {
                     event.preventDefault();
@@ -478,11 +482,34 @@
         // Initial state
         dailyFields.style.display = "block";
         monthlyFields.style.display = "none";
-        expenseForm.action = "/expense/addexpense";
+        addExpenseForm.action = "/expense/addexpense";
         expenseDate.required = true;
         expenseDay.required = false;
         startMonth.required = false;
         endMonth.required = false;
+
+        const expenseModal = document.getElementById("addExpenseModal");
+
+        expenseModal.addEventListener("show.bs.modal", function () {
+            addExpenseForm.reset();
+
+            // Restore the default Daily state
+            dailyRadio.checked = true;
+            monthlyRadio.checked = false;
+
+            dailyFields.style.display = "block";
+            monthlyFields.style.display = "none";
+
+            addExpenseForm.action = "/expense/addexpense";
+
+            expenseDate.required = true;
+            startMonth.required = false;
+            endMonth.required = false;
+            expenseDay.required = false;
+
+            monthError.style.display = "none";
+            endMonth.classList.remove("is-invalid");
+        });
 
         ////////////////////////////////////////
         //  For Creating Line and donut Chart //

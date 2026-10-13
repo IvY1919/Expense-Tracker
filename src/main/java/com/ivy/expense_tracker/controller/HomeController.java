@@ -201,7 +201,7 @@ public class HomeController {
 
     @PostMapping("/expense/updateexpense")
     public String updateExpense(@RequestParam Long expId,
-                                @RequestParam LocalDate expDate,
+                                @RequestParam LocalDate editExpenseDate,
                                 @RequestParam String description,
                                 @RequestParam BigDecimal expAmount,
                                 @RequestParam String paymentMethod,
@@ -210,7 +210,7 @@ public class HomeController {
                                 Authentication authentication) {
 
     String email = authentication.getName();
-    expenseService.updateExpense( expId, expDate, description, expAmount, paymentMethod, email);
+    expenseService.updateExpense( expId, editExpenseDate, description, expAmount, paymentMethod, email);
     return "redirect:/expense?month=" + month + "&view=" + view;
     }
 
@@ -232,15 +232,25 @@ public class HomeController {
     public String addExpense(
             @RequestParam String month,
             @RequestParam String view,
-            @ModelAttribute ExpenseEntity expense,
+            @RequestParam LocalDate addExpenseDate,
+            @RequestParam(required = false) String description,
+            @RequestParam BigDecimal expAmount,
+            @RequestParam String paymentMethod,
             Authentication authentication) {
 
         String email = authentication.getName();
 
+        ExpenseEntity expense = new ExpenseEntity();
+        expense.setExpDate(addExpenseDate);
+        expense.setDescription(description);
+        expense.setExpAmount(expAmount);
+        expense.setPaymentMethod(paymentMethod);
+        
         expenseService.addExpense(expense, email);
 
         return "redirect:/expense?month=" + month + "&view=" + view;
     }
+
 
     @PostMapping("/expense/addmonthlyexpense")
     public String addMonthlyExpense(@RequestParam String startMonth,
@@ -326,10 +336,17 @@ public class HomeController {
     public String AddIncome(
             @RequestParam String month,
             @RequestParam String view,
-            @ModelAttribute IncomeEntity income,
+            @RequestParam LocalDate addIncomeDate,
+            @RequestParam(required = false) String description,
+            @RequestParam BigDecimal incomeAmount,
             Authentication authentication) {
 
         String email = authentication.getName();
+
+        IncomeEntity income = new IncomeEntity();
+        income.setIncomeDate(addIncomeDate);
+        income.setDescription(description);
+        income.setIncomeAmount(incomeAmount);
 
         incomeService.addIncome(income, email);
 
@@ -338,7 +355,7 @@ public class HomeController {
 
     @PostMapping("/income/editincome")
     public String editIncome(@RequestParam Long incomeId,
-                             @RequestParam LocalDate incomeDate,
+                             @RequestParam LocalDate editIncomeDate,
                              @RequestParam String description,
                              @RequestParam BigDecimal incomeAmount,
                              @RequestParam String month,
@@ -346,7 +363,7 @@ public class HomeController {
                              Authentication authentication ) {
         
         String email = authentication.getName();
-        incomeService.updateIncome( incomeId, incomeDate, description, incomeAmount, email);
+        incomeService.updateIncome( incomeId, editIncomeDate, description, incomeAmount, email);
         
         return "redirect:/income?month=" + month + "&view=" + view;
     }

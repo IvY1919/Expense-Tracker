@@ -198,9 +198,13 @@
                     <input type="hidden" name = "month" th:value="${selectedMonth}">
                     <input type="hidden" name = "view" th:value="${view}">
                     <div class="modal-body">
-                        <div class="mb-3">
+                        <!-- <div class="mb-3">
                             <label for="incomeDate" class="form-label"> Income Date </label>
                             <input type="date" name="incomeDate" class="form-control" id="incomeDate" th:value="${income.incomeDate}" required>
+                        </div> -->
+                        <div class="mb-3">
+                            <label for="editIncomeDate" class="form-label"> Income Date </label>
+                            <input type="date" name="editIncomeDate" class="form-control" th:id="'editIncomeDate-' + ${income.incomeId}" th:value="${income.incomeDate}" required>
                         </div>
                         <div class="mb-3">
                             <label for="description" class="form-label"> Description </label>
@@ -273,7 +277,7 @@
                     <h5 class="modal-title" id="editIncomeModalLabel">Add Income</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"> </button>
                 </div>
-                <form th:action="@{/income/addincome}" method="post" id="incomeForm">             
+                <form th:action="@{/income/addincome}" method="post" id="addIncomeForm">             
                     
                     <input type="hidden" name = "month" th:value="${selectedMonth}">
                     <input type="hidden" name = "view" th:value="${view}">
@@ -297,8 +301,8 @@
                         <!-- Daily -->
                         <div id="dailyIncomeFields">
                             <div class="mb-3">
-                                <label for="incomeDate" class="form-label"> Income Date </label>
-                                <input type="date" name="incomeDate" class="form-control" id="incomeDate">
+                                <label for="addIncomeDate" class="form-label"> Income Date </label>
+                                <input type="date" name="addIncomeDate" class="form-control" id="addIncomeDate">
                             </div>
                         </div>
                         <!-- MONTHLY -->
@@ -361,33 +365,51 @@
     const monthlyRadio = document.getElementById("monthlyIncomeInput");
     const dailyFields = document.getElementById("dailyIncomeFields");
     const monthlyFields = document.getElementById("monthlyIncomeFields");
-    const incomeForm = document.getElementById("incomeForm");
-    const incomeDate = document.getElementById("incomeDate");
+    const addIncomeForm = document.getElementById("addIncomeForm");
+    const incomeDate = document.getElementById("addIncomeDate");
     const startMonth = document.getElementById("startMonth");
     const endMonth = document.getElementById("endMonth");
     const incomeDay = document.getElementById("incomeDay");
     const monthError = document.getElementById("monthError");
 
-    // for Daily field
+    // For Daily field
     dailyRadio.addEventListener("change", function () {
         dailyFields.style.display = "block";
         monthlyFields.style.display = "none";
-        incomeForm.action = "/income/addincome";
+
+        addIncomeForm.action = "/income/addincome";
+
         incomeDate.required = true;
         startMonth.required = false;
         endMonth.required = false;
         incomeDay.required = false;
+
+        incomeDate.value = "";
+        startMonth.value = "";
+        endMonth.value = "";
+        incomeDay.value = "";
+      
     });
 
-    // for Monthly field
+
+    // For Monthly field
     monthlyRadio.addEventListener("change", function () {
         dailyFields.style.display = "none";
         monthlyFields.style.display = "block";
-        incomeForm.action = "/income/addmonthlyincome";
+
+        addIncomeForm.action = "/income/addmonthlyincome";
+
         incomeDate.required = false;
         startMonth.required = true;
         endMonth.required = true;
         incomeDay.required = true;
+
+        // Clear Daily date field
+        incomeDate.value = "";
+        incomeDate.removeAttribute("value");
+        // Clear validation error
+        monthError.style.display = "none";
+        endMonth.classList.remove("is-invalid");
     });
 
     // Month validation
@@ -409,7 +431,7 @@
     endMonth.addEventListener("change", validateMonths);
 
     // Form submit
-    incomeForm.addEventListener("submit", function(event) {
+    addIncomeForm.addEventListener("submit", function(event) {
         if (monthlyRadio.checked) {
             if (!validateMonths()) {
                 event.preventDefault();
@@ -421,11 +443,34 @@
     // Initial state
     dailyFields.style.display = "block";
     monthlyFields.style.display = "none";
-    incomeForm.action = "/income/addincome";
+    addIncomeForm.action = "/income/addincome";
     incomeDate.required = true;
     startMonth.required = false;
     endMonth.required = false;
     incomeDay.required = false;
+
+const incomeModal = document.getElementById("addIncomeModal");
+
+incomeModal.addEventListener("show.bs.modal", function () {
+    addIncomeForm.reset();
+
+    // Restore the default Daily state
+    dailyRadio.checked = true;
+    monthlyRadio.checked = false;
+
+    dailyFields.style.display = "block";
+    monthlyFields.style.display = "none";
+
+    addIncomeForm.action = "/income/addincome";
+
+    incomeDate.required = true;
+    startMonth.required = false;
+    endMonth.required = false;
+    incomeDay.required = false;
+
+    monthError.style.display = "none";
+    endMonth.classList.remove("is-invalid");
+});
 
 
     //////////////////////////////////////
