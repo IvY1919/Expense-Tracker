@@ -625,13 +625,17 @@
 
         //month selector 
         function changeMonthInput(month){
-            const view = '[[${view}]]';
-            window.location.href = `/expense?month=${month}&view=${view}`;
+            // const view = '[[${view}]]';
+            // window.location.href = `/expense?month=${month}&view=${view}`;
+            const view = '[[${view}]]'.replace(/"/g, '');
+            window.location.href =`/expense?month=${encodeURIComponent(month)}&view=${encodeURIComponent(view)}`;
 
         }
         function changeView(view){
-            const selectedMonth = '[[${selectedMonth}]]';
-            window.location.href = `/expense?view=${view}&month=${selectedMonth}`;
+            // const selectedMonth = '[[${selectedMonth}]]';
+            // window.location.href = `/expense?view=${view}&month=${selectedMonth}`;
+            const selectedMonth = '[[${selectedMonth}]]'.replace(/"/g, '');
+            window.location.href = `/expense?view=${view}&month=${encodeURIComponent(selectedMonth)}`;
         }
     </script>
 
