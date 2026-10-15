@@ -186,6 +186,36 @@
                     <div class="col-12 col-lg-8">
                         <div class="card h-100 dashboard-card" >
                             <div class="card-body card-body-shadow">
+                                <div class="text-center mb-1"
+                                     th:if="${targetAmount != null and monthlySpent != null}"
+                                     th:with="warnLimit=${targetAmount.multiply(new java.math.BigDecimal('0.8'))},
+                                              dangerLimit=${targetAmount.multiply(new java.math.BigDecimal('1.1'))}">
+
+                                    <!-- Safe: under 80% -->
+                                <img th:if="${monthlySpent.compareTo(warnLimit) < 0}"
+                                     src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f604/512.gif"
+                                     class="budget-status-icon"
+                                     alt="Within budget">
+
+                                <!-- Warning: 80% to 100% -->
+                                <img th:if="${monthlySpent.compareTo(warnLimit) >= 0 and monthlySpent.compareTo(targetAmount) <= 0}"
+                                     src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f631/512.gif"
+                                     class="budget-status-icon"
+                                     alt="Close to budget limit">
+
+                                <!-- Over: above 100% but below 110% -->
+                                <img th:if="${monthlySpent.compareTo(targetAmount) > 0 and monthlySpent.compareTo(dangerLimit) < 0}"
+                                     src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f621/512.gif"
+                                     class="budget-status-icon"
+                                     alt="Over budget">
+
+                                <!-- Way over: 110% or more -->
+                                <img th:if="${monthlySpent.compareTo(dangerLimit) >= 0}"
+                                     src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f635_200d_1f4ab/512.gif"
+                                     class="budget-status-icon"
+                                     alt="Far over budget">
+                                </div>
+
                                 <div class="budget-goal-card">
                                     <!-- Header -->
                                     <div class="budget-goal-header">

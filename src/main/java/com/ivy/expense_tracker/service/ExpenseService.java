@@ -140,9 +140,18 @@ public class ExpenseService {
             || desc.contains("coffee")
             || desc.contains("cafe")
             || desc.contains("breakfast")
+            || desc.contains("drink")
             || desc.contains("eat")){
 
                 return "Food";
+        }
+
+        if (   desc.contains("Netflix")
+            || desc.contains("Spotify")
+            || desc.contains("Disney")
+            || desc.contains("subscribtions")){
+
+                return "Subscribtions";
         }
 
         if(    desc.contains("plane")
@@ -164,6 +173,7 @@ public class ExpenseService {
 
         if (desc.contains("clothes")
                 || desc.contains("shoes")
+                || desc.contains("buy")
                 || desc.contains("shopping")) {
             return "Shopping";
         }
