@@ -197,7 +197,7 @@
                                 </div>
                                 </form>
                             
-                            <!-- Currency change  -->
+                            <!-- Currency change
                                 <div class="mb-3"> 
                                     <label class="form-label fw-bold"> Currency </label> 
                                     <div class="form-control"> 
@@ -215,6 +215,7 @@
                                         </button>
                                     </div>
                                 </div>
+                            -->
                             </div> 
                             <!-- Delete Account --> 
                             <div class="text-center mt-4" id="deleteAccBtn"> 
@@ -263,6 +264,32 @@
      </div>
 
     <script th:src="@{/js/DarkLightMode.js}"></script>
+    <!-- Mobile sidebar toggle -->
+    <script>
+        (function () {
+            const toggleBtn = document.getElementById("sidebarToggle");
+            const backdrop = document.getElementById("sidebarBackdrop");
+            const sidebar = document.getElementById("sidebar");
+            if (!toggleBtn || !backdrop || !sidebar) { return; }
+
+            function setSidebar(open) {
+                document.body.classList.toggle("sidebar-open", open);
+                toggleBtn.setAttribute("aria-expanded", open ? "true" : "false");
+            }
+
+            toggleBtn.addEventListener("click", function () {
+                setSidebar(!document.body.classList.contains("sidebar-open"));
+            });
+            backdrop.addEventListener("click", function () { setSidebar(false); });
+            document.addEventListener("keydown", function (e) {
+                if (e.key === "Escape") { setSidebar(false); }
+            });
+            // Reset when resizing up to desktop layout
+            window.matchMedia("(min-width: 992px)").addEventListener("change", function (e) {
+                if (e.matches) { setSidebar(false); }
+            });
+        })();
+    </script>
     <script>       
         const editBtn = document.getElementById("editUsernameBtn");
         const saveBtn = document.getElementById("saveUsernameBtn");

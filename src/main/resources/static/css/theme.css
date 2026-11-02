@@ -135,12 +135,14 @@ body {
 .wrapper {
     display: flex;
     min-height: 100vh;
+    min-height: 100dvh;
 }
 
 .main {
     flex: 1;
     min-width: 0;
     min-height: 100vh;
+    min-height: 100dvh;
     display: flex;
     flex-direction: column;
 }
@@ -205,6 +207,11 @@ body {
     color: var(--text-color);
     border-color: var(--border-color);
     box-shadow: 0 2px 8px var(--shadow-color);
+    height: 50vh;
+}
+
+.exp-top-cards{
+    height: 35vh;
 }
 
 .card-body-shadow {
@@ -311,7 +318,9 @@ body.dark-mode .theme-switch {
 /* 8. LINE CHART  */
 
 .linechart-container {
-    height: 400px;
+    position: relative;
+    width: 100%;
+    height: clamp(260px, 50vh, 400px);
     animation: floatIn 0.8s ease-out;
 }
 
@@ -337,7 +346,8 @@ body.dark-mode .theme-switch {
 }
 
 .barchart-container {
-    height: 350px;
+    position: relative;
+    height: clamp(260px, 45vh, 350px);
     min-width: 800px;
 }
 
@@ -345,7 +355,9 @@ body.dark-mode .theme-switch {
 /*  10. PIE CHART */
 
 .expense-pie-chart {
-    height: 250px;
+    position: relative;
+    width: 100%;
+    height: clamp(200px, 32vh, 250px);
 }
 
 
@@ -354,17 +366,18 @@ body.dark-mode .theme-switch {
 .exp-table,
 .in-table,
 .trans-table {
-    height: 350px;
+    height: clamp(240px, 45vh, 350px);
     max-height: 350px;
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
 }
 
 .all-trans-table {
     display: flex;
     flex-direction: column;
     height: 100%;
-
+    min-width: 0;
+    overflow-x: auto;
 }
 
 .all-trans-table > div:last-child {
@@ -372,10 +385,10 @@ body.dark-mode .theme-switch {
 }
 
 .latest-transactions{
-    height: 350px;
+    height: clamp(240px, 45vh, 350px);
     max-height: 350px;
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
 }
 
 /*  12. EXPENSE / INCOME TABLE */
@@ -626,5 +639,272 @@ html.dark-mode .pagination .page-item.active .page-link {
 .budget-status-icon {
     width: 140px;
     height: 140px;
+    max-width: 100%;
     object-fit: contain;
+}
+
+
+/* =========================================================
+   17. RESPONSIVE
+   Desktop (>= 992px) keeps the original look. Everything
+   below is added for tablets and phones.
+   ========================================================= */
+
+/* Global safety net */
+img,
+canvas,
+svg {
+    max-width: 100%;
+}
+
+/* Hamburger button + backdrop (hidden on desktop) */
+.sidebar-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    margin-right: 10px;
+    padding: 0;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--card-bg);
+    color: var(--text-color);
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1101;
+}
+
+.sidebar-toggle:focus-visible {
+    outline: 2px solid var(--sidebar-nav-color);
+    outline-offset: 2px;
+}
+
+.sidebar-backdrop {
+    display: none;
+}
+
+/* Wide screens: keep the date centered in the navbar */
+@media (max-width: 1199.98px) {
+    .main-navbar .current-date {
+        position: static !important;
+        transform: none !important;
+        top: auto !important;
+        left: auto !important;
+        order: 3;
+        width: 100%;
+        text-align: center;
+        margin-top: 6px;
+    }
+    .main-navbar .current-date h3 {
+        font-size: 1.35rem;
+    }
+}
+
+/* Tablet & mobile: off-canvas sidebar */
+@media (max-width: 991.98px) {
+
+    .sidebar-toggle {
+        display: inline-flex;
+    }
+
+    #sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        height: 100vh;
+        height: 100dvh;
+        width: 260px;
+        max-width: 85vw;
+        overflow-y: auto;
+        overflow-x: hidden;
+        transform: translateX(-100%);
+        visibility: hidden;
+        transition: transform 0.3s ease, visibility 0s linear 0.3s;
+    }
+
+    body.sidebar-open #sidebar {
+        transform: translateX(0);
+        visibility: visible;
+        transition: transform 0.3s ease, visibility 0s linear 0s;
+    }
+
+    /* leave room for the toggle button that sits above the sidebar */
+    #sidebar .sidebar-header {
+        padding: 18px 16px 18px 68px;
+        text-align: left;
+    }
+
+    #sidebar .sidebar-header h4 {
+        margin: 0;
+        font-size: 1.2rem;
+    }
+
+    .sidebar-backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 999;
+        background: rgba(0, 0, 0, 0.45);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0s linear 0.3s;
+    }
+
+    body.sidebar-open .sidebar-backdrop {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.3s ease, visibility 0s linear 0s;
+    }
+
+    body.sidebar-open {
+        overflow: hidden;
+    }
+
+    .brand {
+        font-size: 24px;
+    }
+
+    /* Transactions page card has only a left margin on desktop */
+    .main > .card.ms-3 {
+        margin-right: 1rem;
+    }
+}
+
+/* Tablet portrait & large phones */
+@media (max-width: 767.98px) {
+
+    .brand {
+        font-size: 20px;
+        overflow-wrap: anywhere;
+    }
+
+    .main-navbar .current-date h3 {
+        font-size: 1.1rem;
+    }
+
+    .main-navbar form {
+        margin-right: 0 !important;
+    }
+
+    .card-body-shadow {
+        box-shadow: 6px 10px 18px -10px #4e46e560;
+    }
+
+    /* header rows inside cards: drop the large side margins */
+    .card-body .row > .col.ms-3,
+    .card-body .row > .col-auto.me-3,
+    .card-body .row > .col-auto.me-4 {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .selected-month {
+        width: 100%;
+        max-width: 180px;
+    }
+
+    .current-month-total {
+        font-size: 17px;
+        flex-wrap: wrap;
+        text-align: center;
+    }
+
+    .current-month-total h2 {
+        font-size: 1.5rem;
+    }
+
+    /* tables scroll sideways inside their own box instead of being cut off */
+    .expense-table {
+        min-width: 560px;
+    }
+
+    .income-table {
+        min-width: 460px;
+    }
+
+    .expense-table th,
+    .expense-table td {
+        padding: 10px 12px;
+    }
+
+    .graph-drop-down {
+        width: 120px;
+    }
+
+    .pagination {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    /* budget card */
+    .budget-title {
+        font-size: 17px;
+    }
+
+    .budget-amount {
+        font-size: 0.8rem;
+    }
+
+    .coin-icon,
+    .flag-icon {
+        font-size: 16px;
+    }
+
+    .budget-status-icon {
+        width: clamp(90px, 30vw, 140px);
+        height: auto;
+    }
+}
+
+/* Small phones */
+@media (max-width: 575.98px) {
+
+    .container-fluid {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .main > .card.ms-3 {
+        margin-left: 10px !important;
+        margin-right: 10px;
+    }
+
+    .brand {
+        font-size: 18px;
+    }
+
+    .theme-btn {
+        padding: 8px 12px;
+    }
+
+    .modal-footer {
+        flex-wrap: wrap;
+    }
+
+    .linechart-container {
+        height: clamp(240px, 42vh, 320px);
+    }
+
+    .expense-pie-chart {
+        height: clamp(220px, 34vh, 280px);
+    }
+}
+
+/* Short screens (landscape phones, small laptops) */
+@media (max-height: 500px) {
+    .exp-table,
+    .in-table,
+    .trans-table,
+    .latest-transactions {
+        height: 70vh;
+        max-height: 70vh;
+    }
+    .linechart-container {
+        height: 70vh;
+    }
 }

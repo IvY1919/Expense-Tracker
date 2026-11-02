@@ -41,3 +41,31 @@ if(savedTheme ==="dark"){
 updateThemeButtons();
 
 // End of Dark-light Mode///////////////////////////////////////////////////////////////////////
+
+// Start of Mobile sidebar toggle///////////////////////////////////////////////////////////////////////
+
+        // (function () {
+        //     const toggleBtn = document.getElementById("sidebarToggle");
+        //     const backdrop = document.getElementById("sidebarBackdrop");
+        //     const sidebar = document.getElementById("sidebar");
+        //     if (!toggleBtn || !backdrop || !sidebar) { return; }
+
+        //     function setSidebar(open) {
+        //         document.body.classList.toggle("sidebar-open", open);
+        //         toggleBtn.setAttribute("aria-expanded", open ? "true" : "false");
+        //     }
+
+        //     toggleBtn.addEventListener("click", function () {
+        //         setSidebar(!document.body.classList.contains("sidebar-open"));
+        //     });
+        //     backdrop.addEventListener("click", function () { setSidebar(false); });
+        //     document.addEventListener("keydown", function (e) {
+        //         if (e.key === "Escape") { setSidebar(false); }
+        //     });
+        //     // Reset when resizing up to desktop layout
+        //     window.matchMedia("(min-width: 992px)").addEventListener("change", function (e) {
+        //         if (e.matches) { setSidebar(false); }
+        //     });
+        // })();
+
+// End of Mobile sidebar toggle///////////////////////////////////////////////////////////////////////
