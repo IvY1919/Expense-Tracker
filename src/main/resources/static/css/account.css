@@ -38,7 +38,7 @@ html.dark-mode {
     width: 320px;
 }
 
-#editUsernameBtn, #editPwdBtn{
+#editUsernameBtn, #editPwdBtn, #editCurrencyBtn{
     color:  #9046e599;
 }
 

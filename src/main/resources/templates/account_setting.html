@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org" data-bs-theme="light" lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="_csrf" th:content="${_csrf.token}">
     <meta name="_csrf_header" th:content="${_csrf.headerName}">
     <!-- <title th:text="${title}">Expense</title> -->
@@ -24,6 +25,9 @@
 </head>
 <body>
     <div class="wrapper">
+
+        <!-- Backdrop for mobile sidebar (click to close) -->
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
         <!-- Sidebar -->
         <nav id="sidebar">
@@ -83,6 +87,11 @@
             <!-- Navbar -->
             <nav class="navbar navbar-expand-lg shadow-sm main-navbar">
                 <div class="container-fluid position-relative">
+                    <!-- Hamburger (mobile / tablet only) -->
+                    <button type="button" class="sidebar-toggle" id="sidebarToggle"
+                            aria-label="Toggle navigation" aria-controls="sidebar" aria-expanded="false">
+                        <i class="bi bi-list"></i>
+                    </button>
                     <span class="brand">
                         Welcome, <span th:text="${username}"></span>
                     </span>                
@@ -187,6 +196,25 @@
                                    <h5>You cannot set the same password as the current password</h5>
                                 </div>
                                 </form>
+                            
+                            <!-- Currency change  -->
+                                <div class="mb-3"> 
+                                    <label class="form-label fw-bold"> Currency </label> 
+                                    <div class="form-control"> 
+                                        <span class="input-group-text"><i class="bi bi-currency-exchange"></i></span>
+                                        <span id="currency" >Currency</span> 
+                                        <input type="text" id="currency"   class="form-control" style="display: none;">
+                                        <button type="button" id="editCurrencyBtn" class="btn btn-link ms-auto -0" title="Edit Currency">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
+                                        <button type="button" id="saveCurrencyBtn" class="btn  btn-outline-success btn-sm" style="display: none;">
+                                             <i class="bi bi-check-lg"></i>     
+                                        </button>
+                                        <button type="button" id="cancleCurrencyBtn" class="btn btn-outline-danger btn-sm" style="display: none;">
+                                            <i class="bi bi-x-lg"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div> 
                             <!-- Delete Account --> 
                             <div class="text-center mt-4" id="deleteAccBtn"> 
