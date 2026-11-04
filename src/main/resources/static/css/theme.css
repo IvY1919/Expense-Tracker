@@ -209,10 +209,10 @@ body {
     box-shadow: 0 2px 8px var(--shadow-color);
     height: 50vh;
 }
-
+/* 
 .exp-top-cards{
     height: 35vh;
-}
+} */
 
 .card-body-shadow {
     box-shadow: var(--card-body-shadow);

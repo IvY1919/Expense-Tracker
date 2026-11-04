@@ -60,7 +60,43 @@ public class HomeController {
     }
 
     ////////////////////////////////////////
-    // 1. For dashboard page              //
+    // 1. For Login page                  //
+    ////////////////////////////////////////
+
+    @GetMapping("/login")
+    public String login() {
+        return "login";
+    }
+
+    ////////////////////////////////////////
+    // 2. For signup page                 //
+    ////////////////////////////////////////
+    
+    @GetMapping("/signup")
+    public String signup() {
+        return "signup";
+    }
+
+    @PostMapping("/signup")
+    public String register(@RequestParam String username,
+                           @RequestParam String email,
+                           @RequestParam String password,
+                           Model model) {
+
+        try{
+            userService.registerUser(username, email, password);       
+            // System.out.println("here is my signup"); 
+            return "redirect:/login";
+        } catch(IllegalArgumentException e){
+            model.addAttribute("signupError", e.getMessage());
+            return "signup";
+        }
+
+    }  
+
+
+    ////////////////////////////////////////
+    // 3. For dashboard page              //
     ////////////////////////////////////////
 
     @GetMapping("/dashboard")
@@ -127,7 +163,7 @@ public class HomeController {
     }
 
     ////////////////////////////////////////
-    // 2. For All transactions page       //
+    // 4. For All transactions page       //
     ////////////////////////////////////////
     
     @GetMapping("/alltransactions")
@@ -289,7 +325,7 @@ public class HomeController {
     }    
 
     ////////////////////////////////////////
-    // 3. For Expense page                //
+    // 5. For Expense page                //
     ////////////////////////////////////////
     
     @GetMapping("/expense")
@@ -431,7 +467,7 @@ public class HomeController {
     }    
 
     ////////////////////////////////////////
-    // 4. For Income page                 //
+    // 6. For Income page                 //
     ////////////////////////////////////////
     
     @GetMapping("/income")
@@ -559,11 +595,33 @@ public class HomeController {
     }
 
     ////////////////////////////////////////
-    // 5. For account setting  page       //
+    // 7. For Saving Simulation page      //
+    ////////////////////////////////////////
+    @GetMapping("/saving")
+    public String saving(
+        Model model, 
+        Authentication authentication
+    ) {
+        CustomUserDetails userDetails =
+            (CustomUserDetails) authentication.getPrincipal();            
+            
+        String email = authentication.getName();     
+        UserEntity user = userService.findByEmail(email);
+
+        model.addAttribute("username", userDetails.getUsernameFromDb());
+        model.addAttribute("email", user.getEmail());
+
+        return "saving";
+    }
+     
+    
+
+    ////////////////////////////////////////
+    // 8. For account setting  page       //
     ////////////////////////////////////////
     
     @GetMapping("/account_setting")
-    public String accountsetting(
+    public String accountSetting(
         Model model,Authentication authentication) {
 
         String email = authentication.getName();

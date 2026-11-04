@@ -65,6 +65,13 @@
                 </li>
 
                 <li class="nav-item">
+                    <a class="nav-link" href="/saving">
+                        <i class="bi bi-bar-chart-fill"></i>
+                        Saving Simulation
+                    </a>
+                </li>
+
+                <li class="nav-item">
                     <a class="nav-link active" href="#">
                         <i class="bi bi-gear"></i>
                         Settings
@@ -264,32 +271,6 @@
      </div>
 
     <script th:src="@{/js/DarkLightMode.js}"></script>
-    <!-- Mobile sidebar toggle -->
-    <script>
-        (function () {
-            const toggleBtn = document.getElementById("sidebarToggle");
-            const backdrop = document.getElementById("sidebarBackdrop");
-            const sidebar = document.getElementById("sidebar");
-            if (!toggleBtn || !backdrop || !sidebar) { return; }
-
-            function setSidebar(open) {
-                document.body.classList.toggle("sidebar-open", open);
-                toggleBtn.setAttribute("aria-expanded", open ? "true" : "false");
-            }
-
-            toggleBtn.addEventListener("click", function () {
-                setSidebar(!document.body.classList.contains("sidebar-open"));
-            });
-            backdrop.addEventListener("click", function () { setSidebar(false); });
-            document.addEventListener("keydown", function (e) {
-                if (e.key === "Escape") { setSidebar(false); }
-            });
-            // Reset when resizing up to desktop layout
-            window.matchMedia("(min-width: 992px)").addEventListener("change", function (e) {
-                if (e.matches) { setSidebar(false); }
-            });
-        })();
-    </script>
     <script>       
         const editBtn = document.getElementById("editUsernameBtn");
         const saveBtn = document.getElementById("saveUsernameBtn");
