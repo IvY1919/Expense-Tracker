@@ -52,11 +52,17 @@
 
     --budget-card-color:#fffaf0;
     --budget-card-border-color :1px solid #eadfca;
-    --budget-progress-fill: #f5eab5;
+    --budget-progress-fill: #ffe45f;
     --add-target-hover-bg: #f5eab5;
     --add-target-bg: transparent;
     --add-target-txt-color-hover: #777;
     --target-line-color: #ffbb00;
+
+    --sv-green: #16a34a;
+    --sv-green-dark: #0f6b35;
+    --sv-green-soft: #e6f6ec;
+    --sv-blue-soft: #eef2ff;
+    --sv-border: #cbcfdb;
 
 
 }
@@ -206,13 +212,10 @@ body {
     background-color: var(--card-bg);
     color: var(--text-color);
     border-color: var(--border-color);
-    box-shadow: 0 2px 8px var(--shadow-color);
-    height: 50vh;
+    height: 40vh;
+    /* box-shadow: 0 2px 8px var(--shadow-color); */
+    
 }
-/* 
-.exp-top-cards{
-    height: 35vh;
-} */
 
 .card-body-shadow {
     box-shadow: var(--card-body-shadow);
@@ -687,6 +690,7 @@ svg {
     display: none;
 }
 
+
 /* Wide screens: keep the date centered in the navbar */
 @media (max-width: 1199.98px) {
     .main-navbar .current-date {
@@ -907,4 +911,136 @@ svg {
     .linechart-container {
         height: 70vh;
     }
+}
+/* For transation Page */
+.transaction-page h4{
+    font-weight: 700;
+
+}
+
+/* For Save Simulation Page */
+
+.savings-page{
+    padding: 0 1.5rem;
+}
+
+.savings-page .page-title {
+    font-weight: 700;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    margin: 0;
+}
+
+.savings-page .page-title-icon {
+    font-size: clamp(1.8rem, 5vw, 2.4rem);
+    color: #e11d48;
+    line-height: 1;
+}
+.savings-page .page-subtitle {
+    margin: .25rem 0 1.25rem;
+}
+
+.savings-page .sv-card{
+    border-color: var(--border-color);
+    border-radius: 8px;
+    padding: 1.7rem 1.6rem;
+    box-shadow: var(--card-body-shadow);
+    transition: 0.3s;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    margin-bottom: 1rem;
+}
+
+.savings-page .sv-card-title {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+.savings-page .sv-card-sub{
+    margin: 1rem;
+}
+
+.savings-page .sv-card-title i { font-size: 1.4rem; }
+.savings-page .icon-gold   { color: #f59e0b; }
+.savings-page .icon-indigo { color: var(--accent-color); }
+.savings-page .icon-green  { color: var(--sv-green); }
+.savings-page .sv-label { font-size: 1.5rem; margin-bottom: .3rem; }
+.savings-page .sv-value { font-size: 1.5rem; font-weight: 700; line-height: 1.2; }
+.savings-page .sv-sub { font-size: .95rem;}
+.savings-page .text-green { color: var(--sv-green); font-size: 1.2rem;}
+
+@media (min-width: 768px) {
+    .savings-page .divider-start { border-left: 1px solid var(--sv-border); padding-left: 1.5rem; }
+}
+
+.savings-page .sv-eta {
+    background: #d7f1e0;
+    border-radius: .85rem;
+    padding: .9rem 1rem;
+    text-align: center;
+    height: 100%;
+}
+.savings-page .sv-eta .sv-eta-label {
+    font-size: .8rem;
+    font-weight: 600;
+    color: var(--sv-green-dark);
+}
+.savings-page .sv-eta .sv-eta-value {
+    font-size: clamp(1.5rem, 4vw, 1.9rem);
+    font-weight: 800;
+    color: var(--sv-green-dark);
+    line-height: 1.1;
+}
+.savings-page .sv-eta .sv-eta-date { font-size: .95rem; font-weight: 600; color: var(--sv-green-dark); }
+
+.savings-page .sv-progress { height: 1.4rem; border-radius: 999px; background-color: #e5e7eb; }
+.savings-page .sv-progress .progress-bar {
+    background: var(--accent-color);
+    font-weight: 700;
+    font-size: .8rem;
+    border-radius: 999px;
+}
+.savings-page .sv-progress-meta { font-size: 1.1rem; white-space: nowrap; }
+
+.savings-page .sv-amount-input {
+    font-size: clamp(1.8rem, 5vw, 2.2rem);
+    font-weight: 800;
+    color: var(--sv-green-dark);
+}
+/* .savings-page .sv-range { color: var(--accent-color); } */
+
+.savings-page .sv-compare {
+    border: 1px solid var(--sv-border);
+    border-radius: .85rem;
+    padding: 1rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: .5rem;
+    text-align: center;
+}
+.savings-page .sv-compare .sv-compare-value { font-size: 1.8rem; font-weight: 700; }
+.savings-page .sv-compare .sv-compare-arrow { font-size: 1.7rem; }
+
+.savings-page .sv-result {
+    background: #d7f1e0;
+    border: 1px solid #b8e4c7;
+    border-radius: .85rem;
+    padding: 1rem;
+    text-align: center;
+    height: 100%;
+}
+.savings-page .sv-result .sv-result-icon { font-size: 1.2rem; color: var(--sv-green);padding-right: 2px; }
+.savings-page .sv-result .sv-result-title { font-weight: 700; font-size:1.3rem; color: var(--sv-green-dark); }
+.savings-page .sv-result .sv-result-sub { font-size: .95rem; color: var(--sv-green-dark); }
+
+/* Small phones */
+@media (max-width: 575.98px) {
+    .savings-page .sv-card { padding: 1rem; }
+    .savings-page .sv-progress-meta { white-space: normal; }
+    .savings-page .sv-compare { flex-direction: row; }
+    .savings-page .sv-label{ font-size: 1.1rem;}
 }

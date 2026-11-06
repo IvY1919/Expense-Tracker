@@ -135,7 +135,6 @@ public class ExpenseService {
         if (   desc.contains("food")
             || desc.contains("lunch")
             || desc.contains("dinner")
-            || desc.contains("lunch")
             || desc.contains("snack")
             || desc.contains("coffee")
             || desc.contains("cafe")
@@ -146,9 +145,9 @@ public class ExpenseService {
                 return "Food";
         }
 
-        if (   desc.contains("Netflix")
-            || desc.contains("Spotify")
-            || desc.contains("Disney")
+        if (   desc.contains("netflix")
+            || desc.contains("spotify")
+            || desc.contains("disney")
             || desc.contains("subscribtions")){
 
                 return "Subscribtions";
@@ -164,14 +163,14 @@ public class ExpenseService {
                 return "Transport";
             }
 
-        if (desc.contains("movie")
-                || desc.contains("game")
-                || desc.contains("concert")
-                || desc.contains("entertainment")) {
+        if (   desc.contains("movie")
+            || desc.contains("game")
+            || desc.contains("concert")
+            || desc.contains("entertainment")) {
             return "Entertainment";
         }
 
-        if (desc.contains("clothes")
+        if (       desc.contains("clothes")
                 || desc.contains("shoes")
                 || desc.contains("buy")
                 || desc.contains("shopping")) {
@@ -184,7 +183,7 @@ public class ExpenseService {
                 || desc.contains("gass")
                 || desc.contains("phone")
                 || desc.contains("bill")) {
-            return "Bills";
+            return "Utilities";
         }
 
         if (desc.contains("rent")) {

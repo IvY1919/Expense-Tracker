@@ -108,12 +108,171 @@
             </nav>
 
             <!-- Page Content -->
-
+            <div class="container-fluid mt-3 savings-page">
+                <div class="d-flex align-items-center gap-3">
+                    <i class="bi bi-bullseye page-title-icon"></i>
+                    <h1 class="page-title">Savings Simulation</h1>
+                </div>
+                <p class="page-subtitle">See when you can reach your savings goal and explore ways to achieve it sooner.</p>
             
+                <div class="sv-card">
+                    <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-2">
+                        <div class="sv-card-title mb-0">
+                            <i class="bi bi-trophy-fill icon-gold"></i>
+                            <span>Your Savings Goal</span>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#targetSavingInputModal">
+                            <i class="bi bi-pencil-fill me-1"></i> Edit Goal
+                        </button>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-12 col-sm-6">
+                            <div class="sv-label">Target Savings Amount</div>
+                            <div class="sv-value">¥1,000,000</div>
+                        </div>
+                        <div class="col-12 col-sm-6 divider-start">
+                            <div class="sv-label">Current Savings</div>
+                            <div class="sv-value">¥200,000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== Current Plan ===== -->
+                <div class="sv-card sv-plan">
+                    <div class="sv-card-title">
+                        <i class="bi bi-calculator-fill icon-indigo"></i>
+                        <span>Current Plan</span>
+                        <div class="sv-card-sub text-green">
+                        <span>The estimated monthly income, expenses, and savings are calculated based on data from the previous 5 months.</span>
+                        </div>
+                    </div>
+                    
+                
+                    <div class="row g-3 align-items-stretch">
+                        <div class="col-6 col-md-3">
+                            <div class="sv-label">Estimate Monthly Income</div>
+                            <div class="sv-value">¥300,000</div>
+                            <div class="sv-sub">(Fixed + Variable Income) </div>
+                        </div>
+                        <div class="col-6 col-md-3 divider-start">
+                            <div class="sv-label">Estimate Monthly Expenses</div>
+                            <div class="sv-value">¥220,000</div>
+                            <div class="sv-sub">(Fixed + Variable Expenses) </div>
+                        </div>
+                        <div class="col-12 col-md-3 divider-start">
+                            <div class="sv-label">Estimate Monthly Savings Capacity</div>
+                            <div class="sv-value text-green">¥80,000</div>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <div class="sv-eta">
+                                <div class="sv-eta-label"><i class="bi bi-calendar-check me-1"></i>Estimated Time to Reach Goal</div>
+                                <div class="sv-eta-value">10 months</div>
+                                <div class="sv-eta-date">Dec, 2026</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column flex-sm-row align-items-sm-center gap-2 gap-sm-3 mt-4">
+                        <div class="progress sv-progress flex-grow-1" role="progressbar"
+                             aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" aria-label="Savings progress">
+                            <div class="progress-bar" style="width: 20%">20%</div>
+                        </div>
+                        <div class="sv-progress-meta">¥200,000 / ¥1,000,000</div>
+                    </div>
+                </div>
+
+                <div class="sv-card sv-more">
+                    <div class="sv-card-title">
+                        <i class="bi bi-bar-chart-fill icon-green"></i>
+                        <span>Try Saving More</span>
+                    </div>
+                    <p class="sv-label mb-3">See how much earlier you can reach your goal by saving an additional amount each month.</p>
+
+                    <div class="row g-3 align-items-stretch">
+                        <div class="col-12 col-lg-4">
+                            <div class="sv-label fw-semibold">Additional Monthly Savings</div>
+                            <div class="sv-amount-input mb-2">¥10,000</div>
+                            <input type="range" class="form-range sv-range" min="0" max="50000" step="1000" value="10000"
+                                   aria-label="Additional monthly savings">
+                            <div class="d-flex justify-content-between sv-sub">
+                                <span>¥0</span>
+                                <span>¥50,000</span>
+                            </div>
+                        </div>
+                    
+
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="sv-compare">
+                                <div>
+                                    <div class="sv-label mb-1">Original Plan</div>
+                                    <div class="sv-compare-value">10 months</div>
+                                </div>
+                                <i class="bi bi-arrow-right sv-compare-arrow"></i>
+                                <div>
+                                    <div class="sv-label mb-1 text-green fw-semibold">New Plan</div>
+                                    <div class="sv-compare-value text-green">9 months</div>
+                                </div>
+                            </div>                    
+                        </div>
+
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="sv-result">                                
+                                <div class="sv-result-title"><i class="bi bi-check-circle-fill sv-result-icon"></i>You can reach your goal<br>1 month earlier!</div>
+                                <div class="sv-result-sub mt-1">New Monthly Savings Capacity<br><strong>¥90,000</strong></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>            
         </div>
 
-
     </div>
+
+
+    <!-- Target Goal modal -->
+     <div class="modal fade" tabindex="-1" id="targetSavingInputModal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"> Set Target Saving</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="targetSavingForm">
+                    <div class="modal-body">
+                        <label for="targetSavingAmount" class="form-label">
+                            Target Amount
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                ¥
+                            </span>
+                            <input type="number"
+                                id="targetSavingAmount"
+                                name="targetSavingAmount"
+                                class="form-control"
+                                min="1"
+                                required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal">
+                            Cancel
+                        </button>
+                        <button type="submit"
+                                class="btn btn-primary">
+                            Save
+                        </button>
+                    </div>
+                </form>
+
+
+            </div>
+        </div>
+
+     </div>
 
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>

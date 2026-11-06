@@ -109,101 +109,104 @@
 
             <!-- Page Content -->
 
-            <div class="card ms-3 mt-3">
-                <div class="card-body card-body-shadow d-flex flex-column">
-                    <div class="row align-items-center">
-                        <div class="table-container all-trans-table">
-                            <form th:action="@{/alltransactions}" method="get" class="d-flex align-items-center justify-content-between mb-4 gap-3 flex-wrap">
-                                <h4 class="mb-4">All Transactions</h4>
+            <div class="container-fluid  mt-3 transaction-page">
+                <div class="card">
+                    <div class="card-body card-body-shadow d-flex flex-column">
+                        <div class="row align-items-center">
+                            <div class="table-container all-trans-table">
+                                <form th:action="@{/alltransactions}" method="get" class="d-flex align-items-center justify-content-between mb-4 gap-3 flex-wrap">
+                                    <h4 class="mb-4">All Transactions</h4>
 
-                                <div class="d-flex align-items-center gap-3 flex-wrap">
-                                    <!-- Year filter -->
-                                    <div class="d-flex align-items-center gap-2 ">
-                                        <label for="yearFilter" class="form-label mb-0">Year</label>
-                                        <select name="yearFilter" id="yearFilter" class="form-select" onchange="this.form.requestSubmit()">
-                                            <option value="All" th:selected="${selectedYear == 'All'}">All</option>
-                                            <option th:each="y : ${availableYears}" 
-                                                th:value="${y}" 
-                                                th:text="${y}" 
-                                                th:selected="${selectedYear == y.toString()}"></option>
-                                        </select>
+                                    <div class="d-flex align-items-center gap-3 flex-wrap">
+                                        <!-- Year filter -->
+                                        <div class="d-flex align-items-center gap-2 ">
+                                            <label for="yearFilter" class="form-label mb-0">Year</label>
+                                            <select name="yearFilter" id="yearFilter" class="form-select" onchange="this.form.requestSubmit()">
+                                                <option value="All" th:selected="${selectedYear == 'All'}">All</option>
+                                                <option th:each="y : ${availableYears}" 
+                                                    th:value="${y}" 
+                                                    th:text="${y}" 
+                                                    th:selected="${selectedYear == y.toString()}"></option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Type filter -->
+                                        <div class="d-flex align-items-center gap-2">
+                                            <label for="typeFilter" class="form-label mb-0">Type</label>
+                                            <select name="typeFilter" id="typeFilter" class="form-select" onchange="this.form.requestSubmit()">
+                                                <option value="All" th:selected="${selectedType == 'All'}">All</option>
+                                                <option value="Income" th:selected="${selectedType == 'Income'}">Income</option>
+                                                <option value="Expense" th:selected="${selectedType == 'Expense'}">Expense</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Apply filter
+                                        <div>
+                                            <button type="submit" class="btn btn-sm btn-outline-primary">Apply</button>
+                                        </div> 
+                                        -->
+
+                                        <!-- Export filtered results -->
+                                        <div>
+                                            <button type="submit" class="btn btn-success" th:formaction="@{/alltransactions/export}">
+                                                <i class="bi bi-file-earmark-excel"></i> Export Excel
+                                            </button>
+                                        </div>
                                     </div>
-
-                                    <!-- Type filter -->
-                                    <div class="d-flex align-items-center gap-2">
-                                        <label for="typeFilter" class="form-label mb-0">Type</label>
-                                        <select name="typeFilter" id="typeFilter" class="form-select" onchange="this.form.requestSubmit()">
-                                            <option value="All" th:selected="${selectedType == 'All'}">All</option>
-                                            <option value="Income" th:selected="${selectedType == 'Income'}">Income</option>
-                                            <option value="Expense" th:selected="${selectedType == 'Expense'}">Expense</option>
-                                        </select>
-                                    </div>
-
-                                    <!-- Apply filter
-                                    <div>
-                                        <button type="submit" class="btn btn-sm btn-outline-primary">Apply</button>
-                                    </div> 
-                                    -->
-
-                                    <!-- Export filtered results -->
-                                    <div>
-                                        <button type="submit" class="btn btn-success" th:formaction="@{/alltransactions/export}">
-                                            <i class="bi bi-file-earmark-excel"></i> Export Excel
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                            <table class="table alltrans-table">
-                                <thead>
-                                    <tr>
-                                        <th>Description</th>
-                                        <th>Date</th>                                        
-                                        <th>Amount</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr th:each="transaction : ${allTransactions}">
-                                        <td th:text = "${transaction.description}"></td>
-                                        <td th:text = "${transaction.date}"></td>
-                                        <td>
-                                            <span th:if="${transaction.type == 'Income'}"
-                                                class="text-success"
-                                                th:text="'+' + ${transaction.amount}"></span>
-                                            <span th:if="${transaction.type == 'Expense'}"
-                                                class="text-danger"
-                                                th:text="'-' + ${transaction.amount}"></span>
-                                            </td>
+                                </form>
+                                <table class="table alltrans-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Description</th>
+                                            <th>Date</th>                                        
+                                            <th>Amount</th>
                                         </tr>
-                                </tbody>
-                            </table>
-                            <div class="pagination-container mt-4" th:if="${totalPages >1}" aria-label="Transaction pagination">
-                                <ul class="pagination justify-content-center">
-                                    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-                                        <a class="page-link" th:href="@{/alltransactions(page=${currentPage -1},
-                                                                                    yearFilter=${selectedYear},
-                                                                                    typeFilter=${selectedType})}">
-                                            <i class="bi bi-caret-left-fill"></i>
-                                        </a>
-                                    </li>
-                                    <li class="page-item" th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"
-                                            th:classappend="${pageNumber == currentPage} ? 'active'">
-                                            <a class="page-link" th:href="@{/alltransactions(page=${pageNumber},
-                                                                                            yearFilter=${selectedYear},
-                                                                                            typeFilter=${selectedType})}" th:text="${pageNumber + 1}">
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="transaction : ${allTransactions}">
+                                            <td th:text = "${transaction.description}"></td>
+                                            <td th:text = "${transaction.date}"></td>
+                                            <td>
+                                                <span th:if="${transaction.type == 'Income'}"
+                                                    class="text-success"
+                                                    th:text="'+' + ${transaction.amount}"></span>
+                                                <span th:if="${transaction.type == 'Expense'}"
+                                                    class="text-danger"
+                                                    th:text="'-' + ${transaction.amount}"></span>
+                                                </td>
+                                            </tr>
+                                    </tbody>
+                                </table>
+                                <div class="pagination-container mt-4" th:if="${totalPages >1}" aria-label="Transaction pagination">
+                                    <ul class="pagination justify-content-center">
+                                        <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                                            <a class="page-link" th:href="@{/alltransactions(page=${currentPage -1},
+                                                                                        yearFilter=${selectedYear},
+                                                                                        typeFilter=${selectedType})}">
+                                                <i class="bi bi-caret-left-fill"></i>
                                             </a>
-                                    </li>
-                                    <li class="page-item" th:classappend="${currentPage == totalPages -1} ? 'disabled'">
-                                        <a class="page-link" th:href="@{/alltransactions(page=${currentPage +1},
-                                                                            yearFilter=${selectedYear},
-                                                                            typeFilter=${selectedType})}">
-                                            <i class="bi bi-caret-right-fill"></i>
-                                        </a>
-                                    </li>
-                                </ul>
+                                        </li>
+                                        <li class="page-item" th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}"
+                                                th:classappend="${pageNumber == currentPage} ? 'active'">
+                                                <a class="page-link" th:href="@{/alltransactions(page=${pageNumber},
+                                                                                                yearFilter=${selectedYear},
+                                                                                                typeFilter=${selectedType})}" th:text="${pageNumber + 1}">
+                                                </a>
+                                        </li>
+                                        <li class="page-item" th:classappend="${currentPage == totalPages -1} ? 'disabled'">
+                                            <a class="page-link" th:href="@{/alltransactions(page=${currentPage +1},
+                                                                                yearFilter=${selectedYear},
+                                                                                typeFilter=${selectedType})}">
+                                                <i class="bi bi-caret-right-fill"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                    </div>              
+                        </div>              
+                    </div>
                 </div>
+
             </div>
         </div>
 
