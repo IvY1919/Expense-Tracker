@@ -145,6 +145,7 @@
                                                 <th>Description</th>
                                                 <th>Amount</th>
                                                 <th>Payment Method</th>
+                                                <th>Type</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
@@ -153,8 +154,9 @@
                                             <tr th:each="expense : ${expenses}">
                                                 <td th:text="${expense.expDate}"></td>
                                                 <td th:text="${expense.description}"></td>
-                                                <td th:text="${expense.expAmount}"></td>
+                                                <td th:text="${expense.expAmount}"></td>                                                
                                                 <td th:text="${expense.paymentMethod}"></td>
+                                                <td th:text="${expense.type}"></td>
                                                 <td>
                                                     <button type="button"
                                                     class="btn btn-sm btn-outline-primary"
@@ -260,6 +262,15 @@
                                 <option value="Credit Card" th:selected="${expense.paymentMethod == 'Credit Card'}">Credit Card</option>
                                 <option value="Debit Card" th:selected="${expense.paymentMethod == 'Debit Card'}">Debit Card</option>
                                 <option value="Bank Transfer" th:selected="${expense.paymentMethod == 'Bank Transfer'}">Bank Transfer</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="type" class="form-label"> Type </label>
+                            <select name="type" class="form-select" id="type" required>
+                                <option value="">Select Expense type</option>
+                                <option value="One-time" th:selected="${expense.type == 'One-time'}">One-time</option>
+                                <option value="Fixed" th:selected="${expense.type == 'Fixed'}">Fixed</option>
+                                <option value="Variable" th:selected="${expense.type == 'Variable'}">Variable</option>
                             </select>
                         </div>
                     </div>
@@ -394,6 +405,15 @@
                                 <option value="Credit Card">Credit Card</option>
                                 <option value="Debit Card">Debit Card</option>
                                 <option value="Bank Transfer">Bank Transfer</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="type" class="form-label"> Type </label>
+                            <select name="type" class="form-select" id="type" required>
+                                <option value="">Select Expense type</option>
+                                <option value="One-time">One-time</option>
+                                <option value="Fixed">Fixed</option>
+                                <option value="Variable">Variable</option>
                             </select>
                         </div>
                     </div>

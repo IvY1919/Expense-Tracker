@@ -32,6 +32,9 @@ public class IncomeEntity {
     @Column(name = "income_date")
     private LocalDate incomeDate;
 
+    @Column(length = 50)
+    private String type;
+
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -72,6 +75,14 @@ public class IncomeEntity {
         this.incomeDate = incomeDate;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+    
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }

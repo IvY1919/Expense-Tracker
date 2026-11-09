@@ -35,6 +35,9 @@ public class ExpenseEntity {
     @Column (name = "payment_method", length = 50, nullable = false)
     private String paymentMethod;
 
+    @Column (length = 50)
+    private String type;
+
     @CreationTimestamp
     @Column (name = "created_at")
     private LocalDateTime createdAt;
@@ -73,6 +76,22 @@ public class ExpenseEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public LocalDate getExpDate() {

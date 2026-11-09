@@ -391,12 +391,13 @@ public class HomeController {
                                 @RequestParam String description,
                                 @RequestParam BigDecimal expAmount,
                                 @RequestParam String paymentMethod,
+                                @RequestParam String type,
                                 @RequestParam String month,
                                 @RequestParam String view,
                                 Authentication authentication) {
 
     String email = authentication.getName();
-    expenseService.updateExpense( expId, editExpenseDate, description, expAmount, paymentMethod, email);
+    expenseService.updateExpense( expId, editExpenseDate, description, expAmount, paymentMethod, type, email);
     return "redirect:/expense?month=" + month + "&view=" + view;
     }
 
@@ -422,6 +423,7 @@ public class HomeController {
             @RequestParam(required = false) String description,
             @RequestParam BigDecimal expAmount,
             @RequestParam String paymentMethod,
+            @RequestParam String type,
             Authentication authentication) {
 
         String email = authentication.getName();
@@ -431,6 +433,7 @@ public class HomeController {
         expense.setDescription(description);
         expense.setExpAmount(expAmount);
         expense.setPaymentMethod(paymentMethod);
+        expense.setType(type);
         
         expenseService.addExpense(expense, email);
 
@@ -445,6 +448,7 @@ public class HomeController {
                              @RequestParam String description,
                              @RequestParam BigDecimal expAmount,
                              @RequestParam String paymentMethod,
+                             @RequestParam String type,
                              @RequestParam String month,
                              @RequestParam String view,
                              Authentication authentication,
@@ -461,7 +465,7 @@ public class HomeController {
             return "redirect:/expense?month=" + month + "&view=" + view;
         }
         String email = authentication.getName();
-        expenseService.addMonthlyexpense(startMonth, endMonth, expenseDay, description, expAmount, paymentMethod, email);
+        expenseService.addMonthlyexpense(startMonth, endMonth, expenseDay, description, expAmount, paymentMethod, type, email);
         
         return "redirect:/expense?month=" + month + "&view=" + view;
     }    
@@ -525,6 +529,7 @@ public class HomeController {
             @RequestParam LocalDate addIncomeDate,
             @RequestParam(required = false) String description,
             @RequestParam BigDecimal incomeAmount,
+            @RequestParam String type,
             Authentication authentication) {
 
         String email = authentication.getName();
@@ -533,7 +538,7 @@ public class HomeController {
         income.setIncomeDate(addIncomeDate);
         income.setDescription(description);
         income.setIncomeAmount(incomeAmount);
-
+        income.setType(type);
         incomeService.addIncome(income, email);
 
         return "redirect:/income?month=" + month + "&view=" + view;
@@ -545,6 +550,7 @@ public class HomeController {
                              @RequestParam Integer incomeDay,
                              @RequestParam String description,
                              @RequestParam BigDecimal incomeAmount,
+                             @RequestParam String type,
                              @RequestParam String month,
                              @RequestParam String view,
                              Authentication authentication,
@@ -563,7 +569,7 @@ public class HomeController {
         }
 
         String email = authentication.getName();
-        incomeService.addMonthlyIncome(startMonth, endMonth, incomeDay, description, incomeAmount, email);
+        incomeService.addMonthlyIncome(startMonth, endMonth, incomeDay, description, incomeAmount, type, email);
         
         return "redirect:/income?month=" + month + "&view=" + view;
     }
@@ -573,12 +579,13 @@ public class HomeController {
                              @RequestParam LocalDate editIncomeDate,
                              @RequestParam String description,
                              @RequestParam BigDecimal incomeAmount,
+                             @RequestParam String type,
                              @RequestParam String month,
                              @RequestParam String view,
                              Authentication authentication ) {
         
         String email = authentication.getName();
-        incomeService.updateIncome( incomeId, editIncomeDate, description, incomeAmount, email);
+        incomeService.updateIncome( incomeId, editIncomeDate, description, incomeAmount, type, email);
         
         return "redirect:/income?month=" + month + "&view=" + view;
     } 

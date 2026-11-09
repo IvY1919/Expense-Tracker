@@ -95,17 +95,19 @@ public class ExpenseService {
 
 
     public void updateExpense(Long expId,
-                                LocalDate expDate,
-                                String description,
-                                BigDecimal expAmount,
-                                String paymentMethod,
-                                String email) {
+                              LocalDate expDate,
+                              String description,
+                              BigDecimal expAmount,
+                              String paymentMethod,
+                              String type,
+                              String email) {
         ExpenseEntity expense = expenseRepository.findByExpIdAndUserIdEmail(expId, email)
                         .orElseThrow(() -> new RuntimeException("Expense not found"));
         expense.setExpDate(expDate);
         expense.setDescription(description);
         expense.setExpAmount(expAmount);
         expense.setPaymentMethod(paymentMethod);
+        expense.setType(type);
         expenseRepository.save(expense);
     }
 
@@ -204,7 +206,7 @@ public class ExpenseService {
         return categoryTotals;
     }
 
-    public void addMonthlyexpense( String startMonth, String endMonth, int expenseDay, String description, BigDecimal amount, String paymentMethod, String email){
+    public void addMonthlyexpense( String startMonth, String endMonth, int expenseDay, String description, BigDecimal amount, String paymentMethod, String type, String email){
         YearMonth start = YearMonth.parse(startMonth);
         YearMonth end = YearMonth.parse(endMonth);
         YearMonth current = start;
@@ -226,6 +228,7 @@ public class ExpenseService {
             expense.setDescription(description);
             expense.setExpAmount(amount);
             expense.setPaymentMethod(paymentMethod);
+            expense.setType(type);
             expenseRepository.save(expense);
             current = current.plusMonths(1);
         }

@@ -196,7 +196,7 @@ public class ExpenseServiceTest {
 
         when(expenseRepository.findByExpIdAndUserIdEmail(1L, "test@example.com")).thenReturn(Optional.of(expense));
 
-        service.updateExpense(1L, LocalDate.of(2026, 9, 4), "New description", new BigDecimal("2000"),  "Credit Card", "test@example.com");
+        service.updateExpense(1L, LocalDate.of(2026, 9, 4), "New description", new BigDecimal("2000"),  "Credit Card", "Fixed","test@example.com");
 
         assertEquals(LocalDate.of(2026, 9, 4), expense.getExpDate());
         assertEquals("New description", expense.getDescription());

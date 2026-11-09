@@ -33,7 +33,7 @@ public class IncomeService {
         incomeRepository.save(income);
     }
     
-    public void addMonthlyIncome( String startMonth, String endMonth, int incomeDay, String description, BigDecimal amount, String email){
+    public void addMonthlyIncome( String startMonth, String endMonth, int incomeDay, String description, BigDecimal amount, String type, String email){
         YearMonth start = YearMonth.parse(startMonth);
         YearMonth end = YearMonth.parse(endMonth);
         YearMonth current = start;
@@ -54,6 +54,7 @@ public class IncomeService {
             income.setIncomeDate(incomeDate);
             income.setDescription(description);
             income.setIncomeAmount(amount);
+            income.setType(type);
             incomeRepository.save(income);
             current = current.plusMonths(1);
         }
@@ -83,12 +84,14 @@ public class IncomeService {
                               LocalDate incomeDate,
                               String description,
                               BigDecimal incomeAmount,
+                              String type,
                               String email ){
 
         IncomeEntity income = incomeRepository.findByIncomeIdAndUserIdEmail(incomeId, email).orElseThrow(() -> new RuntimeException("Expense not found"));
         income.setIncomeDate(incomeDate);
         income.setDescription(description);
         income.setIncomeAmount(incomeAmount);
+        income.setType(type);
         incomeRepository.save(income);
 
     }

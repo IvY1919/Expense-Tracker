@@ -148,6 +148,7 @@
                                                 <th>Income Date</th>
                                                 <th>Description</th>
                                                 <th>Amount</th>
+                                                <th>Type</th>
                                                 <th></th>
                                             </tr>
                                         </thead>
@@ -156,6 +157,7 @@
                                                 <td th:text ="${income.incomeDate}"></td>
                                                 <td th:text ="${income.description}"></td>
                                                 <td th:text ="${income.incomeAmount}"></td>
+                                                <td th:text ="${income.type}"></td>
                                                 <td>
                                                     <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" th:attr="data-bs-target='#editIncomeModal-' + ${income.incomeId}">
                                                         Edit
@@ -200,7 +202,7 @@
         </div>
     </div>
 
-    <!-- Edit modal -->
+    <!-- Edit Income modal -->
      <div th:each="income : ${incomes}" class="modal fade" 
           th:id="'editIncomeModal-' + ${income.incomeId}" tabindex="-1" aria-labelledby="editIncomeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -225,6 +227,15 @@
                         <div class="mb-3">
                             <label for="amount" class="form-label"> Amount </label>
                             <input type="number" name="incomeAmount" class="form-control" id="incomeanoumt" th:value="${income.incomeAmount}" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="type" class="form-label"> Type</label>
+                            <select name="type" class="form-select" id="type" required>
+                                <option value="">Select Income Type</option>
+                                <option value="One-time" th:selected="${income.type == 'One-time'}">One-time</option>
+                                <option value="Fixed" th:selected="${income.type == 'Fixed'}">Fixed</option>
+                                <option value="Variable" th:selected="${income.type == 'Variable'}">Variable</option>
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -348,6 +359,15 @@
                         <div class="mb-3">
                             <label for="amount" class="form-label"> Amount </label>
                             <input type="number" name="incomeAmount" class="form-control" id="incomeanoumt" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="type" class="form-label"> Type</label>
+                            <select name="type" class="form-select" id="type" required>
+                                <option value="">Select Income Type</option>
+                                <option value="One-time">One-time</option>
+                                <option value="Fixed">Fixed</option>
+                                <option value="Variable">Variable</option>
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">
