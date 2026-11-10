@@ -156,7 +156,7 @@
                                             <tr th:each="income : ${incomes}">
                                                 <td th:text ="${income.incomeDate}"></td>
                                                 <td th:text ="${income.description}"></td>
-                                                <td th:text ="${income.incomeAmount}"></td>
+                                                <td th:text="${income.incomeAmount.intValue()}"></td>
                                                 <td th:text ="${income.type}"></td>
                                                 <td>
                                                     <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" th:attr="data-bs-target='#editIncomeModal-' + ${income.incomeId}">
@@ -226,7 +226,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="amount" class="form-label"> Amount </label>
-                            <input type="number" name="incomeAmount" class="form-control" id="incomeanoumt" th:value="${income.incomeAmount}" required>
+                            <input type="number" name="incomeAmount" class="form-control" id="incomeanoumt" th:value="${income.incomeAmount.intValue()}" required>
                         </div>
                         <div class="mb-3">
                             <label for="type" class="form-label"> Type</label>

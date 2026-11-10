@@ -154,7 +154,7 @@
                                             <tr th:each="expense : ${expenses}">
                                                 <td th:text="${expense.expDate}"></td>
                                                 <td th:text="${expense.description}"></td>
-                                                <td th:text="${expense.expAmount}"></td>                                                
+                                                <td th:text="${expense.expAmount.intValue()}"></td>                                                
                                                 <td th:text="${expense.paymentMethod}"></td>
                                                 <td th:text="${expense.type}"></td>
                                                 <td>
@@ -252,7 +252,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="amount" class="form-label"> Amount </label>
-                            <input type="number" name="expAmount" class="form-control" id="amount" step="1" th:value="${expense.expAmount}" required>
+                            <input type="number" name="expAmount" class="form-control" id="amount" step="1" th:value="${expense.expAmount.intValue()}" required>
                         </div>
                         <div class="mb-3">
                             <label for="paymentMethod" class="form-label"> Payment Method </label>

@@ -169,10 +169,10 @@
                                             <td>
                                                 <span th:if="${transaction.type == 'Income'}"
                                                     class="text-success"
-                                                    th:text="'+' + ${transaction.amount}"></span>
+                                                    th:text="'+' + ${transaction.amount.intValue()}"></span>
                                                 <span th:if="${transaction.type == 'Expense'}"
                                                     class="text-danger"
-                                                    th:text="'-' + ${transaction.amount}"></span>
+                                                    th:text="'-' + ${transaction.amount.intValue()}"></span>
                                                 </td>
                                             </tr>
                                     </tbody>
