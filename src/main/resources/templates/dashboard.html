@@ -214,7 +214,7 @@
                                      alt="Within budget">
 
                                 <!-- Warning: 80% to 100% -->
-                                <img th:if="${monthlySpent.compareTo(warnLimit) >= 0 and monthlySpent.compareTo(targetAmount) <= 0}"
+                                <img th:if="${monthlySpent.compareTo(warnLimit) > 0 and monthlySpent.compareTo(targetAmount) < 0}"
                                      src="https://fonts.gstatic.com/s/e/notoemoji/latest/1f631/512.gif"
                                      class="budget-status-icon"
                                      alt="Close to budget limit">

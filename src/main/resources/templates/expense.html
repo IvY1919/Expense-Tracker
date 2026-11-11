@@ -257,7 +257,7 @@
                         <div class="mb-3">
                             <label for="paymentMethod" class="form-label"> Payment Method </label>
                             <select name="paymentMethod" class="form-select" id="paymentMethod" required>
-                                <option value="">Select payment method</option>
+                                <option value="" disabled>Select payment method</option>
                                 <option value="Cash" th:selected="${expense.paymentMethod == 'Cash'}">Cash</option>
                                 <option value="Credit Card" th:selected="${expense.paymentMethod == 'Credit Card'}">Credit Card</option>
                                 <option value="Debit Card" th:selected="${expense.paymentMethod == 'Debit Card'}">Debit Card</option>
@@ -267,7 +267,7 @@
                         <div class="mb-3">
                             <label for="type" class="form-label"> Type </label>
                             <select name="type" class="form-select" id="type" required>
-                                <option value="">Select Expense type</option>
+                                <option value="" disabled>Select Expense type</option>
                                 <option value="One-time" th:selected="${expense.type == 'One-time'}">One-time</option>
                                 <option value="Fixed" th:selected="${expense.type == 'Fixed'}">Fixed</option>
                                 <option value="Variable" th:selected="${expense.type == 'Variable'}">Variable</option>
@@ -400,7 +400,7 @@
                         <div class="mb-3">
                             <label for="paymentMethod" class="form-label"> Payment Method </label>
                             <select name="paymentMethod" class="form-select" id="paymentMethod" required>
-                                <option value="">Select payment method</option>
+                                <option value="" selected disabled>Select payment method</option>
                                 <option value="Cash">Cash</option>
                                 <option value="Credit Card">Credit Card</option>
                                 <option value="Debit Card">Debit Card</option>
@@ -410,7 +410,7 @@
                         <div class="mb-3">
                             <label for="type" class="form-label"> Type </label>
                             <select name="type" class="form-select" id="type" required>
-                                <option value="">Select Expense type</option>
+                                <option value="" selected disabled>Select Expense type</option>
                                 <option value="One-time">One-time</option>
                                 <option value="Fixed">Fixed</option>
                                 <option value="Variable">Variable</option>

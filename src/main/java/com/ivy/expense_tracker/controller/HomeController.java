@@ -1,5 +1,6 @@
 package com.ivy.expense_tracker.controller;
 
+import com.ivy.expense_tracker.service.SavingService;
 import com.ivy.expense_tracker.service.UserService;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -41,6 +42,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class HomeController {
 
+    private final SavingService savingService;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     
@@ -54,9 +56,10 @@ public class HomeController {
     @Autowired
     private ReportService reportService;
 
-    HomeController(UserService userService, PasswordEncoder passwordEncoder) {
+    HomeController(UserService userService, PasswordEncoder passwordEncoder, SavingService savingService) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.savingService = savingService;
     }
 
     ////////////////////////////////////////
@@ -618,9 +621,24 @@ public class HomeController {
         model.addAttribute("username", userDetails.getUsernameFromDb());
         model.addAttribute("email", user.getEmail());
 
+        BigDecimal goalAmount = savingService.getSavingGoal(email);
+        model.addAttribute("goalAmount", goalAmount);
+
+        BigDecimal totalsaving = reportService.getTotal(email);
+        model.addAttribute("totalsaving", totalsaving);     
+
         return "saving";
     }
-     
+
+    @PostMapping("/goal/add")
+    public String addgoal(@RequestParam("goalAmount") BigDecimal goalAmount,
+                            Authentication authentication) {
+        
+        String email = authentication.getName();
+        savingService.updateSavingGoal(email, goalAmount);
+        
+        return "redirect:/saving";
+    }    
     
 
     ////////////////////////////////////////

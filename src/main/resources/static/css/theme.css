@@ -969,7 +969,7 @@ svg {
 .savings-page .sv-label { font-size: 1.5rem; margin-bottom: .3rem; }
 .savings-page .sv-value { font-size: 1.5rem; font-weight: 700; line-height: 1.2; }
 .savings-page .sv-sub { font-size: .95rem;}
-.savings-page .text-green { color: var(--sv-green); font-size: 1.2rem;}
+.savings-page .text-green { color: var(--sv-green);}
 
 @media (min-width: 768px) {
     .savings-page .divider-start { border-left: 1px solid var(--sv-border); padding-left: 1.5rem; }
@@ -1007,7 +1007,7 @@ svg {
 .savings-page .sv-amount-input {
     font-size: clamp(1.8rem, 5vw, 2.2rem);
     font-weight: 800;
-    color: var(--sv-green-dark);
+    color: var(--sv-green);
 }
 /* .savings-page .sv-range { color: var(--accent-color); } */
 
@@ -1036,6 +1036,9 @@ svg {
 .savings-page .sv-result .sv-result-icon { font-size: 1.2rem; color: var(--sv-green);padding-right: 2px; }
 .savings-page .sv-result .sv-result-title { font-weight: 700; font-size:1.3rem; color: var(--sv-green-dark); }
 .savings-page .sv-result .sv-result-sub { font-size: .95rem; color: var(--sv-green-dark); }
+
+.set-goal p{font-weight: 700; font-size:1.5rem;}
+.set-goal .bi-bullseye{color: #e11d48;}
 
 /* Small phones */
 @media (max-width: 575.98px) {

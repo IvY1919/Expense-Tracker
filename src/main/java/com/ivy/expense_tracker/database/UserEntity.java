@@ -27,6 +27,9 @@ public class UserEntity {
     @Column(name = "target_amt")
     private BigDecimal targetAmount;
 
+    @Column(name = "goal_amt", nullable = true)
+    private BigDecimal goalAmount;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -75,5 +78,14 @@ public class UserEntity {
         this.targetAmount = targetAmount;
     }
 
+    public BigDecimal getGoalAmount() {
+        return goalAmount;
+    }
+
+    public void setGoalAmount(BigDecimal goalAmount) {
+        this.goalAmount = goalAmount;
+    }
+
+    
 
 }

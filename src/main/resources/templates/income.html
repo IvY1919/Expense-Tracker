@@ -231,7 +231,7 @@
                         <div class="mb-3">
                             <label for="type" class="form-label"> Type</label>
                             <select name="type" class="form-select" id="type" required>
-                                <option value="">Select Income Type</option>
+                                <option value="" disabled>Select Income Type</option>
                                 <option value="One-time" th:selected="${income.type == 'One-time'}">One-time</option>
                                 <option value="Fixed" th:selected="${income.type == 'Fixed'}">Fixed</option>
                                 <option value="Variable" th:selected="${income.type == 'Variable'}">Variable</option>
@@ -363,7 +363,7 @@
                         <div class="mb-3">
                             <label for="type" class="form-label"> Type</label>
                             <select name="type" class="form-select" id="type" required>
-                                <option value="">Select Income Type</option>
+                                <option value="" selected disabled>Select Income Type</option>
                                 <option value="One-time">One-time</option>
                                 <option value="Fixed">Fixed</option>
                                 <option value="Variable">Variable</option>

@@ -121,19 +121,37 @@
                             <i class="bi bi-trophy-fill icon-gold"></i>
                             <span>Your Savings Goal</span>
                         </div>
-                        <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#targetSavingInputModal">
+                        <button type="button" class="btn btn-outline-primary" th:if="${goalAmount !=null}" data-bs-toggle="modal" data-bs-target="#targetSavingInputModal">
                             <i class="bi bi-pencil-fill me-1"></i> Edit Goal
                         </button>
                     </div>
-                    <div class="row g-3">
+                    <!-- Goal exists: show amounts -->
+                    <div class="row g-3" th:if="${goalAmount != null}">
                         <div class="col-12 col-sm-6">
                             <div class="sv-label">Target Savings Amount</div>
-                            <div class="sv-value">¥1,000,000</div>
+                            <div class="sv-value" >¥<span  th:text="${goalAmount != null ? #numbers.formatDecimal(goalAmount, 0, 'COMMA', 0, 'POINT') : ' - '}"></span></div>
                         </div>
                         <div class="col-12 col-sm-6 divider-start">
                             <div class="sv-label">Current Savings</div>
-                            <div class="sv-value">¥200,000</div>
+                            <div class="sv-value">¥<span th:text="${#numbers.formatDecimal(totalsaving,0, 'COMMA', 0, 'POINT')}"></span></div>
                         </div>
+                    </div>
+
+                    <!-- No goal: prompt the user to set one-->
+                    <div class="text-center py-4 set-goal" th:unless="${goalAmount != null}">
+                        <div class="d-flex justify-content-center align-items-center gap-3 mb-3">
+                            <i class="bi bi-bullseye fs-1"></i>
+                            <p class="mb-0 text-start">
+                                You haven't set a savings goal yet.<br>
+                                Set one to start tracking your progress!
+                            </p>
+                        </div>
+                        <button type="button"
+                                class="btn btn-lg btn-outline-primary px-4"
+                                data-bs-toggle="modal"
+                                data-bs-target="#targetSavingInputModal">
+                            <i class="bi bi-plus-circle-fill me-2"></i> Set Your Goal
+                        </button>
                     </div>
                 </div>
 
@@ -238,9 +256,9 @@
                     <h5 class="modal-title"> Set Target Saving</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <form id="targetSavingForm">
+                <form th:action="@{/goal/add}" method="post" id="targetSavingForm">
                     <div class="modal-body">
-                        <label for="targetSavingAmount" class="form-label">
+                        <label for="goalAmount" class="form-label">
                             Target Amount
                         </label>
                         <div class="input-group">
@@ -248,8 +266,8 @@
                                 ¥
                             </span>
                             <input type="number"
-                                id="targetSavingAmount"
-                                name="targetSavingAmount"
+                                id="goalAmount"
+                                name="goalAmount"
                                 class="form-control"
                                 min="1"
                                 required>
