@@ -83,5 +83,19 @@ public interface ExpenseRepository extends JpaRepository<ExpenseEntity, Long>{
     @Query ("""
         SELECT COALESCE(SUM(e.expAmount), 0) FROM ExpenseEntity e WHERE e.userId.email = :email""")
         BigDecimal getTotalExpense(@Param("email") String email);   
+
+
+    @Query ("""
+        SELECT SUM(c.expAmount)
+        FROM ExpenseEntity c
+        WHERE c.userId.email = :email
+        AND c.expDate BETWEEN :startDate AND :endDate
+        AND c.type <> 'One-time' 
+    """)
+    BigDecimal getAverageExpenseTotal(
+        @Param("email") String email,
+        @Param("startDate") LocalDate starDate,
+        @Param("endDate") LocalDate endDate
+    );
         
 }

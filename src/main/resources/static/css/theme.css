@@ -63,8 +63,9 @@
     --sv-green-soft: #e6f6ec;
     --sv-blue-soft: #eef2ff;
     --sv-border: #cbcfdb;
-
-
+    --grayout: #959595;
+    --grayout-bg:  #e6e5e5;
+    --green-grayout: #d7f1e0;
 }
 
 /*  DARK MODE  */ 
@@ -116,6 +117,10 @@ html.dark-mode {
     --add-target-bg: #f5eab5;
     --add-target-txt-color-hover: #f3f3f3;
     --target-line-color: #ffbb00;
+
+    --grayout: #646464;
+    --grayout-bg: #111827;
+    --green-grayout: #d7f1e0c1;
 
 }
 
@@ -970,6 +975,7 @@ svg {
 .savings-page .sv-value { font-size: 1.5rem; font-weight: 700; line-height: 1.2; }
 .savings-page .sv-sub { font-size: .95rem;}
 .savings-page .text-green { color: var(--sv-green);}
+.savings-page .text-red { color: #dc2626;}
 
 @media (min-width: 768px) {
     .savings-page .divider-start { border-left: 1px solid var(--sv-border); padding-left: 1.5rem; }
@@ -994,7 +1000,7 @@ svg {
     line-height: 1.1;
 }
 .savings-page .sv-eta .sv-eta-date { font-size: .95rem; font-weight: 600; color: var(--sv-green-dark); }
-
+.savings-page .sv-large{ font-size: 2rem;}
 .savings-page .sv-progress { height: 1.4rem; border-radius: 999px; background-color: #e5e7eb; }
 .savings-page .sv-progress .progress-bar {
     background: var(--accent-color);
@@ -1002,10 +1008,10 @@ svg {
     font-size: .8rem;
     border-radius: 999px;
 }
-.savings-page .sv-progress-meta { font-size: 1.1rem; white-space: nowrap; }
+.savings-page .sv-progress-meta { font-size: 1.5rem; white-space: nowrap; }
 
 .savings-page .sv-amount-input {
-    font-size: clamp(1.8rem, 5vw, 2.2rem);
+    font-size: clamp(1.5rem, 4vw, 1.5rem);
     font-weight: 800;
     color: var(--sv-green);
 }
@@ -1039,6 +1045,54 @@ svg {
 
 .set-goal p{font-weight: 700; font-size:1.5rem;}
 .set-goal .bi-bullseye{color: #e11d48;}
+
+.animation-progress {
+    width: 0%;
+    animation: progressAnimation 1.5s ease-out forwards;
+}
+
+.sv-disabled {
+    background-color: var(--grayout-bg) !important;
+    color: var(--grayout);
+    opacity: 0.65;
+}
+.sv-disabled .sv-card-title,
+.sv-disabled .sv-value,
+.sv-disabled .sv-label,
+.sv-disabled .sv-sub,
+.sv-disabled .sv-card-sub,
+.sv-disabled .sv-eta-label,
+.sv-disabled .sv-eta-value,
+.sv-disabled .sv-eta-date,
+.sv-disabled .sv-compare-value,
+.sv-disabled .sv-progress-meta {
+    color: var(--grayout) !important;
+}
+.sv-disabled .sv-eta,
+.sv-disabled .sv-result{
+    background-color: var(--green-grayout);
+}
+
+.sv-disabled .sv-amount-input{
+    color:  #16a34aac;
+}
+
+.sv-disabled .estimate-month{ display: none; }
+.sv-disabled .progress { background-color: var(--grayout); }
+.sv-disabled .progress-bar { background-color:var(--grayout);}
+.sv-range:disabled { opacity: 0.4; cursor: not-allowed;}
+.sv-range:disabled::-webkit-slider-thumb { background-color: var(--grayout); }
+.sv-range:disabled::-moz-range-thumb { background-color: var(--grayout); }
+
+@keyframes progressAnimation {
+    from {
+        width: 0%;
+    }
+
+    to {
+        width: var(--progress-width);
+    }
+}
 
 /* Small phones */
 @media (max-width: 575.98px) {

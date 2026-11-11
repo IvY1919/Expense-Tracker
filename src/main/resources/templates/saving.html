@@ -129,11 +129,11 @@
                     <div class="row g-3" th:if="${goalAmount != null}">
                         <div class="col-12 col-sm-6">
                             <div class="sv-label">Target Savings Amount</div>
-                            <div class="sv-value" >¥<span  th:text="${goalAmount != null ? #numbers.formatDecimal(goalAmount, 0, 'COMMA', 0, 'POINT') : ' - '}"></span></div>
+                            <div class="sv-value sv-large" >¥<span  th:text="${goalAmount != null ? #numbers.formatDecimal(goalAmount, 0, 'COMMA', 0, 'POINT') : ' - '}"></span></div>
                         </div>
                         <div class="col-12 col-sm-6 divider-start">
                             <div class="sv-label">Current Savings</div>
-                            <div class="sv-value">¥<span th:text="${#numbers.formatDecimal(totalsaving,0, 'COMMA', 0, 'POINT')}"></span></div>
+                            <div class="sv-value sv-large">¥<span th:text="${#numbers.formatDecimal(totalsaving,0, 'COMMA', 0, 'POINT')}"></span></div>
                         </div>
                     </div>
 
@@ -156,49 +156,65 @@
                 </div>
 
                 <!-- ===== Current Plan ===== -->
-                <div class="sv-card sv-plan">
+                <div class="sv-card sv-plan" th:classappend="${goalAmount == null ? 'sv-disabled' : ''}">
                     <div class="sv-card-title">
                         <i class="bi bi-calculator-fill icon-indigo"></i>
                         <span>Current Plan</span>
-                        <div class="sv-card-sub text-green">
-                        <span>The estimated monthly income, expenses, and savings are calculated based on data from the previous 5 months.</span>
+                        <div class="sv-card-sub text-green estimate-month">
+                        <span>The estimated monthly income, expenses, and savings are calculated based on data from the previous 
+                            <span th:text="${availableMonths != null ? #numbers.formatDecimal(availableMonths, 0, 'COMMA', 0, 'POINT') : ' - '}" style="font-size: 1.6rem;"></span>
+                             months.
+                        </span>
                         </div>
-                    </div>
-                    
+                    </div>                    
                 
                     <div class="row g-3 align-items-stretch">
                         <div class="col-6 col-md-3">
                             <div class="sv-label">Estimate Monthly Income</div>
-                            <div class="sv-value">¥300,000</div>
+                            <div class="sv-value">¥<span th:text="${goalAmount == null || averageIncome == null ? '-' : #numbers.formatDecimal(averageIncome, 0, 'COMMA', 0, 'POINT')}"></span></div>
                             <div class="sv-sub">(Fixed + Variable Income) </div>
                         </div>
                         <div class="col-6 col-md-3 divider-start">
                             <div class="sv-label">Estimate Monthly Expenses</div>
-                            <div class="sv-value">¥220,000</div>
+                            <div class="sv-value">¥<span th:text="${goalAmount == null || averageExpense == null ? '-' : #numbers.formatDecimal(averageExpense, 0, 'COMMA', 0, 'POINT')}"></span></div>
                             <div class="sv-sub">(Fixed + Variable Expenses) </div>
                         </div>
                         <div class="col-12 col-md-3 divider-start">
                             <div class="sv-label">Estimate Monthly Savings Capacity</div>
-                            <div class="sv-value text-green">¥80,000</div>
+                            <div class="sv-value text-green sv-large" th:classappend="${averageSaving != null && averageSaving < 0 ? 'text-red' : ''}">
+                                ¥<span th:text="${goalAmount == null || averageSaving == null ? '-' : #numbers.formatDecimal(averageSaving, 0, 'COMMA', 0, 'POINT')}"></span>
+                            </div>
                         </div>
                         <div class="col-12 col-md-3">
                             <div class="sv-eta">
                                 <div class="sv-eta-label"><i class="bi bi-calendar-check me-1"></i>Estimated Time to Reach Goal</div>
-                                <div class="sv-eta-value">10 months</div>
-                                <div class="sv-eta-date">Dec, 2026</div>
+                                <div class="sv-eta-value" th:text="${goalAmount == null ? '-' : 'X months'}"></div>
+                                <div class="sv-eta-date" th:text="${goalAmount == null ? '-' : 'XXXXXXX'}"></div>
                             </div>
                         </div>
                     </div>
                     <div class="d-flex flex-column flex-sm-row align-items-sm-center gap-2 gap-sm-3 mt-4">
-                        <div class="progress sv-progress flex-grow-1" role="progressbar"
-                             aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" aria-label="Savings progress">
-                            <div class="progress-bar" style="width: 20%">20%</div>
+                        <div class="progress sv-progress flex-grow-1"
+                             role="progressbar"
+                             th:aria-valuenow="${savingPercentage}"
+                             aria-valuemin="0"
+                             aria-valuemax="100"
+                             aria-label="Savings progress">
+                            <div class="progress-bar"
+                                 th:classappend="${goalAmount == null ? '' : 'animation-progress'}"
+                                 th:style="${goalAmount == null ? 'width: 0%' : '--progress-width: ' + savingPercentage + '%'}"
+                                 th:text="${goalAmount == null ? '-' : savingPercentage + '%'}" >50%
+                            </div>
                         </div>
-                        <div class="sv-progress-meta">¥200,000 / ¥1,000,000</div>
+                        <div class="sv-progress-meta">
+                            <span th:text="${goalAmount == null || totalsaving == null ? '-' :#numbers.formatDecimal(totalsaving,0, 'COMMA', 0, 'POINT')}"></span>
+                            / 
+                            <span  th:text="${goalAmount != null ? #numbers.formatDecimal(goalAmount, 0, 'COMMA', 0, 'POINT') : ' - '}"></span>
+                        </div>
                     </div>
                 </div>
 
-                <div class="sv-card sv-more">
+                <div class="sv-card sv-more" th:classappend="${goalAmount == null ? 'sv-disabled' : ''}">
                     <div class="sv-card-title">
                         <i class="bi bi-bar-chart-fill icon-green"></i>
                         <span>Try Saving More</span>
@@ -210,24 +226,23 @@
                             <div class="sv-label fw-semibold">Additional Monthly Savings</div>
                             <div class="sv-amount-input mb-2" id="svAmount">¥10,00</div>
                             <input type="range" class="form-range sv-range" id="svRange" min="0" max="50000" step="100" value="1000"
-                                   aria-label="Additional monthly savings">
+                                   aria-label="Additional monthly savings" th:disabled="${goalAmount == null}">
                             <div class="d-flex justify-content-between sv-sub">
                                 <span>¥0</span>
                                 <span>¥50,000</span>
                             </div>
-                        </div>
-                    
+                        </div>                    
 
                         <div class="col-12 col-md-6 col-lg-4">
                             <div class="sv-compare">
                                 <div>
                                     <div class="sv-label mb-1">Original Plan</div>
-                                    <div class="sv-compare-value">10 months</div>
+                                    <div class="sv-compare-value">X months</div>
                                 </div>
                                 <i class="bi bi-arrow-right sv-compare-arrow"></i>
                                 <div>
                                     <div class="sv-label mb-1 text-green fw-semibold">New Plan</div>
-                                    <div class="sv-compare-value text-green">9 months</div>
+                                    <div class="sv-compare-value text-green">X months</div>
                                 </div>
                             </div>                    
                         </div>

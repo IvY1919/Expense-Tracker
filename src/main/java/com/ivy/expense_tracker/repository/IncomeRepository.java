@@ -93,6 +93,19 @@ public interface IncomeRepository extends JpaRepository<IncomeEntity, Long>{
         SELECT COALESCE(SUM(i.incomeAmount), 0) FROM IncomeEntity i WHERE i.userId.email = :email""")
         BigDecimal getTotalIncome(@Param("email") String email);
 
+    @Query ("""
+        SELECT SUM(c.incomeAmount)
+        FROM IncomeEntity c
+        WHERE c.userId.email = :email
+        AND c.incomeDate BETWEEN :startDate AND :endDate
+        AND c.type <> 'One-time' 
+    """)
+    BigDecimal getAverageIncomeTotal(
+        @Param("email") String email,
+        @Param("startDate") LocalDate starDate,
+        @Param("endDate") LocalDate endDate
+    );
+
 
     
 }

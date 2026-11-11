@@ -7,6 +7,7 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.Year;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.time.YearMonth;
@@ -620,12 +621,21 @@ public class HomeController {
 
         model.addAttribute("username", userDetails.getUsernameFromDb());
         model.addAttribute("email", user.getEmail());
-
+        //Show saving goal
         BigDecimal goalAmount = savingService.getSavingGoal(email);
         model.addAttribute("goalAmount", goalAmount);
-
+        //Show current savings
         BigDecimal totalsaving = reportService.getTotal(email);
         model.addAttribute("totalsaving", totalsaving);     
+        //Show Estate Monthly Income, Expense and Savings
+        HashMap<String, BigDecimal> averages = savingService.getAverageBalance(email);
+        model.addAttribute("averageIncome", averages.get("averageIncome"));   
+        model.addAttribute("averageExpense", averages.get("averageExpense"));  
+        model.addAttribute("averageSaving", averages.get("averageSaving")); 
+        model.addAttribute("availableMonths", averages.get("availableMonths"));  
+
+        BigDecimal savingPercentage = savingService.savingPercentage(totalsaving, goalAmount);
+        model.addAttribute("savingPercentage", savingPercentage);
 
         return "saving";
     }
