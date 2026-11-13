@@ -120,8 +120,8 @@ public class IncomeService {
     }
 
     public List<BigDecimal> getYearlyTotalsForChart(String email, int year){
-        int startYear = year - 4;
-        int endYear = year + 2;
+        int startYear = year - 6;
+        int endYear = year ;
 
         LocalDate startDate = LocalDate.of(startYear,1,1);
         LocalDate endDate = LocalDate.of(endYear,12,31);

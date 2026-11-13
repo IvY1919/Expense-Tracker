@@ -69,8 +69,8 @@ public class ExpenseService {
     // Get yearly totals
     public List<BigDecimal> getYearlyTotals(String email, int currentYear){
 
-        int startYear = currentYear - 4;
-        int endYear = currentYear + 2;
+        int startYear = currentYear - 6;
+        int endYear = currentYear;
 
         LocalDate startDate = LocalDate.of(startYear, 1, 1);
         LocalDate endDate = LocalDate.of(endYear, 12, 31);

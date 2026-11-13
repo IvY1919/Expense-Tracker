@@ -4,12 +4,12 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.YearMonth;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Locale;
 
 import org.springframework.stereotype.Service;
 
-import com.ivy.expense_tracker.database.IncomeEntity;
 import com.ivy.expense_tracker.database.UserEntity;
 import com.ivy.expense_tracker.repository.ExpenseRepository;
 import com.ivy.expense_tracker.repository.IncomeRepository;
@@ -110,6 +110,59 @@ public class SavingService {
         }
         return percentage;
 
+    }
+
+    public HashMap<String, Object> calculateGoalPeriod(
+        BigDecimal goalAmount, BigDecimal totalsaving, BigDecimal averageSaving, BigDecimal averageIncome, BigDecimal averageExpense
+    ){
+
+        HashMap<String, Object> result = new HashMap<>();
+
+        if (goalAmount == null || goalAmount.compareTo(BigDecimal.ZERO) <= 0) {
+            result.put("estimatedMonths", "-");
+            result.put("estimatedDate", "-");
+            result.put("remainingMonths","-");
+            return result;
+        }
+
+        if ((averageIncome == null || averageIncome.compareTo(BigDecimal.ZERO) <= 0)
+                && (averageExpense == null || averageExpense.compareTo(BigDecimal.ZERO) <= 0)) {                
+            result.put("estimatedMonth","Please input your previous Income/Expense.");
+            result.put("estimatedDate", "-");
+            result.put("remainingMonths","-");
+            return result;
+        }
+
+        if(totalsaving == null){
+            totalsaving = BigDecimal.ZERO;
+        }
+
+        BigDecimal remainingAmount = goalAmount.subtract(totalsaving);
+
+        if(remainingAmount.compareTo(BigDecimal.ZERO) <= 0){
+            result.put("estimatedMonth", "Congratulations! <i class='bi bi-stars celebration-icon'></i><br>" + "You have achieved your goal.");
+            result.put("estimatedDate", YearMonth.now().format(DateTimeFormatter.ofPattern("MMM, yyy",Locale.ENGLISH)));
+            result.put("remainingMonths","Goal achieved!");
+            return result;
+        }
+
+        if(averageSaving == null || averageSaving.compareTo(BigDecimal.ZERO) <= 0){
+            result.put("estimatedMonth", "Based on your income and expenses, there's no extra money.<br>Saving isn't possible.");
+            result.put("estimatedDate", "-");
+            result.put("remainingMonths","Not possible");
+            return result;
+        }
+
+        int months = remainingAmount.divide(averageSaving,0,RoundingMode.CEILING).intValueExact();
+        YearMonth estimatedMonth = YearMonth.now().plusMonths(months);
+        String estimatedDate = estimatedMonth.format(DateTimeFormatter.ofPattern("MMM, yyy", Locale.ENGLISH));
+
+        result.put("estimatedMonth","<span style='font-size: 3rem; font-weight: bold;'>" + months + (months == 1 ? " month" : " months") + "</span>");
+        result.put("estimatedDate", estimatedDate);
+        result.put("remainingMonths", months + (months == 1 ? " month" : " months") );
+        result.put("remainMonthsInNum", months);
+
+        return result;
     }
 
 }

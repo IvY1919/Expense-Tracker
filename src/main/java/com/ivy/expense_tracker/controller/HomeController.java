@@ -633,10 +633,15 @@ public class HomeController {
         model.addAttribute("averageExpense", averages.get("averageExpense"));  
         model.addAttribute("averageSaving", averages.get("averageSaving")); 
         model.addAttribute("availableMonths", averages.get("availableMonths"));  
-
+        //Show progressbar
         BigDecimal savingPercentage = savingService.savingPercentage(totalsaving, goalAmount);
         model.addAttribute("savingPercentage", savingPercentage);
-
+        //Show estimated month
+        HashMap<String, Object> goalEstimate = savingService.calculateGoalPeriod(goalAmount, totalsaving, averages.get("averageSaving"),averages.get("averageIncome"),averages.get("averageExpense"));
+        model.addAttribute("estimatedMonth", goalEstimate.get("estimatedMonth"));
+        model.addAttribute("estimatedDate", goalEstimate.get("estimatedDate"));
+        model.addAttribute("remainingMonths", goalEstimate.get("remainingMonths"));
+        model.addAttribute("remainMonthsInNum",goalEstimate.get("remainMonthsInNum"));
         return "saving";
     }
 
